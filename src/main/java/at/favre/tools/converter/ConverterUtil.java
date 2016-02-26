@@ -1,7 +1,5 @@
 package at.favre.tools.converter;
 
-import at.favre.tools.converter.graphics.CompressionType;
-
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
@@ -11,9 +9,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
- * Created by PatrickF on 25.02.2016.
+ * Util class
  */
 public class ConverterUtil {
 
@@ -47,11 +46,14 @@ public class ConverterUtil {
 		return ImageIO.read(new File(filePath));
 	}
 
-	public static void compressToFile(File targetFile, CompressionType type, BufferedImage bufferedImage, Dimension targetDimension) throws Exception {
-		if(type == CompressionType.JPEG) {
-			compressJpeg(targetFile,scale(bufferedImage, targetDimension.width, targetDimension.height, type, Color.BLACK),0.9f);
-		} else {
-			ImageIO.write(scale(bufferedImage, targetDimension.width, targetDimension.height, type, Color.BLACK), type.formatName, targetFile);
+	public static void compressToFile(File targetFile, List<Arguments.Compression> compressionList, BufferedImage bufferedImage, Dimension targetDimension, float compressionQuality) throws Exception {
+
+		for (Arguments.Compression compression : compressionList) {
+			if (compression == Arguments.Compression.PNG || compression == Arguments.Compression.GIF) {
+				ImageIO.write(scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK), compression.name().toLowerCase(), new File(targetFile.getAbsolutePath() + "." + compression.name().toLowerCase()));
+			} else if (compression == Arguments.Compression.JPG) {
+				compressJpeg(new File(targetFile.getAbsolutePath() + "." + Arguments.OutputCompressionMode.JPG.name().toLowerCase()), scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK), compressionQuality);
+			}
 		}
 	}
 
@@ -67,11 +69,11 @@ public class ConverterUtil {
 		writer.write(null, new IIOImage(bufferedImage, null, null), jpgWriteParam);
 	}
 
-	public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, CompressionType compressionType, Color background) {
+	public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, Arguments.Compression compression, Color background) {
 		BufferedImage scaledImage = null;
 		if (imageToScale != null) {
 			int imageType = imageToScale.getType();
-			if (compressionType == CompressionType.PNG || compressionType == CompressionType.GIF) {
+			if (compression == Arguments.Compression.PNG || compression == Arguments.Compression.GIF) {
 				imageType = BufferedImage.TYPE_INT_ARGB;
 			}
 
@@ -81,7 +83,7 @@ public class ConverterUtil {
 			graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 			graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			if (compressionType == CompressionType.JPEG) {
+			if (compression == Arguments.Compression.JPG) {
 				graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, background, null);
 			} else {
 				graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
@@ -90,9 +92,5 @@ public class ConverterUtil {
 			graphics2D.dispose();
 		}
 		return scaledImage;
-	}
-
-	private static void draw() {
-
 	}
 }

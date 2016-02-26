@@ -1,7 +1,6 @@
 package at.favre.tools.converter.platforms;
 
-import at.favre.tools.converter.graphics.CompressionType;
-import at.favre.tools.converter.RoundingHandler;
+import at.favre.tools.converter.Arguments;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -10,9 +9,5 @@ import java.io.File;
  *
  */
 public interface IPlatformConverter {
-
-	void setup(RoundingHandler roundingHandler);
-
-	void convert(File target, BufferedImage rawImage, double baseScale, String targetImageFileName, CompressionType compressionType, float quality) throws Exception;
-
+	void convert(File destinationFolder, BufferedImage rawImage, String targetImageFileName, Arguments.Compression srcCompression, Arguments arguments, ConverterCallback callback);
 }

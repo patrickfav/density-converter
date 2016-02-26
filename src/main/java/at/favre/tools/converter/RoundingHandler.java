@@ -7,8 +7,7 @@ public class RoundingHandler {
 	enum Strategy {
 		ROUND,
 		CEIL,
-		FLOOR,
-		CAST
+		FLOOR
 	}
 
 	private final Strategy strategy;
@@ -19,15 +18,13 @@ public class RoundingHandler {
 
 	public long round(double value) {
 		switch (strategy) {
+			default:
 			case ROUND:
 				return Math.round(value);
 			case CEIL:
 				return (long) Math.ceil(value);
 			case FLOOR:
 				return (long) Math.floor(value);
-			default:
-			case CAST:
-				return (long) value;
 		}
 	}
 }
