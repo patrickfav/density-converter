@@ -3,7 +3,7 @@ package at.favre.tools.converter.platforms;
 /**
  * Base class for information on creating different densities for the platforms
  */
-public class DensityDescription {
+public class DensityDescription implements Comparable<DensityDescription> {
 	public final float scale;
 	public final String name;
 
@@ -29,5 +29,10 @@ public class DensityDescription {
 		int result = (scale != +0.0f ? Float.floatToIntBits(scale) : 0);
 		result = 31 * result + (name != null ? name.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public int compareTo(DensityDescription o) {
+		return Float.compare(scale, o.scale);
 	}
 }

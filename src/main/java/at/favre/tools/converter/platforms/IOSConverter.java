@@ -48,8 +48,8 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescription> {
 	}
 
 	@Override
-	public void onPreExecute(File dstFolder, String targetFileName, List<IOSDensityDescription> densityDescriptions, Arguments arguments) throws Exception {
-		writeContentJson(dstFolder, targetFileName, densityDescriptions, arguments.outputCompressionMode);
+	public void onPreExecute(File dstFolder, String targetFileName, List<IOSDensityDescription> densityDescriptions, Arguments.Compression srcCompression, Arguments arguments) throws Exception {
+		writeContentJson(dstFolder, targetFileName, densityDescriptions, Arguments.getCompressionForType(arguments.outputCompressionMode, srcCompression));
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescription> {
 
 	}
 
-	private void writeContentJson(File dstFolder, String targetFileName, List<IOSDensityDescription> iosDensityDescriptions, Arguments.OutputCompressionMode outputCompressionMode) throws IOException {
+	private void writeContentJson(File dstFolder, String targetFileName, List<IOSDensityDescription> iosDensityDescriptions, List<Arguments.Compression> compressions) throws IOException {
 		File contentJson = new File(dstFolder, "Content.json");
 
 		if (contentJson.exists()) {
@@ -66,19 +66,20 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescription> {
 		contentJson.createNewFile();
 
 		try (PrintWriter out = new PrintWriter(contentJson)) {
-			out.println(createContentJson(targetFileName, iosDensityDescriptions, outputCompressionMode));
+			out.println(createContentJson(targetFileName, iosDensityDescriptions, compressions));
 		}
 	}
 
-	private String createContentJson(String targetFileName, List<IOSDensityDescription> iosDensityDescriptions, Arguments.OutputCompressionMode outputCompressionMode) {
+	private String createContentJson(String targetFileName, List<IOSDensityDescription> iosDensityDescriptions, List<Arguments.Compression> compressions) {
 		StringBuilder sb = new StringBuilder("{\n\t\"images\": [");
-
-		for (IOSDensityDescription densityDescription : iosDensityDescriptions) {
-			sb.append("\n\t\t{\n" +
-					"\t\t\t\"filename\": \"" + targetFileName + densityDescription.postFix + "." + outputCompressionMode.name().toLowerCase() + "\",\n" +
-					"\t\t\t\"idiom\": \"universal\",\n" +
-					"\t\t\t\"scrScale\": \"" + densityDescription.name + "\"\n" +
-					"\t\t},");
+		for (Arguments.Compression compression : compressions) {
+			for (IOSDensityDescription densityDescription : iosDensityDescriptions) {
+				sb.append("\n\t\t{\n" +
+						"\t\t\t\"filename\": \"" + targetFileName + densityDescription.postFix + "." + compression.name().toLowerCase() + "\",\n" +
+						"\t\t\t\"idiom\": \"universal\",\n" +
+						"\t\t\t\"scrScale\": \"" + densityDescription.name + "\"\n" +
+						"\t\t},");
+			}
 		}
 		sb.setLength(sb.length() - 1);
 		sb.append("\t],\n\t\"info\": {\n\t\t\"author\": \"xcode\",\n\t\t\"version\": 1\n\t}\n}");

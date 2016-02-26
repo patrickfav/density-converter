@@ -2,13 +2,21 @@ package at.favre.tools.converter;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by PatrickF on 26.02.2016.
+ * Handles all the arguments that can be set in the converter
  */
 public class Arguments {
 	public static final float DEFAULT_COMPRESSION_QUALITY = 0.9f;
+	public static final int DEFAULT_THREAD_COUNT = 2;
+	public static final RoundingHandler.Strategy DEFAULT_ROUNDING_STRATEGY = RoundingHandler.Strategy.ROUND_HALF_UP;
+	public static final Platform DEFAULT_PLATFORM = Platform.ALL;
+
+	public final static String[] VALID_FILE_EXTENSIONS = new String[]{Compression.GIF.name().toLowerCase(), Compression.JPG.name().toLowerCase(), Compression.PNG.name().toLowerCase(), "jpeg"};
+
+	public final static Arguments START_GUI = new Arguments();
 
 	public final File src;
 	public final File dst;
@@ -23,6 +31,7 @@ public class Arguments {
 	public final boolean includeObsoleteFormats;
 	public final boolean haltOnError;
 	public final RoundingHandler roundingHandler;
+	public final List<File> filesToProcess;
 
 	public Arguments(File src, File dst, float scrScale, Platform platform, OutputCompressionMode outputCompressionMode,
 	                 float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
@@ -40,6 +49,26 @@ public class Arguments {
 		this.includeObsoleteFormats = includeObsoleteFormats;
 		this.haltOnError = haltOnError;
 		this.roundingHandler = roundingHandler;
+
+		this.filesToProcess = new ArrayList<>();
+
+		if (src != null && src.isDirectory()) {
+			for (File file : src.listFiles()) {
+				String extension = ConverterUtil.getFileExtension(file);
+				if (Arrays.asList(VALID_FILE_EXTENSIONS).contains(extension)) {
+					filesToProcess.add(file);
+					if (verboseLog) {
+						System.out.println("add " + file + " to processing queue");
+					}
+				}
+			}
+		} else {
+			filesToProcess.add(src);
+		}
+	}
+
+	private Arguments() {
+		this(null, null, 0f, null, null, 0f, 0, false, false, false, false, false, null);
 	}
 
 	@Override
@@ -77,16 +106,16 @@ public class Arguments {
 		private File dst;
 		private float srcScale;
 		private File src = null;
-		private Platform platform = Platform.ALL;
+		private Platform platform = DEFAULT_PLATFORM;
 		private OutputCompressionMode outputCompressionMode = OutputCompressionMode.SAME_AS_INPUT;
 		private float compressionQuality = DEFAULT_COMPRESSION_QUALITY;
-		private int threadCount = 3;
+		private int threadCount = DEFAULT_THREAD_COUNT;
+		private RoundingHandler.Strategy roundingStrategy = DEFAULT_ROUNDING_STRATEGY;
 		private boolean skipExistingFiles = false;
 		private boolean skipUpscaling = false;
 		private boolean verboseLog = false;
 		private boolean includeObsoleteFormats = false;
 		private boolean haltOnError = false;
-		private RoundingHandler.Strategy roundingStrategy = RoundingHandler.Strategy.ROUND;
 
 		public Builder(File src, float srcScale) {
 			this.src = src;
@@ -119,28 +148,28 @@ public class Arguments {
 			return this;
 		}
 
-		public Builder skipExistingFiles(boolean skip) {
-			this.skipExistingFiles = skip;
+		public Builder skipExistingFiles() {
+			this.skipExistingFiles = true;
 			return this;
 		}
 
-		public Builder skipUpscaling(boolean skip) {
-			this.skipUpscaling = skip;
+		public Builder skipUpscaling() {
+			this.skipUpscaling = true;
 			return this;
 		}
 
-		public Builder verboseLog(boolean verboseLog) {
-			this.verboseLog = verboseLog;
+		public Builder verboseLog() {
+			this.verboseLog = true;
 			return this;
 		}
 
-		public Builder includeObsoleteFormats(boolean includeObsoleteFormats) {
-			this.includeObsoleteFormats = includeObsoleteFormats;
+		public Builder includeObsoleteFormats() {
+			this.includeObsoleteFormats = true;
 			return this;
 		}
 
-		public Builder haltOnError(boolean haltOnError) {
-			this.haltOnError = haltOnError;
+		public Builder haltOnError() {
+			this.haltOnError = true;
 			return this;
 		}
 

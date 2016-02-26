@@ -52,7 +52,7 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripti
 	}
 
 	@Override
-	public void onPreExecute(File dstFolder, String targetFileName, List<AndroidDensityDescription> densityDescriptions, Arguments arguments) throws Exception {
+	public void onPreExecute(File dstFolder, String targetFileName, List<AndroidDensityDescription> densityDescriptions, Arguments.Compression srcCompression, Arguments arguments) throws Exception {
 		//nothing
 	}
 

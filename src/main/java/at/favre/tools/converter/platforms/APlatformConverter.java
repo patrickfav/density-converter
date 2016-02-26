@@ -21,8 +21,10 @@ public abstract class APlatformConverter<T extends DensityDescription> implement
 
 		Map<T, Dimension> bucketMap = new TreeMap<>();
 		for (T density : densities) {
-			bucketMap.put(density, new Dimension((int) args.roundingHandler.round(baseWidth * density.scale),
-					(int) args.roundingHandler.round(baseHeight * density.scale)));
+			if (args.scrScale >= density.scale || !args.skipUpscaling) {
+				bucketMap.put(density, new Dimension((int) args.roundingHandler.round(baseWidth * density.scale),
+						(int) args.roundingHandler.round(baseHeight * density.scale)));
+			}
 		}
 		return bucketMap;
 	}
@@ -37,7 +39,7 @@ public abstract class APlatformConverter<T extends DensityDescription> implement
 
 			File mainSubFolder = createMainSubFolder(destinationFolder, targetImageFileName, args);
 
-			onPreExecute(mainSubFolder, targetImageFileName, usedOutputDensities(args), args);
+			onPreExecute(mainSubFolder, targetImageFileName, usedOutputDensities(args), srcCompression, args);
 
 			for (Map.Entry<T, Dimension> entry : densityMap.entrySet()) {
 				File dstFolder = createFolderForOutputFile(mainSubFolder, entry.getKey(), entry.getValue(), targetImageFileName, args);
@@ -49,13 +51,23 @@ public abstract class APlatformConverter<T extends DensityDescription> implement
 						imageFile.delete();
 					}
 
-					log.append("create ").append(imageFile).append(" with ").append(entry.getValue().width).append("x").append(entry.getValue().height).append(" (x").append(entry.getKey().scale).append(")\n");
+					log.append("process ").append(imageFile).append(" with ").append(entry.getValue().width).append("x").append(entry.getValue().height).append(" (x").append(entry.getKey().scale).append(")\n");
 
-					ConverterUtil.compressToFile(imageFile, Arguments.getCompressionForType(args.outputCompressionMode, srcCompression), rawImage, entry.getValue(), args.compressionQuality);
+					List<File> files = ConverterUtil.compressToFile(imageFile, Arguments.getCompressionForType(args.outputCompressionMode, srcCompression), rawImage, entry.getValue(), args.compressionQuality, args.skipExistingFiles);
+
+					for (File file : files) {
+						log.append("compressed to disk: ").append(file).append(" (").append(Math.round((float) file.length() / 1024f)).append("kB)\n");
+					}
+
+					if (files.isEmpty()) {
+						log.append("files skipped\n");
+					}
 				} else {
 					throw new IllegalStateException("could not create " + dstFolder);
 				}
 			}
+
+			System.out.println(log.toString());
 
 			onPostExecute(args);
 
@@ -81,7 +93,7 @@ public abstract class APlatformConverter<T extends DensityDescription> implement
 
 	public abstract String createDestinationFileNameWithoutExtension(T density, Dimension dimension, String targetFileName, Arguments arguments);
 
-	public abstract void onPreExecute(File dstFolder, String targetFileName, List<T> densityDescriptions, Arguments arguments) throws Exception;
+	public abstract void onPreExecute(File dstFolder, String targetFileName, List<T> densityDescriptions, Arguments.Compression srcCompression, Arguments arguments) throws Exception;
 
 	public abstract void onPostExecute(Arguments arguments);
 }

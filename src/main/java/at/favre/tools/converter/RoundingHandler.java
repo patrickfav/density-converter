@@ -5,7 +5,7 @@ package at.favre.tools.converter;
  */
 public class RoundingHandler {
 	enum Strategy {
-		ROUND,
+		ROUND_HALF_UP,
 		CEIL,
 		FLOOR
 	}
@@ -19,7 +19,7 @@ public class RoundingHandler {
 	public long round(double value) {
 		switch (strategy) {
 			default:
-			case ROUND:
+			case ROUND_HALF_UP:
 				return Math.round(value);
 			case CEIL:
 				return (long) Math.ceil(value);

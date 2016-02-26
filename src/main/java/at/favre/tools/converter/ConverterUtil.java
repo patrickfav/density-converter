@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,15 +47,23 @@ public class ConverterUtil {
 		return ImageIO.read(new File(filePath));
 	}
 
-	public static void compressToFile(File targetFile, List<Arguments.Compression> compressionList, BufferedImage bufferedImage, Dimension targetDimension, float compressionQuality) throws Exception {
-
+	public static List<File> compressToFile(File targetFile, List<Arguments.Compression> compressionList, BufferedImage bufferedImage, Dimension targetDimension, float compressionQuality, boolean skipIfExists) throws Exception {
+		List<File> files = new ArrayList<>(2);
 		for (Arguments.Compression compression : compressionList) {
-			if (compression == Arguments.Compression.PNG || compression == Arguments.Compression.GIF) {
-				ImageIO.write(scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK), compression.name().toLowerCase(), new File(targetFile.getAbsolutePath() + "." + compression.name().toLowerCase()));
-			} else if (compression == Arguments.Compression.JPG) {
-				compressJpeg(new File(targetFile.getAbsolutePath() + "." + Arguments.OutputCompressionMode.JPG.name().toLowerCase()), scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK), compressionQuality);
+			File imageFile = new File(targetFile.getAbsolutePath() + "." + compression.name().toLowerCase());
+
+			if (imageFile.exists() && skipIfExists) {
+				break;
 			}
+
+			if (compression == Arguments.Compression.PNG || compression == Arguments.Compression.GIF) {
+				ImageIO.write(scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK), compression.name().toLowerCase(), imageFile);
+			} else if (compression == Arguments.Compression.JPG) {
+				compressJpeg(imageFile, scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK), compressionQuality);
+			}
+			files.add(imageFile);
 		}
+		return files;
 	}
 
 	public static void compressJpeg(File targetFile,BufferedImage bufferedImage, float quality) throws IOException {
