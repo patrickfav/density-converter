@@ -35,6 +35,18 @@ public class Convert {
 		public Mode mode = Mode.ALL;
 		public CompressionType compressionType = null;
 		public float compressionQuality = 0.9f;
+
+		@Override
+		public String toString() {
+			return "Args{" +
+					"dst=" + dst +
+					", src=" + src +
+					", scale=" + scale +
+					", mode=" + mode +
+					", compressionType=" + compressionType +
+					", compressionQuality=" + compressionQuality +
+					'}';
+		}
 	}
 
 	public static void main(String[] args) {
@@ -43,6 +55,8 @@ public class Convert {
 		Args argsObj = parse(options, args);
 
 //		File srcFile = new File("C:\\Users\\PatrickF\\Desktop\\");
+
+		System.out.println("Arguments: " + argsObj + "\n");
 
 		List<File> filesToProcess = new ArrayList<>();
 
@@ -137,7 +151,7 @@ public class Convert {
 
 	private static void execute(File root, Mode mode, List<File> srcFiles, double baseScale, boolean useSameCompressionAsSrc, RoundingHandler roundingHandler, CompressionType compressionType, float compressionQuality) {
 		final long begin = System.currentTimeMillis();
-		System.out.println("begin execution");
+		System.out.println("\nbegin execution\n");
 
 		AndroidConverter androidConverter = new AndroidConverter();
 		androidConverter.setup(roundingHandler);
