@@ -7,6 +7,7 @@ import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.FileImageOutputStream;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -74,10 +75,14 @@ public class ConverterUtil {
 		jpgWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
 		jpgWriteParam.setCompressionQuality(quality);
 
-		final ImageWriter writer = ImageIO.getImageWritersByFormatName("jpg").next();
-		writer.setOutput(new FileImageOutputStream(targetFile));
-
-		writer.write(null, new IIOImage(bufferedImage, null, null), jpgWriteParam);
+		ImageWriter writer = null;
+		try (ImageOutputStream outputStream = new FileImageOutputStream(targetFile)) {
+			writer = ImageIO.getImageWritersByFormatName("jpg").next();
+			writer.setOutput(outputStream);
+			writer.write(null, new IIOImage(bufferedImage, null, null), jpgWriteParam);
+		} finally {
+			if (writer != null) writer.dispose();
+		}
 	}
 
 	public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ECompression compression, Color background) {

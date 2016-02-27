@@ -3,6 +3,7 @@ package at.favre.tools.converter.ui;
 import at.favre.tools.converter.ConverterHandler;
 import at.favre.tools.converter.arg.Arguments;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -110,13 +111,14 @@ public class GUI extends Application {
 				new ConverterHandler().execute(arg, new ConverterHandler.HandlerCallback() {
 					@Override
 					public void onProgress(float progress) {
+						Platform.runLater(() -> progressBar.setProgress(progress));
 						System.out.println(progress);
-						progressBar.setProgress(progress);
 					}
 
 					@Override
 					public void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess) {
-						btnMainConvert.setDisable(false);
+						Platform.runLater(() -> btnMainConvert.setDisable(false));
+
 					}
 				});
 			} catch (InvalidArgumentException e) {
@@ -126,7 +128,5 @@ public class GUI extends Application {
 
 		});
 		grid.add(btnMainConvert, 0, 7, 4, 1);
-
-
 	}
 }
