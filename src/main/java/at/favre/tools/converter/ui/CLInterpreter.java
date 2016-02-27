@@ -1,5 +1,9 @@
-package at.favre.tools.converter;
+package at.favre.tools.converter.ui;
 
+import at.favre.tools.converter.arg.Arguments;
+import at.favre.tools.converter.arg.EOutputCompressionMode;
+import at.favre.tools.converter.arg.EPlatform;
+import at.favre.tools.converter.arg.RoundingHandler;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -18,6 +22,7 @@ public class CLInterpreter {
 	public static final String DST_ARG = "dst";
 	public static final String VERBOSE_ARG = "verbose";
 	public static final String SKIP_EXISTING_ARG = "skipExisting";
+	private static final String TIMEOUT_ARG = "timeout";
 
 
 	public static Arguments parse(String[] args) {
@@ -56,16 +61,16 @@ public class CLInterpreter {
 			if (commandLine.hasOption(OUT_COMPRESSION_ARG)) {
 				switch (commandLine.getOptionValue(OUT_COMPRESSION_ARG)) {
 					case "png":
-						builder.compression(Arguments.OutputCompressionMode.PNG);
+						builder.compression(EOutputCompressionMode.PNG);
 						break;
 					case "jpg":
-						builder.compression(Arguments.OutputCompressionMode.JPG, compressionQuality);
+						builder.compression(EOutputCompressionMode.JPG, compressionQuality);
 						break;
 					case "gif":
-						builder.compression(Arguments.OutputCompressionMode.GIF);
+						builder.compression(EOutputCompressionMode.GIF);
 						break;
 					case "png+jpg":
-						builder.compression(Arguments.OutputCompressionMode.JPG_AND_PNG, compressionQuality);
+						builder.compression(EOutputCompressionMode.JPG_AND_PNG, compressionQuality);
 						break;
 					default:
 						System.err.println("unknown compression type: " + commandLine.getOptionValue(OUT_COMPRESSION_ARG));
@@ -75,13 +80,13 @@ public class CLInterpreter {
 			if (commandLine.hasOption(PLATFORM_ARG)) {
 				switch (commandLine.getOptionValue(PLATFORM_ARG)) {
 					case "all":
-						builder.platform(Arguments.Platform.ALL);
+						builder.platform(EPlatform.ALL);
 						break;
 					case "android":
-						builder.platform(Arguments.Platform.ANROID);
+						builder.platform(EPlatform.ANROID);
 						break;
 					case "ios":
-						builder.platform(Arguments.Platform.IOS);
+						builder.platform(EPlatform.IOS);
 						break;
 					default:
 						System.err.println("unknown mode: " + commandLine.getOptionValue(PLATFORM_ARG));
@@ -106,6 +111,10 @@ public class CLInterpreter {
 
 			if (commandLine.hasOption(THREADS_ARG)) {
 				builder.threadCount(Integer.valueOf(commandLine.getOptionValue(THREADS_ARG)));
+			}
+
+			if (commandLine.hasOption(TIMEOUT_ARG)) {
+				builder.timeout(Integer.valueOf(commandLine.getOptionValue(TIMEOUT_ARG)));
 			}
 
 			if (commandLine.hasOption("skipUpscaling")) {
@@ -150,6 +159,7 @@ public class CLInterpreter {
 		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc("Defines the rounding mode when scaling the dimensions. Possible options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and 'ceil' (rounds up). Default is " + Arguments.DEFAULT_ROUNDING_STRATEGY).build();
 		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg").desc("Sets the compression of the converted images. Can be 'png', 'jpg', 'gif' or 'png+jpg'. By default the src compression type will be used (e.g. png will be re-compressed to png after scaling).").build();
 		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).hasArg(true).argName("0.0-1.0").desc("Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is the highest quality. Default is " + Arguments.DEFAULT_COMPRESSION_QUALITY).build();
+		Option timeout = Option.builder(TIMEOUT_ARG).hasArg(true).argName("sec").desc("Timout in sec of the whole process. Will only wait this amount of time before interrupting the threadpool. Default is " + Arguments.DEFAULT_TIMEOUT_SEC + " sec").build();
 
 		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc("If set will not overwrite a already existing file").build();
 		Option includeObsoleteFormats = Option.builder("includeObsoleteFormats").desc("If set will include obsolete densities (e.g. ldpi in android)").build();
@@ -166,7 +176,7 @@ public class CLInterpreter {
 		mainArgs.setRequired(true);
 
 		options.addOption(srcScaleOpt).addOption(dstOpt);
-		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler);
+		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler).addOption(timeout);
 		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(includeObsoleteFormats).addOption(verboseLog).addOption(haltOnError);
 
 		options.addOptionGroup(mainArgs);

@@ -1,7 +1,8 @@
 package at.favre.tools.converter.platforms;
 
-import at.favre.tools.converter.Arguments;
 import at.favre.tools.converter.ConverterUtil;
+import at.favre.tools.converter.arg.Arguments;
+import at.favre.tools.converter.arg.ECompression;
 import at.favre.tools.converter.platforms.descriptors.DensityDescriptor;
 
 import java.awt.*;
@@ -29,7 +30,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 	}
 
 	@Override
-	public void convert(File destinationFolder, BufferedImage rawImage, String targetImageFileName, Arguments.Compression srcCompression, Arguments args, ConverterCallback callback) {
+	public void convert(File destinationFolder, BufferedImage rawImage, String targetImageFileName, ECompression srcCompression, Arguments args, ConverterCallback callback) {
 		try {
 			StringBuilder log = new StringBuilder();
 			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ").append(rawImage.getWidth()).append("x").append(rawImage.getHeight()).append(" (x").append(args.scrScale).append(")\n");
@@ -90,7 +91,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 	public abstract String createDestinationFileNameWithoutExtension(T density, Dimension dimension, String targetFileName, Arguments arguments);
 
-	public abstract void onPreExecute(File dstFolder, String targetFileName, List<T> densityDescriptions, Arguments.Compression srcCompression, Arguments arguments) throws Exception;
+	public abstract void onPreExecute(File dstFolder, String targetFileName, List<T> densityDescriptions, ECompression srcCompression, Arguments arguments) throws Exception;
 
 	public abstract void onPostExecute(Arguments arguments);
 }

@@ -1,4 +1,4 @@
-package at.favre.tools.converter;
+package at.favre.tools.converter.ui;
 
 /**
  * Created by PatrickF on 26.02.2016.

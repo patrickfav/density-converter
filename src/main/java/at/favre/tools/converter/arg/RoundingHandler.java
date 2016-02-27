@@ -1,10 +1,10 @@
-package at.favre.tools.converter;
+package at.favre.tools.converter.arg;
 
 /**
  * Defines how float numbers will be rounded
  */
 public class RoundingHandler {
-	enum Strategy {
+	public enum Strategy {
 		ROUND_HALF_UP,
 		CEIL,
 		FLOOR

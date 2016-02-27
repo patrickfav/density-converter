@@ -1,7 +1,9 @@
 package at.favre.tools.converter.platforms;
 
-import at.favre.tools.converter.Arguments;
 import at.favre.tools.converter.ConverterUtil;
+import at.favre.tools.converter.arg.Arguments;
+import at.favre.tools.converter.arg.ECompression;
+import at.favre.tools.converter.arg.EPlatform;
 import at.favre.tools.converter.platforms.descriptors.AndroidDensityDescriptor;
 
 import java.awt.*;
@@ -35,7 +37,7 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
-		if (arguments.platform != Arguments.Platform.ANROID) {
+		if (arguments.platform != EPlatform.ANROID) {
 			return ConverterUtil.createAndCheckFolder(new File(destinationFolder, "android").getAbsolutePath());
 		} else {
 			return destinationFolder;
@@ -53,7 +55,7 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 	}
 
 	@Override
-	public void onPreExecute(File dstFolder, String targetFileName, List<AndroidDensityDescriptor> densityDescriptions, Arguments.Compression srcCompression, Arguments arguments) throws Exception {
+	public void onPreExecute(File dstFolder, String targetFileName, List<AndroidDensityDescriptor> densityDescriptions, ECompression srcCompression, Arguments arguments) throws Exception {
 		//nothing
 	}
 

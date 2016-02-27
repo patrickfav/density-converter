@@ -1,5 +1,7 @@
 package at.favre.tools.converter;
 
+import at.favre.tools.converter.arg.ECompression;
+
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriteParam;
@@ -47,18 +49,18 @@ public class ConverterUtil {
 		return ImageIO.read(new File(filePath));
 	}
 
-	public static List<File> compressToFile(File targetFile, List<Arguments.Compression> compressionList, BufferedImage bufferedImage, Dimension targetDimension, float compressionQuality, boolean skipIfExists) throws Exception {
+	public static List<File> compressToFile(File targetFile, List<ECompression> compressionList, BufferedImage bufferedImage, Dimension targetDimension, float compressionQuality, boolean skipIfExists) throws Exception {
 		List<File> files = new ArrayList<>(2);
-		for (Arguments.Compression compression : compressionList) {
+		for (ECompression compression : compressionList) {
 			File imageFile = new File(targetFile.getAbsolutePath() + "." + compression.name().toLowerCase());
 
 			if (imageFile.exists() && skipIfExists) {
 				break;
 			}
 
-			if (compression == Arguments.Compression.PNG || compression == Arguments.Compression.GIF) {
+			if (compression == ECompression.PNG || compression == ECompression.GIF) {
 				ImageIO.write(scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK), compression.name().toLowerCase(), imageFile);
-			} else if (compression == Arguments.Compression.JPG) {
+			} else if (compression == ECompression.JPG) {
 				compressJpeg(imageFile, scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK), compressionQuality);
 			}
 			files.add(imageFile);
@@ -78,11 +80,11 @@ public class ConverterUtil {
 		writer.write(null, new IIOImage(bufferedImage, null, null), jpgWriteParam);
 	}
 
-	public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, Arguments.Compression compression, Color background) {
+	public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ECompression compression, Color background) {
 		BufferedImage scaledImage = null;
 		if (imageToScale != null) {
 			int imageType = imageToScale.getType();
-			if (compression == Arguments.Compression.PNG || compression == Arguments.Compression.GIF) {
+			if (compression == ECompression.PNG || compression == ECompression.GIF) {
 				imageType = BufferedImage.TYPE_INT_ARGB;
 			}
 
@@ -92,7 +94,7 @@ public class ConverterUtil {
 			graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 			graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-			if (compression == Arguments.Compression.JPG) {
+			if (compression == ECompression.JPG) {
 				graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
 			} else {
 				graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);

@@ -1,4 +1,7 @@
-package at.favre.tools.converter;
+package at.favre.tools.converter.arg;
+
+import at.favre.tools.converter.ConverterUtil;
+import at.favre.tools.converter.ui.InvalidArgumentException;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,17 +15,19 @@ public class Arguments {
 	public static final float DEFAULT_COMPRESSION_QUALITY = 0.9f;
 	public static final int DEFAULT_THREAD_COUNT = 2;
 	public static final RoundingHandler.Strategy DEFAULT_ROUNDING_STRATEGY = RoundingHandler.Strategy.ROUND_HALF_UP;
-	public static final Platform DEFAULT_PLATFORM = Platform.ALL;
+	public static final EPlatform DEFAULT_PLATFORM = EPlatform.ALL;
+	public static final int DEFAULT_TIMEOUT_SEC = 60 * 10;
 
-	public final static String[] VALID_FILE_EXTENSIONS = new String[]{Compression.GIF.name().toLowerCase(), Compression.JPG.name().toLowerCase(), Compression.PNG.name().toLowerCase(), "jpeg"};
+
+	public final static String[] VALID_FILE_EXTENSIONS = new String[]{ECompression.GIF.name().toLowerCase(), ECompression.JPG.name().toLowerCase(), ECompression.PNG.name().toLowerCase(), "jpeg"};
 
 	public final static Arguments START_GUI = new Arguments();
 
 	public final File src;
 	public final File dst;
 	public final float scrScale;
-	public final Platform platform;
-	public final OutputCompressionMode outputCompressionMode;
+	public final EPlatform platform;
+	public final EOutputCompressionMode outputCompressionMode;
 	public final float compressionQuality;
 	public final int threadCount;
 	public final boolean skipExistingFiles;
@@ -32,10 +37,12 @@ public class Arguments {
 	public final boolean haltOnError;
 	public final RoundingHandler roundingHandler;
 	public final List<File> filesToProcess;
+	public final int timeoutSec;
 
-	public Arguments(File src, File dst, float scrScale, Platform platform, OutputCompressionMode outputCompressionMode,
+
+	public Arguments(File src, File dst, float scrScale, EPlatform platform, EOutputCompressionMode outputCompressionMode,
 	                 float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
-	                 boolean verboseLog, boolean includeObsoleteFormats, boolean haltOnError, RoundingHandler roundingHandler) {
+	                 boolean verboseLog, boolean includeObsoleteFormats, boolean haltOnError, RoundingHandler roundingHandler, int timeoutSec) {
 		this.dst = dst;
 		this.src = src;
 		this.scrScale = scrScale;
@@ -49,6 +56,7 @@ public class Arguments {
 		this.includeObsoleteFormats = includeObsoleteFormats;
 		this.haltOnError = haltOnError;
 		this.roundingHandler = roundingHandler;
+		this.timeoutSec = timeoutSec;
 
 		this.filesToProcess = new ArrayList<>();
 
@@ -68,7 +76,7 @@ public class Arguments {
 	}
 
 	private Arguments() {
-		this(null, null, 0f, null, null, 0f, 0, false, false, false, false, false, null);
+		this(null, null, 0f, null, null, 0f, 0, false, false, false, false, false, null, 0);
 	}
 
 	@Override
@@ -90,27 +98,16 @@ public class Arguments {
 				'}';
 	}
 
-	public enum Platform {
-		ALL, ANROID, IOS
-	}
-
-	public enum OutputCompressionMode {
-		SAME_AS_INPUT, JPG, PNG, GIF, JPG_AND_PNG
-	}
-
-	public enum Compression {
-		JPG, PNG, GIF
-	}
-
 	public static class Builder {
 		private File dst;
 		private float srcScale;
 		private File src = null;
-		private Platform platform = DEFAULT_PLATFORM;
-		private OutputCompressionMode outputCompressionMode = OutputCompressionMode.SAME_AS_INPUT;
+		private EPlatform platform = DEFAULT_PLATFORM;
+		private EOutputCompressionMode outputCompressionMode = EOutputCompressionMode.SAME_AS_INPUT;
 		private float compressionQuality = DEFAULT_COMPRESSION_QUALITY;
 		private int threadCount = DEFAULT_THREAD_COUNT;
 		private RoundingHandler.Strategy roundingStrategy = DEFAULT_ROUNDING_STRATEGY;
+		private int timeoutSec = DEFAULT_TIMEOUT_SEC;
 		private boolean skipExistingFiles = false;
 		private boolean skipUpscaling = false;
 		private boolean verboseLog = false;
@@ -127,17 +124,17 @@ public class Arguments {
 			return this;
 		}
 
-		public Builder platform(Platform platform) {
+		public Builder platform(EPlatform platform) {
 			this.platform = platform;
 			return this;
 		}
 
-		public Builder compression(OutputCompressionMode outputCompressionMode) {
+		public Builder compression(EOutputCompressionMode outputCompressionMode) {
 			this.outputCompressionMode = outputCompressionMode;
 			return this;
 		}
 
-		public Builder compression(OutputCompressionMode outputCompressionMode, float compressionQuality) {
+		public Builder compression(EOutputCompressionMode outputCompressionMode, float compressionQuality) {
 			this.outputCompressionMode = outputCompressionMode;
 			this.compressionQuality = compressionQuality;
 			return this;
@@ -145,6 +142,11 @@ public class Arguments {
 
 		public Builder threadCount(int threadCount) {
 			this.threadCount = threadCount;
+			return this;
+		}
+
+		public Builder timeout(int sec) {
+			this.timeoutSec = sec;
 			return this;
 		}
 
@@ -203,41 +205,45 @@ public class Arguments {
 				throw new InvalidArgumentException("invalid src scale given '" + srcScale + "' - must be between (excluding) 0 and 100");
 			}
 
+			if (timeoutSec < 1) {
+				throw new InvalidArgumentException("invalid timeout given '" + timeoutSec + "' - must be between at least 1 sec");
+			}
+
 			return new Arguments(src, dst, srcScale, platform, outputCompressionMode, compressionQuality, threadCount, skipExistingFiles, skipUpscaling,
-					verboseLog, includeObsoleteFormats, haltOnError, new RoundingHandler(roundingStrategy));
+					verboseLog, includeObsoleteFormats, haltOnError, new RoundingHandler(roundingStrategy), timeoutSec);
 		}
 	}
 
-	public static Compression getSrcCompressionType(File srcFile) {
+	public static ECompression getSrcCompressionType(File srcFile) {
 		String extension = ConverterUtil.getFileExtension(srcFile);
 		switch (extension) {
 			case "jpg":
 			case "jpeg":
-				return Compression.JPG;
+				return ECompression.JPG;
 			case "png":
-				return Compression.PNG;
+				return ECompression.PNG;
 			case "gif":
-				return Compression.GIF;
+				return ECompression.GIF;
 			default:
 				throw new IllegalArgumentException("unknown file extension " + extension + " in srcFile " + srcFile);
 		}
 	}
 
-	public static List<Compression> getCompressionForType(OutputCompressionMode type, Compression srcCompression) {
-		List<Compression> list = new ArrayList<>(2);
+	public static List<ECompression> getCompressionForType(EOutputCompressionMode type, ECompression srcCompression) {
+		List<ECompression> list = new ArrayList<>(2);
 		switch (type) {
 			case GIF:
-				list.add(Compression.GIF);
+				list.add(ECompression.GIF);
 				break;
 			case PNG:
-				list.add(Compression.PNG);
+				list.add(ECompression.PNG);
 				break;
 			case JPG:
-				list.add(Compression.JPG);
+				list.add(ECompression.JPG);
 				break;
 			case JPG_AND_PNG:
-				list.add(Compression.JPG);
-				list.add(Compression.PNG);
+				list.add(ECompression.JPG);
+				list.add(ECompression.PNG);
 				break;
 			default:
 			case SAME_AS_INPUT:

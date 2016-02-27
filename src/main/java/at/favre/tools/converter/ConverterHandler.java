@@ -1,5 +1,7 @@
 package at.favre.tools.converter;
 
+import at.favre.tools.converter.arg.Arguments;
+import at.favre.tools.converter.arg.EPlatform;
 import at.favre.tools.converter.platforms.AndroidConverter;
 import at.favre.tools.converter.platforms.ConverterCallback;
 import at.favre.tools.converter.platforms.IOSConverter;
@@ -16,26 +18,29 @@ import java.util.concurrent.*;
  */
 public class ConverterHandler {
 	private CountDownLatch latch;
-	private ConverterCallback converterCallback;
+	private LocalCallback converterCallback;
+	private HandlerCallback handlerCallback;
+	private long beginMs;
 
-	public void execute(Arguments args) {
-		final long begin = System.currentTimeMillis();
+	public void execute(Arguments args, HandlerCallback callback) {
+		beginMs = System.currentTimeMillis();
 		System.out.println("\nbegin execution using " + args.threadCount + " theads\n");
 
 		List<IPlatformConverter> converters = new ArrayList<>();
 
 		ExecutorService threadPool = new ThreadPoolExecutor(args.threadCount, args.threadCount, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<>(256));
 
-		if (args.platform == Arguments.Platform.ANROID || args.platform == Arguments.Platform.ALL) {
+		if (args.platform == EPlatform.ANROID || args.platform == EPlatform.ALL) {
 			converters.add(new AndroidConverter());
 		}
-		if (args.platform == Arguments.Platform.IOS || args.platform == Arguments.Platform.ALL) {
+		if (args.platform == EPlatform.IOS || args.platform == EPlatform.ALL) {
 			converters.add(new IOSConverter());
 		}
 
 		int jobs = args.filesToProcess.size() * converters.size();
+		boolean halted = false;
 		latch = new CountDownLatch(jobs);
-		converterCallback = new LocalCallback(args, latch, jobs);
+		converterCallback = new LocalCallback(args, latch, jobs, callback);
 
 		for (File srcFile : args.filesToProcess) {
 			if (!srcFile.exists() || !srcFile.isFile()) {
@@ -53,7 +58,10 @@ public class ConverterHandler {
 				System.err.println("Could not load or convert " + ConverterUtil.getWithoutExtension(srcFile) + ": " + e.getMessage());
 
 				if (args.haltOnError) {
-					System.err.println("stop execution");
+					halted = true;
+					while (latch.getCount() > 0) {
+						latch.countDown();
+					}
 					break;
 				}
 			}
@@ -63,9 +71,15 @@ public class ConverterHandler {
 
 		try {
 			latch.await(10, TimeUnit.MINUTES);
-			System.out.println("execution finished (" + (System.currentTimeMillis() - begin) + "ms)");
+			informFinished(halted);
 		} catch (InterruptedException e) {
 			System.err.println("Timeout will waiting for execution to finish: " + e.getMessage());
+		}
+	}
+
+	private void informFinished(boolean halted) {
+		if (handlerCallback != null) {
+			handlerCallback.onFinished(converterCallback.getFinished(), converterCallback.getExceptions(), (System.currentTimeMillis() - beginMs), halted);
 		}
 	}
 
@@ -74,11 +88,15 @@ public class ConverterHandler {
 		private CountDownLatch latch;
 		private final int jobCount;
 		private int finished = 0;
+		private HandlerCallback callback;
+		private List<Exception> exceptions;
 
-		public LocalCallback(Arguments arguments, CountDownLatch latch, int jobCount) {
+		public LocalCallback(Arguments arguments, CountDownLatch latch, int jobCount, HandlerCallback callback) {
 			this.arguments = arguments;
 			this.latch = latch;
 			this.jobCount = jobCount;
+			this.callback = callback;
+			this.exceptions = new ArrayList<>();
 		}
 
 		@Override
@@ -93,17 +111,24 @@ public class ConverterHandler {
 		public void failure(Exception e) {
 			System.err.println("Error in convert worker: " + e.getMessage());
 			e.printStackTrace();
+			exceptions.add(e);
 			jobFinished();
 		}
 
 		private void jobFinished() {
 			latch.countDown();
 			finished++;
-			printProgress();
+			if (callback != null) {
+				callback.onProgress((float) finished / (float) jobCount);
+			}
 		}
 
-		private void printProgress() {
-			System.out.println(Math.round((float) finished / (float) jobCount * 100f) + "%");
+		public List<Exception> getExceptions() {
+			return exceptions;
+		}
+
+		public int getFinished() {
+			return finished;
 		}
 	}
 
@@ -126,5 +151,11 @@ public class ConverterHandler {
 		public void run() {
 			converter.convert(arguments.dst, srcRawImage, ConverterUtil.getWithoutExtension(srcFile), Arguments.getSrcCompressionType(srcFile), arguments, callback);
 		}
+	}
+
+	interface HandlerCallback {
+		void onProgress(float progress);
+
+		void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess);
 	}
 }
