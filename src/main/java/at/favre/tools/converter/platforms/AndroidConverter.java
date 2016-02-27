@@ -2,6 +2,7 @@ package at.favre.tools.converter.platforms;
 
 import at.favre.tools.converter.Arguments;
 import at.favre.tools.converter.ConverterUtil;
+import at.favre.tools.converter.platforms.descriptors.AndroidDensityDescriptor;
 
 import java.awt.*;
 import java.io.File;
@@ -11,19 +12,19 @@ import java.util.List;
 /**
  * Converts and creates Android-style resource set
  */
-public class AndroidConverter extends APlatformConverter<AndroidDensityDescription> {
+public class AndroidConverter extends APlatformConverter<AndroidDensityDescriptor> {
 
 	@Override
-	public List<AndroidDensityDescription> usedOutputDensities(Arguments arguments) {
-		List<AndroidDensityDescription> list = new ArrayList<>();
+	public List<AndroidDensityDescriptor> usedOutputDensities(Arguments arguments) {
+		List<AndroidDensityDescriptor> list = new ArrayList<>();
 		if (arguments.includeObsoleteFormats) {
-			list.add(new AndroidDensityDescription(0.75f, "ldpi", "drawable-ldpi"));
+			list.add(new AndroidDensityDescriptor(0.75f, "ldpi", "drawable-ldpi"));
 		}
-		list.add(new AndroidDensityDescription(1, "mdpi", "drawable-mdpi"));
-		list.add(new AndroidDensityDescription(1.5f, "hdpi", "drawable-mdpi"));
-		list.add(new AndroidDensityDescription(2, "xhdpi", "drawable-xhdpi"));
-		list.add(new AndroidDensityDescription(3, "xxhdpi", "drawable-xxhdpi"));
-		list.add(new AndroidDensityDescription(4, "xxxhdpi", "drawable-xxxhdpi"));
+		list.add(new AndroidDensityDescriptor(1, "mdpi", "drawable-mdpi"));
+		list.add(new AndroidDensityDescriptor(1.5f, "hdpi", "drawable-mdpi"));
+		list.add(new AndroidDensityDescriptor(2, "xhdpi", "drawable-xhdpi"));
+		list.add(new AndroidDensityDescriptor(3, "xxhdpi", "drawable-xxhdpi"));
+		list.add(new AndroidDensityDescriptor(4, "xxxhdpi", "drawable-xxxhdpi"));
 		return list;
 	}
 
@@ -42,17 +43,17 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripti
 	}
 
 	@Override
-	public File createFolderForOutputFile(File mainSubFolder, AndroidDensityDescription density, Dimension dimension, String targetFileName, Arguments arguments) {
+	public File createFolderForOutputFile(File mainSubFolder, AndroidDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
 		return ConverterUtil.createAndCheckFolder(new File(mainSubFolder, density.folderName).getAbsolutePath());
 	}
 
 	@Override
-	public String createDestinationFileNameWithoutExtension(AndroidDensityDescription density, Dimension dimension, String targetFileName, Arguments arguments) {
+	public String createDestinationFileNameWithoutExtension(AndroidDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
 		return targetFileName;
 	}
 
 	@Override
-	public void onPreExecute(File dstFolder, String targetFileName, List<AndroidDensityDescription> densityDescriptions, Arguments.Compression srcCompression, Arguments arguments) throws Exception {
+	public void onPreExecute(File dstFolder, String targetFileName, List<AndroidDensityDescriptor> densityDescriptions, Arguments.Compression srcCompression, Arguments arguments) throws Exception {
 		//nothing
 	}
 

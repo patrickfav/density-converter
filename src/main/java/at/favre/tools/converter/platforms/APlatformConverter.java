@@ -2,6 +2,7 @@ package at.favre.tools.converter.platforms;
 
 import at.favre.tools.converter.Arguments;
 import at.favre.tools.converter.ConverterUtil;
+import at.favre.tools.converter.platforms.descriptors.DensityDescriptor;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,19 +14,17 @@ import java.util.TreeMap;
 /**
  * Shared code
  */
-public abstract class APlatformConverter<T extends DensityDescription> implements IPlatformConverter {
+public abstract class APlatformConverter<T extends DensityDescriptor> implements IPlatformConverter {
 
 	private Map<T, Dimension> getDensityBuckets(List<T> densities, Dimension dimensionForScalingFactor, Arguments args) {
 		double baseWidth = (double) dimensionForScalingFactor.width / args.scrScale;
 		double baseHeight = (double) dimensionForScalingFactor.height / args.scrScale;
 
 		Map<T, Dimension> bucketMap = new TreeMap<>();
-		for (T density : densities) {
-			if (args.scrScale >= density.scale || !args.skipUpscaling) {
-				bucketMap.put(density, new Dimension((int) args.roundingHandler.round(baseWidth * density.scale),
-						(int) args.roundingHandler.round(baseHeight * density.scale)));
-			}
-		}
+		densities.stream().filter(density -> args.scrScale >= density.scale || !args.skipUpscaling).forEach(density -> {
+			bucketMap.put(density, new Dimension((int) args.roundingHandler.round(baseWidth * density.scale),
+					(int) args.roundingHandler.round(baseHeight * density.scale)));
+		});
 		return bucketMap;
 	}
 
@@ -66,8 +65,6 @@ public abstract class APlatformConverter<T extends DensityDescription> implement
 					throw new IllegalStateException("could not create " + dstFolder);
 				}
 			}
-
-			System.out.println(log.toString());
 
 			onPostExecute(args);
 

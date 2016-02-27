@@ -16,6 +16,8 @@ public class CLInterpreter {
 	public static final String OUT_COMPRESSION_ARG = "outCompression";
 	public static final String ROUNDING_MODE_ARG = "roundingMode";
 	public static final String DST_ARG = "dst";
+	public static final String VERBOSE_ARG = "verbose";
+	public static final String SKIP_EXISTING_ARG = "skipExisting";
 
 
 	public static Arguments parse(String[] args) {
@@ -62,7 +64,7 @@ public class CLInterpreter {
 					case "gif":
 						builder.compression(Arguments.OutputCompressionMode.GIF);
 						break;
-					case "jpg+png":
+					case "png+jpg":
 						builder.compression(Arguments.OutputCompressionMode.JPG_AND_PNG, compressionQuality);
 						break;
 					default:
@@ -109,13 +111,13 @@ public class CLInterpreter {
 			if (commandLine.hasOption("skipUpscaling")) {
 				builder.skipUpscaling();
 			}
-			if (commandLine.hasOption("skipExistingFiles")) {
+			if (commandLine.hasOption(SKIP_EXISTING_ARG)) {
 				builder.skipExistingFiles();
 			}
 			if (commandLine.hasOption("includeObsoleteFormats")) {
 				builder.includeObsoleteFormats();
 			}
-			if (commandLine.hasOption("verboseLog")) {
+			if (commandLine.hasOption(VERBOSE_ARG)) {
 				builder.verboseLog();
 			}
 			if (commandLine.hasOption("haltOnError")) {
@@ -147,12 +149,12 @@ public class CLInterpreter {
 		Option threadCount = Option.builder(THREADS_ARG).argName("1-8").hasArg(true).desc("Sets the count of max parallel threads (more is faster but uses more memory). Possible values are 1-8. Default is " + Arguments.DEFAULT_THREAD_COUNT).build();
 		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc("Defines the rounding mode when scaling the dimensions. Possible options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and 'ceil' (rounds up). Default is " + Arguments.DEFAULT_ROUNDING_STRATEGY).build();
 		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg").desc("Sets the compression of the converted images. Can be 'png', 'jpg', 'gif' or 'png+jpg'. By default the src compression type will be used (e.g. png will be re-compressed to png after scaling).").build();
-		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).argName("0.0-1.0").desc("Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is the highest quality. Default is " + Arguments.DEFAULT_COMPRESSION_QUALITY).build();
+		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).hasArg(true).argName("0.0-1.0").desc("Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is the highest quality. Default is " + Arguments.DEFAULT_COMPRESSION_QUALITY).build();
 
-		Option skipExistingFiles = Option.builder("skipExistingFiles").desc("If set will not overwrite a already existing file").build();
+		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc("If set will not overwrite a already existing file").build();
 		Option includeObsoleteFormats = Option.builder("includeObsoleteFormats").desc("If set will include obsolete densities (e.g. ldpi in android)").build();
 		Option skipUpscaling = Option.builder("skipUpscaling").desc("If set will only scale down, but not up to prevent image quality loss").build();
-		Option verboseLog = Option.builder("verboseLog").desc("If set will log to console more verbose").build();
+		Option verboseLog = Option.builder(VERBOSE_ARG).desc("If set will log to console more verbose").build();
 		Option haltOnError = Option.builder("haltOnError").desc("If set will stop the process if an error occurred during conversion").build();
 
 		Option help = Option.builder("h").longOpt("help").desc("This help page").build();

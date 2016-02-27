@@ -1,13 +1,13 @@
-package at.favre.tools.converter.platforms;
+package at.favre.tools.converter.platforms.descriptors;
 
 /**
  * Base class for information on creating different densities for the platforms
  */
-public class DensityDescription implements Comparable<DensityDescription> {
+public class DensityDescriptor implements Comparable<DensityDescriptor> {
 	public final float scale;
 	public final String name;
 
-	protected DensityDescription(float scale, String name) {
+	protected DensityDescriptor(float scale, String name) {
 		this.scale = scale;
 		this.name = name;
 	}
@@ -17,7 +17,7 @@ public class DensityDescription implements Comparable<DensityDescription> {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		DensityDescription that = (DensityDescription) o;
+		DensityDescriptor that = (DensityDescriptor) o;
 
 		if (Float.compare(that.scale, scale) != 0) return false;
 		return !(name != null ? !name.equals(that.name) : that.name != null);
@@ -32,7 +32,7 @@ public class DensityDescription implements Comparable<DensityDescription> {
 	}
 
 	@Override
-	public int compareTo(DensityDescription o) {
+	public int compareTo(DensityDescriptor o) {
 		return Float.compare(scale, o.scale);
 	}
 }

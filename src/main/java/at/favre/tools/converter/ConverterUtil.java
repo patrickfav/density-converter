@@ -93,7 +93,7 @@ public class ConverterUtil {
 			graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 			if (compression == Arguments.Compression.JPG) {
-				graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, background, null);
+				graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
 			} else {
 				graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
 			}

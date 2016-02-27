@@ -2,6 +2,7 @@ package at.favre.tools.converter.platforms;
 
 import at.favre.tools.converter.Arguments;
 import at.favre.tools.converter.ConverterUtil;
+import at.favre.tools.converter.platforms.descriptors.IOSDensityDescriptor;
 
 import java.awt.*;
 import java.io.File;
@@ -13,14 +14,14 @@ import java.util.List;
 /**
  * Needed info to convert for Android
  */
-public class IOSConverter extends APlatformConverter<IOSDensityDescription> {
+public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 
 	@Override
-	public List<IOSDensityDescription> usedOutputDensities(Arguments arguments) {
-		List<IOSDensityDescription> list = new ArrayList<>();
-		list.add(new IOSDensityDescription(1, "1x", ""));
-		list.add(new IOSDensityDescription(2, "2x", "_2x"));
-		list.add(new IOSDensityDescription(3, "3x", "_3x"));
+	public List<IOSDensityDescriptor> usedOutputDensities(Arguments arguments) {
+		List<IOSDensityDescriptor> list = new ArrayList<>();
+		list.add(new IOSDensityDescriptor(1, "1x", ""));
+		list.add(new IOSDensityDescriptor(2, "2x", "_2x"));
+		list.add(new IOSDensityDescriptor(3, "3x", "_3x"));
 		return list;
 	}
 
@@ -38,17 +39,17 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescription> {
 	}
 
 	@Override
-	public File createFolderForOutputFile(File mainSubFolder, IOSDensityDescription density, Dimension dimension, String targetFileName, Arguments arguments) {
+	public File createFolderForOutputFile(File mainSubFolder, IOSDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
 		return mainSubFolder;
 	}
 
 	@Override
-	public String createDestinationFileNameWithoutExtension(IOSDensityDescription density, Dimension dimension, String targetFileName, Arguments arguments) {
+	public String createDestinationFileNameWithoutExtension(IOSDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
 		return targetFileName + density.postFix;
 	}
 
 	@Override
-	public void onPreExecute(File dstFolder, String targetFileName, List<IOSDensityDescription> densityDescriptions, Arguments.Compression srcCompression, Arguments arguments) throws Exception {
+	public void onPreExecute(File dstFolder, String targetFileName, List<IOSDensityDescriptor> densityDescriptions, Arguments.Compression srcCompression, Arguments arguments) throws Exception {
 		writeContentJson(dstFolder, targetFileName, densityDescriptions, Arguments.getCompressionForType(arguments.outputCompressionMode, srcCompression));
 	}
 
@@ -57,7 +58,7 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescription> {
 
 	}
 
-	private void writeContentJson(File dstFolder, String targetFileName, List<IOSDensityDescription> iosDensityDescriptions, List<Arguments.Compression> compressions) throws IOException {
+	private void writeContentJson(File dstFolder, String targetFileName, List<IOSDensityDescriptor> iosDensityDescriptions, List<Arguments.Compression> compressions) throws IOException {
 		File contentJson = new File(dstFolder, "Content.json");
 
 		if (contentJson.exists()) {
@@ -70,10 +71,10 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescription> {
 		}
 	}
 
-	private String createContentJson(String targetFileName, List<IOSDensityDescription> iosDensityDescriptions, List<Arguments.Compression> compressions) {
+	private String createContentJson(String targetFileName, List<IOSDensityDescriptor> iosDensityDescriptions, List<Arguments.Compression> compressions) {
 		StringBuilder sb = new StringBuilder("{\n\t\"images\": [");
 		for (Arguments.Compression compression : compressions) {
-			for (IOSDensityDescription densityDescription : iosDensityDescriptions) {
+			for (IOSDensityDescriptor densityDescription : iosDensityDescriptions) {
 				sb.append("\n\t\t{\n" +
 						"\t\t\t\"filename\": \"" + targetFileName + densityDescription.postFix + "." + compression.name().toLowerCase() + "\",\n" +
 						"\t\t\t\"idiom\": \"universal\",\n" +
