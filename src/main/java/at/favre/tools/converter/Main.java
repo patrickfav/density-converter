@@ -2,6 +2,7 @@ package at.favre.tools.converter;
 
 import at.favre.tools.converter.arg.Arguments;
 import at.favre.tools.converter.ui.CLInterpreter;
+import at.favre.tools.converter.ui.GUI;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
@@ -13,13 +14,19 @@ import java.util.Locale;
  */
 public class Main {
 	public static void main(String[] rawArgs) {
+
+		if (rawArgs.length <= 1) {
+			new GUI().launchApp(rawArgs);
+			return;
+		}
+
 		Arguments args = CLInterpreter.parse(rawArgs);
 
 		if (args == null) {
 			return;
 		} else if (args == Arguments.START_GUI) {
 			System.out.println("start gui");
-			//TODO start ui
+			new GUI().launchApp(rawArgs);
 			return;
 		}
 
@@ -48,7 +55,7 @@ public class Main {
 						System.err.println("error: " + exception.getMessage());
 					}
 				}
-				System.out.println("execution finished (" + time + ")");
+				System.out.println("execution finished (" + time + "ms)");
 			}
 		});
 	}

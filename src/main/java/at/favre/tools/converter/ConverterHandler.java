@@ -24,6 +24,8 @@ public class ConverterHandler {
 
 	public void execute(Arguments args, HandlerCallback callback) {
 		beginMs = System.currentTimeMillis();
+		handlerCallback = callback;
+
 		System.out.println("\nbegin execution using " + args.threadCount + " theads\n");
 
 		List<IPlatformConverter> converters = new ArrayList<>();
@@ -153,7 +155,7 @@ public class ConverterHandler {
 		}
 	}
 
-	interface HandlerCallback {
+	public interface HandlerCallback {
 		void onProgress(float progress);
 
 		void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess);
