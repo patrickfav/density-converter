@@ -1,11 +1,26 @@
+/*
+ * Copyright (C) 2016 Patrick Favre-Bulle
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
 package at.favre.tools.converter;
 
 import at.favre.tools.converter.arg.Arguments;
 import at.favre.tools.converter.ui.CLInterpreter;
 import at.favre.tools.converter.ui.GUI;
 
-import java.math.RoundingMode;
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,17 +46,21 @@ public class Main {
 		}
 
 		new ConverterHandler().execute(args, new ConverterHandler.HandlerCallback() {
-			private NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
-
+			int i = 0;
 			@Override
 			public void onProgress(float progress, String log) {
-				nf.setMaximumFractionDigits(2);
-				nf.setRoundingMode(RoundingMode.HALF_UP);
-				System.out.print("--> " + nf.format(progress * 100f) + "% ");
+				i++;
+				System.out.print(String.format(Locale.US, "%.2f", progress * 100f) + "%\t");
+				if (i % 10 == 0) {
+					System.out.println("");
+				}
 			}
 
 			@Override
 			public void onFinished(int finishedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
+
+				System.out.println("");
+
 				if (args.verboseLog) {
 					System.out.println("Log:");
 					System.out.println(log);

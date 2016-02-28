@@ -7,13 +7,13 @@ versions given the base scale. It has a **graphical** and **command line** inter
 Usage:
 
 ```
-java -jar .\dconvert.jar -src "C:\your-folder\image-folder" -scale 3
+java -jar ./dconvert.jar -src "C:/your-folder/image-folder" -scale 3
 ```
 
 or
 
 ```
-java -jar .\dconvert.jar
+java -jar ./dconvert.jar
 ```
 
 will start the UI (or double click the jar file).
@@ -27,26 +27,27 @@ This tool is based on the idea that a developer gets the 'master' image in the h
 e.g. xxxhdpi (x4) in Android. He then proceeds to generate every other density with it. This tool exist to make this step as
 easy and fast as possible.
 
-To better understand, here is a practical example: Source file is "ic_my_icon" in density xxxhdpi with resolution 144x144 (this will be 36dp x 36dp).
+To better understand, here is a practical example for Android: Source file is `ic_my_icon.png` in density xxxhdpi with resolution 144x144 (this will be 36dp x 36dp).
 The tool will generated the following images in the following resolutions:
 ```
 * mdpi 36x36 (x1)
 * hdpi 54x54 (x1.5)
 * xhdpi 72x72 (x2)
 * xxhdpi 108x108 (x3)
-* xxxxhdpi 144x144 (x4)
+* xxxhdpi 144x144 (x4)
 ```
-To further optimize the output post processers can be used (see section below).
+To further optimize the output post processors can be used (see section below). This tool supports processing single files
+or batches that are in a folder. Batch mode only processes direct child files and will NOT recursively search for images.
 
 ## Command Line
 
 Continuing the above example of a xxxhdpi (x4) icon:
 
 ```
-java -jar .\dconvert.jar -src "C:\master-image\ic_my_icon.png" -scale 4 -platform android
+java -jar ./dconvert.jar -src "C:/master-image/ic_my_icon.png" -scale 4 -platform android
 ```
 
-Will generate mdpi, hdpi, etc. folders in "C:\master-image\" containing the resized images
+Will generate mdpi, hdpi, etc. folders in "C:/master-image/" containing the resized images
 
 Full list of arguments:
 
@@ -92,7 +93,7 @@ Full list of arguments:
 Start with
 
 ```
-java -jar dconvert
+java -jar ./dconvert.jar
 ```
 
 provides the same features as the command line tool so see manpages.
@@ -107,7 +108,7 @@ Post processors can be easily implemented by implementing the `PostProcessor` in
 ### pngcrush
 
 Pngcrush is a brute force png compression tool. This may be already in your build chain (Android does this automatically),
-but may be useful if not. Will run pngcrush over the all convertered *.png files. See code or output for specific used options.
+but may be useful if not. Will run pngcrush over the all converted *.png files. See code or output for specific used options.
 
 The converter tool requires `pngcrush` to be in PATH. Minimal required version is 1.7.22; currently tested with v1.7.87 & 1.8.0.
 [More info on the pngcrush wesbite](http://pmt.sourceforge.net/pngcrush/)
@@ -135,7 +136,7 @@ Both user interfaces use the same underlying logic.
 
 ## Limitations
 
-* There is no specific support for Anroid 9-patches ([see this project](https://github.com/redwarp/9-Patch-Resizer))
+* There is no specific support for Android 9-patches ([see this project](https://github.com/redwarp/9-Patch-Resizer))
 
 
 # How to build
@@ -147,3 +148,8 @@ mvn clean package
 ```
 
 The .jar file will be in the generated `/target` folder
+
+
+# License
+
+[Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)
