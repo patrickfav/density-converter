@@ -30,10 +30,6 @@ public class Main {
 			return;
 		}
 
-		if (args.verboseLog) {
-			System.out.println("\nArguments: " + args + "\n");
-		}
-
 		new ConverterHandler().execute(args, new ConverterHandler.HandlerCallback() {
 			private NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
 

@@ -51,9 +51,12 @@ public class GUIController {
 	public void onCreate() {
 		btnSrcFile.setOnAction(event -> {
 			srcFileChooser.setTitle("Select Image");
-			srcFileChooser.setInitialDirectory(
-					new File(System.getProperty("user.home"))
-			);
+			File file = new File(btnSrcFile.getText());
+			if (btnSrcFile.getText().isEmpty() || !file.exists() || !file.isFile()) {
+				srcFileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+			} else {
+				srcFileChooser.setInitialDirectory(new File(btnSrcFile.getText()));
+			}
 			srcFileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.gif"));
 			File srcFile = srcFileChooser.showOpenDialog(btnSrcFile.getScene().getWindow());
 			if (srcFile != null) {
@@ -75,6 +78,7 @@ public class GUIController {
 				labelResult.setText("");
 				textFieldConsole.setText("");
 				textFieldConsole.setDisable(true);
+				progressBar.setProgress(0);
 				progressBar.setDisable(false);
 
 				new ConverterHandler().execute(arg, new ConverterHandler.HandlerCallback() {
@@ -96,8 +100,8 @@ public class GUIController {
 				});
 			} catch (Exception e) {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
-				alert.setTitle("Warning");
-				alert.setHeaderText(e.getClass().getSimpleName());
+				alert.setTitle(e.getClass().getSimpleName());
+				alert.setHeaderText(null);
 				alert.setContentText(e.getMessage());
 				alert.showAndWait();
 			}
@@ -167,9 +171,12 @@ public class GUIController {
 		@Override
 		public void handle(ActionEvent event) {
 			directoryChooser.setTitle("Select Image Folder");
-			directoryChooser.setInitialDirectory(
-					new File(System.getProperty("user.home"))
-			);
+			File dir = new File(textFieldPath.getText());
+			if (textFieldPath.getText().isEmpty() || !dir.exists() || !dir.isDirectory()) {
+				directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+			} else {
+				directoryChooser.setInitialDirectory(new File(textFieldPath.getText()));
+			}
 			File srcFile = directoryChooser.showDialog(textFieldPath.getScene().getWindow());
 			if (srcFile != null) {
 				textFieldPath.setText(srcFile.getAbsolutePath());

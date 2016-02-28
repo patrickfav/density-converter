@@ -30,7 +30,7 @@ public class ConverterUtil {
 	}
 
 	public static String getFileExtension(File file) {
-		return file.getName().substring(file.getName().lastIndexOf(".") + 1);
+		return file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
 	}
 
 	public static File createAndCheckFolder(String path) {

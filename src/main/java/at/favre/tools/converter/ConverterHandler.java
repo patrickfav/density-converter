@@ -29,6 +29,7 @@ public class ConverterHandler {
 		handlerCallback = callback;
 
 		logStringBuilder.append("begin execution using ").append(args.threadCount).append(" theads\n");
+		logStringBuilder.append("args: ").append(args).append("\n");
 
 		List<IPlatformConverter> converters = new ArrayList<>();
 
@@ -92,7 +93,7 @@ public class ConverterHandler {
 		public void failure(Exception e) {
 			exceptions.add(e);
 			jobFinished(null);
-
+			logSB.append("error: ").append(e.getMessage()).append("\n");
 			if (arguments.haltOnError) {
 				done = true;
 				threadPool.shutdownNow();

@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="at.favre.tools.converter.ui.GUIController"
-          stylesheets="style.css" styleClass="body" maxHeight="Infinity" prefWidth="Infinity"
+          stylesheets="style.css" styleClass="body" maxHeight="Infinity"
           maxWidth="Infinity" alignment="CENTER" hgap="8" vgap="8">
     <padding>
         <Insets top="20" right="15" bottom="5" left="15"/>
@@ -19,9 +19,14 @@
 
     <Label text="Scale (x3.00)" styleClass="main_label" alignment="CENTER_RIGHT" maxWidth="Infinity"
            fx:id="labelScale" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-    <Slider fx:id="scaleSlider" min="0.5" max="5" value="3" majorTickUnit="1" blockIncrement="0.25"
+    <Slider fx:id="scaleSlider" min="0.5" max="6" value="3" majorTickUnit="1" blockIncrement="0.25"
             GridPane.columnIndex="1" GridPane.rowIndex="1" showTickLabels="true" snapToTicks="true"
-            showTickMarks="true" GridPane.columnSpan="3"/>
+            showTickMarks="true" GridPane.columnSpan="3">
+        <tooltip>
+            <Tooltip
+                    text="Sets the scale factor of the source file(s). Based on this all the other scale types will be calculated."/>
+        </tooltip>
+    </Slider>
 
     <Label text="Destination" style="-fx-font-style: italic" styleClass="text" alignment="CENTER_RIGHT"
            maxWidth="Infinity" GridPane.columnIndex="0"
@@ -35,30 +40,54 @@
 
     <GridPane alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0" GridPane.rowIndex="5"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
-        <Label maxWidth="Infinity" styleClass="text" alignment="CENTER_RIGHT" text="Platform" GridPane.columnIndex="0"
-               GridPane.rowIndex="0" GridPane.vgrow="always"/>
-        <ChoiceBox fx:id="choicePlatform" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                   GridPane.columnSpan="3" GridPane.vgrow="always"/>
 
-        <Label maxWidth="Infinity" GridPane.vgrow="always" styleClass="text" alignment="CENTER_RIGHT" text="Compression"
+        <Label maxWidth="Infinity" styleClass="text" alignment="CENTER_RIGHT" text="Platform" GridPane.columnIndex="0"
+               GridPane.rowIndex="0" GridPane.hgrow="always"/>
+        <ChoiceBox fx:id="choicePlatform" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0"
+                   GridPane.columnSpan="3" GridPane.hgrow="always">
+            <tooltip>
+                <Tooltip text="Defines which formats will be generated"/>
+            </tooltip>
+        </ChoiceBox>
+
+        <Label maxWidth="Infinity" GridPane.hgrow="always" styleClass="text" alignment="CENTER_RIGHT" text="Compression"
                GridPane.columnIndex="0"
                GridPane.rowIndex="1"/>
-        <ChoiceBox fx:id="choiceCompression" GridPane.vgrow="always" maxWidth="Infinity" GridPane.columnIndex="1"
-                   GridPane.rowIndex="1"/>
+        <ChoiceBox fx:id="choiceCompression" GridPane.hgrow="always" maxWidth="Infinity" GridPane.columnIndex="1"
+                   GridPane.rowIndex="1">
+            <tooltip>
+                <Tooltip text="Sets the output compression type."/>
+            </tooltip>
+        </ChoiceBox>
 
         <Label maxWidth="Infinity" styleClass="text" alignment="CENTER_RIGHT" text="JPG Quality"
                GridPane.columnIndex="2"
                GridPane.rowIndex="1"/>
         <ChoiceBox fx:id="choiceCompressionQuality" maxWidth="Infinity" GridPane.columnIndex="3"
-                   GridPane.rowIndex="1"/>
+                   GridPane.rowIndex="1">
+            <tooltip>
+                <Tooltip
+                        text="JPEG compression quality. 1.0 is best but biggest file size. Will be ignored for png and gif."/>
+            </tooltip>
+        </ChoiceBox>
 
         <Label maxWidth="Infinity" styleClass="text" alignment="CENTER_RIGHT" text="Rounding" GridPane.columnIndex="0"
-               GridPane.rowIndex="2"/>
-        <ChoiceBox fx:id="choiceRounding" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+               GridPane.rowIndex="2" GridPane.hgrow="always"/>
+        <ChoiceBox fx:id="choiceRounding" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                   GridPane.hgrow="always">
+            <tooltip>
+                <Tooltip text="The used rounding mode for calculating the dimensions for the different scale factors"/>
+            </tooltip>
+        </ChoiceBox>
 
         <Label maxWidth="Infinity" styleClass="text" alignment="CENTER_RIGHT" text="Threads" GridPane.columnIndex="2"
-               GridPane.rowIndex="2"/>
-        <ChoiceBox fx:id="choiceThreads" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+               GridPane.rowIndex="2" GridPane.hgrow="always"/>
+        <ChoiceBox fx:id="choiceThreads" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="2"
+                   GridPane.hgrow="always">
+            <tooltip>
+                <Tooltip text="Max parallel worker threads. More is faster but requires more memory."/>
+            </tooltip>
+        </ChoiceBox>
     </GridPane>
 
     <Separator GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="4"/>
@@ -82,7 +111,7 @@
 
         <CheckBox fx:id="cbVerboseLog" styleClass="checkbox" alignment="CENTER_LEFT" selected="true" maxWidth="Infinity"
                   text="verbose"
-                  GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="always" tooltip="Shows verbose log">
+                  GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="always">
             <tooltip>
                 <Tooltip text="Shows verbose log"/>
             </tooltip>
