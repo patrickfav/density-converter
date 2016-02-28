@@ -134,10 +134,10 @@ The tool can easily be extended by using the `IPlatformConvert` and `PostProcess
 
 Both user interfaces use the same underlying logic.
 
-## Limitations
+## Limitations & Known Issues
 
 * There is no specific support for Android 9-patches ([see this project](https://github.com/redwarp/9-Patch-Resizer))
-
+* Jpeg compression seems to create false colors if source file has transparency
 
 # How to build
 
