@@ -43,6 +43,7 @@ public class GUIController {
 	public CheckBox cbVerboseLog;
 	public CheckBox cbIncludeObsolete;
 	public CheckBox cbHaltOnError;
+	public CheckBox chEnablePngCrush;
 	public Slider scaleSlider;
 	public Label labelScale;
 	public Label labelResult;
@@ -90,6 +91,7 @@ public class GUIController {
 					@Override
 					public void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
 						Platform.runLater(() -> {
+							progressBar.setProgress(1);
 							btnConvert.setDisable(false);
 							labelResult.setText("Finished Jobs: " + finsihedJobs + " / Errors: " + exceptions.size() + " / Duration: " + time + "ms");
 							textFieldConsole.setDisable(false);
@@ -97,7 +99,7 @@ public class GUIController {
 						});
 
 					}
-				});
+				}, false);
 			} catch (Exception e) {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle(e.getClass().getSimpleName());
@@ -153,6 +155,7 @@ public class GUIController {
 		builder.verboseLog(cbVerboseLog.isSelected());
 		builder.includeObsoleteFormats(cbIncludeObsolete.isSelected());
 		builder.haltOnError(cbHaltOnError.isSelected());
+		builder.enablePngCrush(chEnablePngCrush.isSelected());
 
 		return builder.build();
 	}

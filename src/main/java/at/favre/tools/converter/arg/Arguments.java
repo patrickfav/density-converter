@@ -34,13 +34,14 @@ public class Arguments {
 	public final boolean verboseLog;
 	public final boolean includeObsoleteFormats;
 	public final boolean haltOnError;
-	public final RoundingHandler roundingHandler;
+	public final boolean enablePngCrush;
+	public final RoundingHandler.Strategy roundingHandler;
 	public final List<File> filesToProcess;
 
 
 	public Arguments(File src, File dst, float scrScale, EPlatform platform, EOutputCompressionMode outputCompressionMode,
 	                 float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
-	                 boolean verboseLog, boolean includeObsoleteFormats, boolean haltOnError, RoundingHandler roundingHandler) {
+	                 boolean verboseLog, boolean includeObsoleteFormats, boolean haltOnError, boolean enablePngCrush, RoundingHandler.Strategy roundingHandler) {
 		this.dst = dst;
 		this.src = src;
 		this.scrScale = scrScale;
@@ -53,6 +54,7 @@ public class Arguments {
 		this.verboseLog = verboseLog;
 		this.includeObsoleteFormats = includeObsoleteFormats;
 		this.haltOnError = haltOnError;
+		this.enablePngCrush = enablePngCrush;
 		this.roundingHandler = roundingHandler;
 
 		this.filesToProcess = new ArrayList<>();
@@ -70,7 +72,11 @@ public class Arguments {
 	}
 
 	private Arguments() {
-		this(null, null, 0f, null, null, 0f, 0, false, false, false, false, false, null);
+		this(null, null, 0f, null, null, 0f, 0, false, false, false, false, false, false, null);
+	}
+
+	public double round(double raw) {
+		return new RoundingHandler(roundingHandler).round(raw);
 	}
 
 	@Override
@@ -80,7 +86,7 @@ public class Arguments {
 				", dst=" + dst +
 				", scrScale=" + scrScale +
 				", platform=" + platform +
-				", outputCompressionType=" + outputCompressionMode +
+				", outputCompressionMode=" + outputCompressionMode +
 				", compressionQuality=" + compressionQuality +
 				", threadCount=" + threadCount +
 				", skipExistingFiles=" + skipExistingFiles +
@@ -88,7 +94,9 @@ public class Arguments {
 				", verboseLog=" + verboseLog +
 				", includeObsoleteFormats=" + includeObsoleteFormats +
 				", haltOnError=" + haltOnError +
+				", enablePngCrush=" + enablePngCrush +
 				", roundingHandler=" + roundingHandler +
+				", filesToProcess=" + filesToProcess +
 				'}';
 	}
 
@@ -106,6 +114,7 @@ public class Arguments {
 		private boolean verboseLog = false;
 		private boolean includeObsoleteFormats = false;
 		private boolean haltOnError = false;
+		private boolean enablePngCrush = false;
 
 		public Builder(File src, float srcScale) {
 			this.src = src;
@@ -163,6 +172,11 @@ public class Arguments {
 			return this;
 		}
 
+		public Builder enablePngCrush(boolean b) {
+			this.enablePngCrush = b;
+			return this;
+		}
+
 		public Builder scaleRoundingStragy(RoundingHandler.Strategy strategy) {
 			this.roundingStrategy = strategy;
 			return this;
@@ -194,7 +208,7 @@ public class Arguments {
 			}
 
 			return new Arguments(src, dst, srcScale, platform, outputCompressionMode, compressionQuality, threadCount, skipExistingFiles, skipUpscaling,
-					verboseLog, includeObsoleteFormats, haltOnError, new RoundingHandler(roundingStrategy));
+					verboseLog, includeObsoleteFormats, haltOnError, enablePngCrush, roundingStrategy);
 		}
 	}
 

@@ -2,10 +2,12 @@ package at.favre.tools.converter;
 
 import at.favre.tools.converter.arg.Arguments;
 import at.favre.tools.converter.arg.EPlatform;
-import at.favre.tools.converter.platforms.AndroidConverter;
-import at.favre.tools.converter.platforms.ConverterCallback;
-import at.favre.tools.converter.platforms.IOSConverter;
-import at.favre.tools.converter.platforms.IPlatformConverter;
+import at.favre.tools.converter.converters.AndroidConverter;
+import at.favre.tools.converter.converters.ConverterCallback;
+import at.favre.tools.converter.converters.IOSConverter;
+import at.favre.tools.converter.converters.IPlatformConverter;
+import at.favre.tools.converter.converters.postprocessing.PngCrushProcessor;
+import at.favre.tools.converter.converters.postprocessing.PostProcessor;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,8 +24,9 @@ public class ConverterHandler {
 	private Arguments arguments;
 	private long beginMs;
 	private StringBuilder logStringBuilder = new StringBuilder();
+	private List<PostProcessor> postProcessors = new ArrayList<>();
 
-	public void execute(Arguments args, HandlerCallback callback) {
+	public void execute(Arguments args, HandlerCallback callback, boolean blockingWaitForFinish) {
 		arguments = args;
 		beginMs = System.currentTimeMillis();
 		handlerCallback = callback;
@@ -36,15 +39,25 @@ public class ConverterHandler {
 		ExecutorService threadPool = new ThreadPoolExecutor(args.threadCount, args.threadCount, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<>(256));
 
 		if (args.platform == EPlatform.ANROID || args.platform == EPlatform.ALL) {
+			logStringBuilder.append("add android converter\n");
 			converters.add(new AndroidConverter());
 		}
 		if (args.platform == EPlatform.IOS || args.platform == EPlatform.ALL) {
+			logStringBuilder.append("add ios converter\n");
 			converters.add(new IOSConverter());
 		}
 
-		int jobs = args.filesToProcess.size() * converters.size();
-		latch = new CountDownLatch(jobs);
-		converterCallback = new LocalCallback(jobs, callback, threadPool, logStringBuilder);
+		if (args.enablePngCrush) {
+			logStringBuilder.append("add pngcrush postprocessor\n");
+			postProcessors.add(new PngCrushProcessor());
+		}
+
+
+		int convertJobs = args.filesToProcess.size() * converters.size();
+		int allJobs = convertJobs + (convertJobs * postProcessors.size());
+
+		latch = new CountDownLatch(convertJobs);
+		converterCallback = new LocalCallback(allJobs, threadPool, logStringBuilder);
 
 		for (File srcFile : args.filesToProcess) {
 			logStringBuilder.append("add ").append(srcFile).append(" to processing queue\n");
@@ -58,6 +71,14 @@ public class ConverterHandler {
 			}
 		}
 		threadPool.shutdown();
+
+		if (blockingWaitForFinish) {
+			try {
+				threadPool.awaitTermination(30, TimeUnit.MINUTES);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	private void informFinished(String log, boolean halted) {
@@ -69,23 +90,23 @@ public class ConverterHandler {
 	private class LocalCallback implements ConverterCallback {
 		private final int jobCount;
 		private int finished = 0;
-		private HandlerCallback callback;
 		private List<Exception> exceptions;
 		private ExecutorService threadPool;
 		private boolean done = false;
 		private final StringBuilder logSB;
+		private List<List<File>> resultingFiles = new ArrayList<>();
 
-		public LocalCallback(int jobCount, HandlerCallback callback, ExecutorService threadPool, StringBuilder logStringBuilder) {
+		public LocalCallback(int jobCount, ExecutorService threadPool, StringBuilder logStringBuilder) {
 			this.jobCount = jobCount;
-			this.callback = callback;
 			this.threadPool = threadPool;
 			this.exceptions = new ArrayList<>();
 			this.logSB = logStringBuilder;
 		}
 
 		@Override
-		public void success(String log) {
+		public void success(String log, List<File> compressedImages) {
 			logSB.append(log).append("\n");
+			resultingFiles.add(compressedImages);
 			jobFinished(log);
 		}
 
@@ -105,12 +126,12 @@ public class ConverterHandler {
 			if (!done) {
 				latch.countDown();
 				finished++;
-				if (callback != null) {
-					callback.onProgress((float) finished / (float) jobCount, log);
+				if (handlerCallback != null) {
+					handlerCallback.onProgress((float) finished / (float) jobCount, log);
 				}
 				if (latch.getCount() == 0) {
 					done = true;
-					informFinished(logSB.toString(), false);
+					startPostProcessing(resultingFiles, logSB, finished, jobCount);
 				}
 			}
 		}
@@ -122,6 +143,25 @@ public class ConverterHandler {
 		public int getFinished() {
 			return finished;
 		}
+	}
+
+	private void startPostProcessing(List<List<File>> allFiles, StringBuilder log, final int finishedJobs, final int jobCount) {
+		log.append("\nstart post processing\n");
+
+		new Thread(() -> {
+			int finished = finishedJobs;
+			for (List<File> filesPerConvert : allFiles) {
+				for (File file : filesPerConvert) {
+					for (PostProcessor postProcessor : postProcessors) {
+						String currentLog = postProcessor.process(file);
+						log.append(currentLog).append("\n");
+					}
+				}
+				finished++;
+				handlerCallback.onProgress((float) finished / (float) jobCount, "");
+			}
+			informFinished(log.toString(), false);
+		}).start();
 	}
 
 	private static class ConverterWorker implements Runnable {

@@ -60,6 +60,6 @@ public class Main {
 				}
 				System.out.println("execution finished (" + time + "ms)");
 			}
-		});
+		}, true);
 	}
 }

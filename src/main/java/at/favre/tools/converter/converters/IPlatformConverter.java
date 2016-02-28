@@ -1,4 +1,4 @@
-package at.favre.tools.converter.platforms;
+package at.favre.tools.converter.converters;
 
 import at.favre.tools.converter.arg.Arguments;
 import at.favre.tools.converter.arg.ECompression;

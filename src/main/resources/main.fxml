@@ -125,11 +125,21 @@
         </CheckBox>
 
         <CheckBox fx:id="cbHaltOnError" styleClass="checkbox" maxWidth="Infinity" text="halt on error"
-                  GridPane.columnIndex="0"
+                  GridPane.columnIndex="1"
                   GridPane.rowIndex="2" GridPane.hgrow="always"
                   GridPane.vgrow="always">
             <tooltip>
                 <Tooltip text="Halts process on first error"/>
+            </tooltip>
+        </CheckBox>
+
+        <CheckBox fx:id="chEnablePngCrush" styleClass="checkbox" maxWidth="Infinity" text="pngcrush (slow)"
+                  GridPane.columnIndex="0"
+                  GridPane.rowIndex="2" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip text="Will post-process all pngs with pngcrush. The executable must be set in the system environment as 'pngcrush' i.e
+                executable from every path. Pngcrush is a tool to compress pngs. Requires v1.7.22+"/>
             </tooltip>
         </CheckBox>
     </GridPane>

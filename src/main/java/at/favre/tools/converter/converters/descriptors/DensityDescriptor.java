@@ -1,4 +1,4 @@
-package at.favre.tools.converter.platforms.descriptors;
+package at.favre.tools.converter.converters.descriptors;
 
 /**
  * Base class for information on creating different densities for the platforms

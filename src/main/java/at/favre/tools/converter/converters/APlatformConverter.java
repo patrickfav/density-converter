@@ -1,16 +1,15 @@
-package at.favre.tools.converter.platforms;
+package at.favre.tools.converter.converters;
 
 import at.favre.tools.converter.ConverterUtil;
 import at.favre.tools.converter.arg.Arguments;
 import at.favre.tools.converter.arg.ECompression;
-import at.favre.tools.converter.platforms.descriptors.DensityDescriptor;
+import at.favre.tools.converter.converters.descriptors.DensityDescriptor;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Shared code
@@ -23,8 +22,8 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 		Map<T, Dimension> bucketMap = new TreeMap<>();
 		densities.stream().filter(density -> args.scrScale >= density.scale || !args.skipUpscaling).forEach(density -> {
-			bucketMap.put(density, new Dimension((int) args.roundingHandler.round(baseWidth * density.scale),
-					(int) args.roundingHandler.round(baseHeight * density.scale)));
+			bucketMap.put(density, new Dimension((int) args.round(baseWidth * density.scale),
+					(int) args.round(baseHeight * density.scale)));
 		});
 		return bucketMap;
 	}
@@ -41,22 +40,23 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 			onPreExecute(mainSubFolder, targetImageFileName, usedOutputDensities(args), srcCompression, args);
 
+			List<File> allResultingFiles = new ArrayList<>();
+
 			for (Map.Entry<T, Dimension> entry : densityMap.entrySet()) {
 				File dstFolder = createFolderForOutputFile(mainSubFolder, entry.getKey(), entry.getValue(), targetImageFileName, args);
 
 				if (dstFolder.isDirectory() && dstFolder.exists()) {
 					File imageFile = new File(dstFolder, createDestinationFileNameWithoutExtension(entry.getKey(), entry.getValue(), targetImageFileName, args));
 
-					if (imageFile.exists()) {
-						imageFile.delete();
-					}
-
 					log.append("process ").append(imageFile).append(" with ").append(entry.getValue().width).append("x").append(entry.getValue().height).append(" (x").append(entry.getKey().scale).append(")\n");
 
-					List<File> files = ConverterUtil.compressToFile(imageFile, Arguments.getCompressionForType(args.outputCompressionMode, srcCompression), rawImage, entry.getValue(), args.compressionQuality, args.skipExistingFiles);
+					List<File> files = ConverterUtil.compressToFile(imageFile, Arguments.getCompressionForType(args.outputCompressionMode, srcCompression), rawImage,
+							entry.getValue(), args.compressionQuality, args.skipExistingFiles);
+
+					allResultingFiles.addAll(files);
 
 					for (File file : files) {
-						log.append("compressed to disk: ").append(file).append(" (").append(Math.round((float) file.length() / 1024f)).append("kB)\n");
+						log.append("compressed to disk: ").append(file).append(" (").append(String.format(Locale.US, "%.2f", (float) file.length() / 1024f)).append("kB)\n");
 					}
 
 					if (files.isEmpty()) {
@@ -70,7 +70,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 			onPostExecute(args);
 
 			if (callback != null) {
-				callback.success(log.toString());
+				callback.success(log.toString(), allResultingFiles);
 			}
 		} catch (Exception e) {
 			if (callback != null) {

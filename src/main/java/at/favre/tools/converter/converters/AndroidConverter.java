@@ -1,10 +1,10 @@
-package at.favre.tools.converter.platforms;
+package at.favre.tools.converter.converters;
 
 import at.favre.tools.converter.ConverterUtil;
 import at.favre.tools.converter.arg.Arguments;
 import at.favre.tools.converter.arg.ECompression;
 import at.favre.tools.converter.arg.EPlatform;
-import at.favre.tools.converter.platforms.descriptors.AndroidDensityDescriptor;
+import at.favre.tools.converter.converters.descriptors.AndroidDensityDescriptor;
 
 import java.awt.*;
 import java.io.File;

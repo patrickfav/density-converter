@@ -10,9 +10,12 @@ import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,7 +53,37 @@ public class ConverterUtil {
 		return ImageIO.read(new File(filePath));
 	}
 
-	public static List<File> compressToFile(File targetFile, List<ECompression> compressionList, BufferedImage bufferedImage, Dimension targetDimension, float compressionQuality, boolean skipIfExists) throws Exception {
+	public static String runPngCrush(File target, String[] additionalArgs) {
+		StringBuilder logStringBuilder = new StringBuilder();
+		if (getFileExtension(target).equals("png") && target.exists() && target.isFile()) {
+			try {
+				String[] cmdArray = concat(concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"-ow", "\"" + target.getAbsoluteFile() + "\""});
+				logStringBuilder.append("execute: ").append(Arrays.toString(cmdArray)).append("\n");
+				ProcessBuilder pb = new ProcessBuilder(cmdArray);
+				pb.redirectErrorStream(true);
+				Process process = pb.start();
+				try (BufferedReader inStreamReader = new BufferedReader(
+						new InputStreamReader(process.getInputStream()))) {
+					String s;
+					while ((s = inStreamReader.readLine()) != null) {
+						logStringBuilder.append("\t").append(s).append("\n");
+					}
+				}
+			} catch (Exception e) {
+				logStringBuilder.append("error: could not png crush - ").append(e.getMessage()).append(" - is it set in PATH?\n");
+			}
+		}
+		return logStringBuilder.toString();
+	}
+
+	public static <T> T[] concat(T[] first, T[] second) {
+		T[] result = Arrays.copyOf(first, first.length + second.length);
+		System.arraycopy(second, 0, result, first.length, second.length);
+		return result;
+	}
+
+	public static List<File> compressToFile(File targetFile, List<ECompression> compressionList, BufferedImage bufferedImage, Dimension targetDimension,
+	                                        float compressionQuality, boolean skipIfExists) throws Exception {
 		List<File> files = new ArrayList<>(2);
 		for (ECompression compression : compressionList) {
 			File imageFile = new File(targetFile.getAbsolutePath() + "." + compression.name().toLowerCase());
@@ -69,7 +102,7 @@ public class ConverterUtil {
 		return files;
 	}
 
-	public static void compressJpeg(File targetFile,BufferedImage bufferedImage, float quality) throws IOException {
+	public static void compressJpeg(File targetFile, BufferedImage bufferedImage, float quality) throws IOException {
 		ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
 		ImageWriteParam jpgWriteParam = jpgWriter.getDefaultWriteParam();
 		jpgWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);

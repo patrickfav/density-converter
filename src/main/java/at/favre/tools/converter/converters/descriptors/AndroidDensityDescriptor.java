@@ -1,4 +1,4 @@
-package at.favre.tools.converter.platforms.descriptors;
+package at.favre.tools.converter.converters.descriptors;
 
 /**
  * Needed info to convert for Android
