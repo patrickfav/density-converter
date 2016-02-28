@@ -1,5 +1,6 @@
 package at.favre.tools.converter;
 
+import at.favre.tools.converter.arg.Arguments;
 import at.favre.tools.converter.arg.ECompression;
 
 import javax.imageio.IIOImage;
@@ -23,7 +24,7 @@ import java.util.List;
  */
 public class ConverterUtil {
 
-	public static String getWithoutExtension(File file) {
+	public static String getFileNameWithoutExtension(File file) {
 		String fileName = file.getName();
 		int pos = fileName.lastIndexOf(".");
 		if (pos > 0) {
@@ -53,27 +54,38 @@ public class ConverterUtil {
 		return ImageIO.read(new File(filePath));
 	}
 
+	public static String runWebP(File target, String[] additionalArgs, File outFile) {
+		String[] cmdArray = concat(concat(new String[]{"cwebp"}, additionalArgs), new String[]{"\"" + target.getAbsoluteFile() + "\"", "-o", "\"" + outFile.getAbsoluteFile() + "\""});
+		return runCmd(cmdArray);
+	}
+
 	public static String runPngCrush(File target, String[] additionalArgs) {
+		if (Arguments.getCompressionType(target) == ECompression.PNG && target.exists() && target.isFile()) {
+			String[] cmdArray = concat(concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"-ow", "\"" + target.getAbsoluteFile() + "\""});
+			return runCmd(cmdArray);
+		}
+		return "";
+	}
+
+	private static String runCmd(String[] cmdArray) {
 		StringBuilder logStringBuilder = new StringBuilder();
-		if (getFileExtension(target).equals("png") && target.exists() && target.isFile()) {
-			try {
-				String[] cmdArray = concat(concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"-ow", "\"" + target.getAbsoluteFile() + "\""});
-				logStringBuilder.append("execute: ").append(Arrays.toString(cmdArray)).append("\n");
-				ProcessBuilder pb = new ProcessBuilder(cmdArray);
-				pb.redirectErrorStream(true);
-				Process process = pb.start();
-				try (BufferedReader inStreamReader = new BufferedReader(
-						new InputStreamReader(process.getInputStream()))) {
-					String s;
-					while ((s = inStreamReader.readLine()) != null) {
-						logStringBuilder.append("\t").append(s).append("\n");
-					}
+		try {
+			logStringBuilder.append("execute: ").append(Arrays.toString(cmdArray)).append("\n");
+			ProcessBuilder pb = new ProcessBuilder(cmdArray);
+			pb.redirectErrorStream(true);
+			Process process = pb.start();
+			try (BufferedReader inStreamReader = new BufferedReader(
+					new InputStreamReader(process.getInputStream()))) {
+				String s;
+				while ((s = inStreamReader.readLine()) != null) {
+					logStringBuilder.append("\t").append(s).append("\n");
 				}
-			} catch (Exception e) {
-				logStringBuilder.append("error: could not png crush - ").append(e.getMessage()).append(" - is it set in PATH?\n");
 			}
+		} catch (Exception e) {
+			logStringBuilder.append("error: could not png crush - ").append(e.getMessage()).append(" - is it set in PATH?\n");
 		}
 		return logStringBuilder.toString();
+
 	}
 
 	public static <T> T[] concat(T[] first, T[] second) {
@@ -92,11 +104,14 @@ public class ConverterUtil {
 				break;
 			}
 
+			BufferedImage scaledImage = scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK);
+
 			if (compression == ECompression.PNG || compression == ECompression.GIF) {
-				ImageIO.write(scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK), compression.name().toLowerCase(), imageFile);
+				ImageIO.write(scaledImage, compression.name().toLowerCase(), imageFile);
 			} else if (compression == ECompression.JPG) {
-				compressJpeg(imageFile, scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK), compressionQuality);
+				compressJpeg(imageFile, scaledImage, compressionQuality);
 			}
+			scaledImage.flush();
 			files.add(imageFile);
 		}
 		return files;

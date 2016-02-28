@@ -37,12 +37,13 @@ public class Main {
 			public void onProgress(float progress, String log) {
 				nf.setMaximumFractionDigits(2);
 				nf.setRoundingMode(RoundingMode.HALF_UP);
-				System.out.println(nf.format(progress * 100f) + "%");
+				System.out.print("--> " + nf.format(progress * 100f) + "% ");
 			}
 
 			@Override
-			public void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
+			public void onFinished(int finishedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
 				if (args.verboseLog) {
+					System.out.println("Log:");
 					System.out.println(log);
 				}
 
@@ -58,7 +59,7 @@ public class Main {
 						}
 					}
 				}
-				System.out.println("execution finished (" + time + "ms)");
+				System.out.println("execution finished (" + time + "ms) with " + finishedJobs + " finsihed jobs and " + exceptions.size() + " errors");
 			}
 		}, true);
 	}

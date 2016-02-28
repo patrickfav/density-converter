@@ -67,6 +67,8 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 				}
 			}
 
+			rawImage.flush();
+
 			onPostExecute(args);
 
 			if (callback != null) {

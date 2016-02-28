@@ -8,6 +8,7 @@ import at.favre.tools.converter.converters.IOSConverter;
 import at.favre.tools.converter.converters.IPlatformConverter;
 import at.favre.tools.converter.converters.postprocessing.PngCrushProcessor;
 import at.favre.tools.converter.converters.postprocessing.PostProcessor;
+import at.favre.tools.converter.converters.postprocessing.WebpProcessor;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,7 +19,8 @@ import java.util.concurrent.*;
  * Main Converter class
  */
 public class ConverterHandler {
-	private CountDownLatch latch;
+	private CountDownLatch mainLatch;
+
 	private LocalCallback converterCallback;
 	private HandlerCallback handlerCallback;
 	private Arguments arguments;
@@ -51,13 +53,16 @@ public class ConverterHandler {
 			logStringBuilder.append("add pngcrush postprocessor\n");
 			postProcessors.add(new PngCrushProcessor());
 		}
-
+		if (args.postConvertWebp) {
+			logStringBuilder.append("add webp postprocessor\n");
+			postProcessors.add(new WebpProcessor());
+		}
 
 		int convertJobs = args.filesToProcess.size() * converters.size();
 		int allJobs = convertJobs + (convertJobs * postProcessors.size());
 
-		latch = new CountDownLatch(convertJobs);
-		converterCallback = new LocalCallback(allJobs, threadPool, logStringBuilder);
+		mainLatch = new CountDownLatch(allJobs);
+		converterCallback = new LocalCallback(allJobs, new CountDownLatch(convertJobs), threadPool, logStringBuilder);
 
 		for (File srcFile : args.filesToProcess) {
 			logStringBuilder.append("add ").append(srcFile).append(" to processing queue\n");
@@ -74,7 +79,7 @@ public class ConverterHandler {
 
 		if (blockingWaitForFinish) {
 			try {
-				threadPool.awaitTermination(30, TimeUnit.MINUTES);
+				mainLatch.await(30, TimeUnit.MINUTES);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -82,6 +87,7 @@ public class ConverterHandler {
 	}
 
 	private void informFinished(String log, boolean halted) {
+		System.gc();
 		if (handlerCallback != null) {
 			handlerCallback.onFinished(converterCallback.getFinished(), converterCallback.getExceptions(), (System.currentTimeMillis() - beginMs), halted, log);
 		}
@@ -95,12 +101,14 @@ public class ConverterHandler {
 		private boolean done = false;
 		private final StringBuilder logSB;
 		private List<List<File>> resultingFiles = new ArrayList<>();
+		private CountDownLatch latch;
 
-		public LocalCallback(int jobCount, ExecutorService threadPool, StringBuilder logStringBuilder) {
+		public LocalCallback(int jobCount, CountDownLatch latch, ExecutorService threadPool, StringBuilder logStringBuilder) {
 			this.jobCount = jobCount;
 			this.threadPool = threadPool;
 			this.exceptions = new ArrayList<>();
 			this.logSB = logStringBuilder;
+			this.latch = latch;
 		}
 
 		@Override
@@ -125,6 +133,7 @@ public class ConverterHandler {
 		private void jobFinished(String log) {
 			if (!done) {
 				latch.countDown();
+				mainLatch.countDown();
 				finished++;
 				if (handlerCallback != null) {
 					handlerCallback.onProgress((float) finished / (float) jobCount, log);
@@ -157,6 +166,7 @@ public class ConverterHandler {
 						log.append(currentLog).append("\n");
 					}
 				}
+				mainLatch.countDown();
 				finished++;
 				handlerCallback.onProgress((float) finished / (float) jobCount, "");
 			}
@@ -180,7 +190,7 @@ public class ConverterHandler {
 		@Override
 		public void run() {
 			try {
-				converter.convert(arguments.dst, ConverterUtil.loadImage(srcFile.getAbsolutePath()), ConverterUtil.getWithoutExtension(srcFile), Arguments.getSrcCompressionType(srcFile), arguments, callback);
+				converter.convert(arguments.dst, ConverterUtil.loadImage(srcFile.getAbsolutePath()), ConverterUtil.getFileNameWithoutExtension(srcFile), Arguments.getCompressionType(srcFile), arguments, callback);
 			} catch (Exception e) {
 				callback.failure(e);
 			}

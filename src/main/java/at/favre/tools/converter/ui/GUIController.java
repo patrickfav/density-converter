@@ -48,6 +48,7 @@ public class GUIController {
 	public Label labelScale;
 	public Label labelResult;
 	public TextArea textFieldConsole;
+	public CheckBox cbPostConvertWebp;
 
 	public void onCreate() {
 		btnSrcFile.setOnAction(event -> {
@@ -156,6 +157,7 @@ public class GUIController {
 		builder.includeObsoleteFormats(cbIncludeObsolete.isSelected());
 		builder.haltOnError(cbHaltOnError.isSelected());
 		builder.enablePngCrush(chEnablePngCrush.isSelected());
+		builder.postConvertWebp(cbPostConvertWebp.isSelected());
 
 		return builder.build();
 	}
