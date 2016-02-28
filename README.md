@@ -18,6 +18,8 @@ java -jar .\dconvert.jar
 
 will start the UI (or double click the jar file).
 
+**Download here: [dconvert.jar](misc/dconvert-0.2-SNAPSHOT.jar)**
+
 
 # Usage
 
