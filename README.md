@@ -1,22 +1,22 @@
-# ![logo](misc/density_converter_icon_48.png) Density Converter Tool for Android and iOS
+# ![logo](misc/density_converter_icon_36.png) Density Image Converter Tool for Android and iOS
 
-This is a simple tool that helps converting single or batches of images to Android and iOS specific formats and density
+This is a simple tool that helps **converting single or batches of images** to **Android** and **iOS** specific formats and density
 versions given the base scale. It has a **graphical** and **command line** interface and supports changing of compression types
 (e.g. png -> jpeg). It is designed to make conversion of images easy and fast while keeping the image quality high.
 
 Usage:
 
 ```
-java -jar dconvert -src "C:\your-folder\image-folder" -scale 3
+java -jar .\dconvert.jar -src "C:\your-folder\image-folder" -scale 3
 ```
 
 or
 
 ```
-java -jar dconvert
+java -jar .\dconvert.jar
 ```
 
-will start the UI.
+will start the UI (or double click the jar file).
 
 
 # Usage
@@ -27,13 +27,13 @@ easy and fast as possible.
 
 To better understand, here is a practical example: Source file is "ic_my_icon" in density xxxhdpi with resolution 144x144 (this will be 36dp x 36dp).
 The tool will generated the following images in the following resolutions:
-
+```
 * mdpi 36x36 (x1)
 * hdpi 54x54 (x1.5)
 * xhdpi 72x72 (x2)
 * xxhdpi 108x108 (x3)
 * xxxxhdpi 144x144 (x4)
-
+```
 To further optimize the output post processers can be used (see section below).
 
 ## Command Line
@@ -41,7 +41,7 @@ To further optimize the output post processers can be used (see section below).
 Continuing the above example of a xxxhdpi (x4) icon:
 
 ```
-java -jar dconvert -src "C:\master-image\ic_my_icon.png" -scale 4 -platform android
+java -jar .\dconvert.jar -src "C:\master-image\ic_my_icon.png" -scale 4 -platform android
 ```
 
 Will generate mdpi, hdpi, etc. folders in "C:\master-image\" containing the resized images
@@ -128,9 +128,20 @@ Loading and compressing of images also happens with JDK methods.
 For parallel execution, every source file spawns his own thread for each platform converter e.g. 3 files 2 converters -> 6 threads needed.
 
 The tool can easily be extended by using the `IPlatformConvert` and `PostProcessor` interfaces.
+
+Both user interfaces use the same underlying logic.
+
 ## Limitations
 
 * There is no specific support for Anroid 9-patches ([see this project](https://github.com/redwarp/9-Patch-Resizer))
 
 
 # How to build
+
+Build with maven
+
+```
+mvn clean package
+```
+
+The .jar file will be in the generated `/target` folder
