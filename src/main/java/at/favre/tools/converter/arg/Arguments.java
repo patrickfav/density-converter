@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class Arguments {
 	public static final float DEFAULT_COMPRESSION_QUALITY = 0.9f;
-	public static final int DEFAULT_THREAD_COUNT = 2;
+	public static final int DEFAULT_THREAD_COUNT = 3;
 	public static final RoundingHandler.Strategy DEFAULT_ROUNDING_STRATEGY = RoundingHandler.Strategy.ROUND_HALF_UP;
 	public static final EPlatform DEFAULT_PLATFORM = EPlatform.ALL;
 

@@ -32,7 +32,8 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 	public void convert(File destinationFolder, BufferedImage rawImage, String targetImageFileName, ECompression srcCompression, Arguments args, ConverterCallback callback) {
 		try {
 			StringBuilder log = new StringBuilder();
-			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ").append(rawImage.getWidth()).append("x").append(rawImage.getHeight()).append(" (x").append(args.scrScale).append(")\n");
+			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ")
+					.append(rawImage.getWidth()).append("x").append(rawImage.getHeight()).append(" (x").append(args.scrScale).append(")\n");
 
 			Map<T, Dimension> densityMap = getDensityBuckets(usedOutputDensities(args), new Dimension(rawImage.getWidth(), rawImage.getHeight()), args);
 

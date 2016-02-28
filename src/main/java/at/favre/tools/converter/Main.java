@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Entrypoint of the app
+ * Entry point of the app
  */
 public class Main {
 	public static void main(String[] rawArgs) {
 
-		if (rawArgs.length <= 1) {
+		if (rawArgs.length < 1) {
 			new GUI().launchApp(rawArgs);
 			return;
 		}

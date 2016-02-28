@@ -133,7 +133,7 @@ public class GUIController {
 
 		choiceThreads.setItems(FXCollections.observableArrayList(
 				1, 2, 3, 4, 5, 6, 7, 8));
-		choiceThreads.getSelectionModel().select(Arguments.DEFAULT_THREAD_COUNT);
+		choiceThreads.getSelectionModel().select(Arguments.DEFAULT_THREAD_COUNT - 1);
 
 		cbVerboseLog.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			textFieldConsole.setVisible(cbVerboseLog.isSelected());

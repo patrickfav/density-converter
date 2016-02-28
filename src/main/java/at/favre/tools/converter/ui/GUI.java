@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
@@ -11,7 +12,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 /**
- * Created by PatrickF on 27.02.2016.
+ * Main GUI Class
  */
 public class GUI extends Application {
 	private Stage primaryStage;
@@ -50,5 +51,6 @@ public class GUI extends Application {
 
 		Scene scene = new Scene(root, 500, 600);
 		primaryStage.setScene(scene);
+		primaryStage.getIcons().add(new Image("density_converter_icon_48.png"));
 	}
 }
