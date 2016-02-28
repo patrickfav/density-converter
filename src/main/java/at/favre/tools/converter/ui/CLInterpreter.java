@@ -113,25 +113,11 @@ public class CLInterpreter {
 				builder.threadCount(Integer.valueOf(commandLine.getOptionValue(THREADS_ARG)));
 			}
 
-			if (commandLine.hasOption(TIMEOUT_ARG)) {
-				builder.timeout(Integer.valueOf(commandLine.getOptionValue(TIMEOUT_ARG)));
-			}
-
-			if (commandLine.hasOption("skipUpscaling")) {
-				builder.skipUpscaling();
-			}
-			if (commandLine.hasOption(SKIP_EXISTING_ARG)) {
-				builder.skipExistingFiles();
-			}
-			if (commandLine.hasOption("includeObsoleteFormats")) {
-				builder.includeObsoleteFormats();
-			}
-			if (commandLine.hasOption(VERBOSE_ARG)) {
-				builder.verboseLog();
-			}
-			if (commandLine.hasOption("haltOnError")) {
-				builder.haltOnError();
-			}
+			builder.skipUpscaling(commandLine.hasOption("skipUpscaling"));
+			builder.skipExistingFiles(commandLine.hasOption(SKIP_EXISTING_ARG));
+			builder.includeObsoleteFormats(commandLine.hasOption("includeObsoleteFormats"));
+			builder.verboseLog(commandLine.hasOption(VERBOSE_ARG));
+			builder.haltOnError(commandLine.hasOption("haltOnError"));
 
 			return builder.build();
 		} catch (Exception e) {
@@ -159,7 +145,6 @@ public class CLInterpreter {
 		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc("Defines the rounding mode when scaling the dimensions. Possible options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and 'ceil' (rounds up). Default is " + Arguments.DEFAULT_ROUNDING_STRATEGY).build();
 		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg").desc("Sets the compression of the converted images. Can be 'png', 'jpg', 'gif' or 'png+jpg'. By default the src compression type will be used (e.g. png will be re-compressed to png after scaling).").build();
 		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).hasArg(true).argName("0.0-1.0").desc("Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is the highest quality. Default is " + Arguments.DEFAULT_COMPRESSION_QUALITY).build();
-		Option timeout = Option.builder(TIMEOUT_ARG).hasArg(true).argName("sec").desc("Timout in sec of the whole process. Will only wait this amount of time before interrupting the threadpool. Default is " + Arguments.DEFAULT_TIMEOUT_SEC + " sec").build();
 
 		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc("If set will not overwrite a already existing file").build();
 		Option includeObsoleteFormats = Option.builder("includeObsoleteFormats").desc("If set will include obsolete densities (e.g. ldpi in android)").build();
@@ -176,7 +161,7 @@ public class CLInterpreter {
 		mainArgs.setRequired(true);
 
 		options.addOption(srcScaleOpt).addOption(dstOpt);
-		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler).addOption(timeout);
+		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler);
 		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(includeObsoleteFormats).addOption(verboseLog).addOption(haltOnError);
 
 		options.addOptionGroup(mainArgs);

@@ -85,7 +85,7 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 			}
 		}
 		sb.setLength(sb.length() - 1);
-		sb.append("\t],\n\t\"info\": {\n\t\t\"author\": \"xcode\",\n\t\t\"version\": 1\n\t}\n}");
+		sb.append("\n\t],\n\t\"info\": {\n\t\t\"author\": \"xcode\",\n\t\t\"version\": 1\n\t}\n}");
 
 		return sb.toString();
 	}

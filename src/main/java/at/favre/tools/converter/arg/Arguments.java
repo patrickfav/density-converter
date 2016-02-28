@@ -16,7 +16,6 @@ public class Arguments {
 	public static final int DEFAULT_THREAD_COUNT = 2;
 	public static final RoundingHandler.Strategy DEFAULT_ROUNDING_STRATEGY = RoundingHandler.Strategy.ROUND_HALF_UP;
 	public static final EPlatform DEFAULT_PLATFORM = EPlatform.ALL;
-	public static final int DEFAULT_TIMEOUT_SEC = 60 * 10;
 
 
 	public final static String[] VALID_FILE_EXTENSIONS = new String[]{ECompression.GIF.name().toLowerCase(), ECompression.JPG.name().toLowerCase(), ECompression.PNG.name().toLowerCase(), "jpeg"};
@@ -37,12 +36,11 @@ public class Arguments {
 	public final boolean haltOnError;
 	public final RoundingHandler roundingHandler;
 	public final List<File> filesToProcess;
-	public final int timeoutSec;
 
 
 	public Arguments(File src, File dst, float scrScale, EPlatform platform, EOutputCompressionMode outputCompressionMode,
 	                 float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
-	                 boolean verboseLog, boolean includeObsoleteFormats, boolean haltOnError, RoundingHandler roundingHandler, int timeoutSec) {
+	                 boolean verboseLog, boolean includeObsoleteFormats, boolean haltOnError, RoundingHandler roundingHandler) {
 		this.dst = dst;
 		this.src = src;
 		this.scrScale = scrScale;
@@ -56,7 +54,6 @@ public class Arguments {
 		this.includeObsoleteFormats = includeObsoleteFormats;
 		this.haltOnError = haltOnError;
 		this.roundingHandler = roundingHandler;
-		this.timeoutSec = timeoutSec;
 
 		this.filesToProcess = new ArrayList<>();
 
@@ -65,9 +62,6 @@ public class Arguments {
 				String extension = ConverterUtil.getFileExtension(file);
 				if (Arrays.asList(VALID_FILE_EXTENSIONS).contains(extension)) {
 					filesToProcess.add(file);
-					if (verboseLog) {
-						System.out.println("add " + file + " to processing queue");
-					}
 				}
 			}
 		} else {
@@ -76,7 +70,7 @@ public class Arguments {
 	}
 
 	private Arguments() {
-		this(null, null, 0f, null, null, 0f, 0, false, false, false, false, false, null, 0);
+		this(null, null, 0f, null, null, 0f, 0, false, false, false, false, false, null);
 	}
 
 	@Override
@@ -107,7 +101,6 @@ public class Arguments {
 		private float compressionQuality = DEFAULT_COMPRESSION_QUALITY;
 		private int threadCount = DEFAULT_THREAD_COUNT;
 		private RoundingHandler.Strategy roundingStrategy = DEFAULT_ROUNDING_STRATEGY;
-		private int timeoutSec = DEFAULT_TIMEOUT_SEC;
 		private boolean skipExistingFiles = false;
 		private boolean skipUpscaling = false;
 		private boolean verboseLog = false;
@@ -145,33 +138,28 @@ public class Arguments {
 			return this;
 		}
 
-		public Builder timeout(int sec) {
-			this.timeoutSec = sec;
+		public Builder skipExistingFiles(boolean b) {
+			this.skipExistingFiles = b;
 			return this;
 		}
 
-		public Builder skipExistingFiles() {
-			this.skipExistingFiles = true;
+		public Builder skipUpscaling(boolean b) {
+			this.skipUpscaling = b;
 			return this;
 		}
 
-		public Builder skipUpscaling() {
-			this.skipUpscaling = true;
+		public Builder verboseLog(boolean b) {
+			this.verboseLog = b;
 			return this;
 		}
 
-		public Builder verboseLog() {
-			this.verboseLog = true;
+		public Builder includeObsoleteFormats(boolean b) {
+			this.includeObsoleteFormats = b;
 			return this;
 		}
 
-		public Builder includeObsoleteFormats() {
-			this.includeObsoleteFormats = true;
-			return this;
-		}
-
-		public Builder haltOnError() {
-			this.haltOnError = true;
+		public Builder haltOnError(boolean b) {
+			this.haltOnError = b;
 			return this;
 		}
 
@@ -205,12 +193,8 @@ public class Arguments {
 				throw new InvalidArgumentException("invalid src scale given '" + srcScale + "' - must be between (excluding) 0 and 100");
 			}
 
-			if (timeoutSec < 1) {
-				throw new InvalidArgumentException("invalid timeout given '" + timeoutSec + "' - must be between at least 1 sec");
-			}
-
 			return new Arguments(src, dst, srcScale, platform, outputCompressionMode, compressionQuality, threadCount, skipExistingFiles, skipUpscaling,
-					verboseLog, includeObsoleteFormats, haltOnError, new RoundingHandler(roundingStrategy), timeoutSec);
+					verboseLog, includeObsoleteFormats, haltOnError, new RoundingHandler(roundingStrategy));
 		}
 	}
 

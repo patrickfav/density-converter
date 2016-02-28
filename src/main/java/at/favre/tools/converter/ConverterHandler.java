@@ -21,13 +21,14 @@ public class ConverterHandler {
 	private HandlerCallback handlerCallback;
 	private Arguments arguments;
 	private long beginMs;
+	private StringBuilder logStringBuilder = new StringBuilder();
 
 	public void execute(Arguments args, HandlerCallback callback) {
 		arguments = args;
 		beginMs = System.currentTimeMillis();
 		handlerCallback = callback;
 
-		System.out.println("\nbegin execution using " + args.threadCount + " theads\n");
+		logStringBuilder.append("begin execution using ").append(args.threadCount).append(" theads\n");
 
 		List<IPlatformConverter> converters = new ArrayList<>();
 
@@ -42,9 +43,11 @@ public class ConverterHandler {
 
 		int jobs = args.filesToProcess.size() * converters.size();
 		latch = new CountDownLatch(jobs);
-		converterCallback = new LocalCallback(jobs, callback, threadPool);
+		converterCallback = new LocalCallback(jobs, callback, threadPool, logStringBuilder);
 
 		for (File srcFile : args.filesToProcess) {
+			logStringBuilder.append("add ").append(srcFile).append(" to processing queue\n");
+
 			if (!srcFile.exists() || !srcFile.isFile()) {
 				throw new IllegalStateException("srcFile " + srcFile + " does not exist");
 			}
@@ -56,9 +59,9 @@ public class ConverterHandler {
 		threadPool.shutdown();
 	}
 
-	private void informFinished(boolean halted) {
+	private void informFinished(String log, boolean halted) {
 		if (handlerCallback != null) {
-			handlerCallback.onFinished(converterCallback.getFinished(), converterCallback.getExceptions(), (System.currentTimeMillis() - beginMs), halted);
+			handlerCallback.onFinished(converterCallback.getFinished(), converterCallback.getExceptions(), (System.currentTimeMillis() - beginMs), halted, log);
 		}
 	}
 
@@ -69,50 +72,44 @@ public class ConverterHandler {
 		private List<Exception> exceptions;
 		private ExecutorService threadPool;
 		private boolean done = false;
+		private final StringBuilder logSB;
 
-		public LocalCallback(int jobCount, HandlerCallback callback, ExecutorService threadPool) {
+		public LocalCallback(int jobCount, HandlerCallback callback, ExecutorService threadPool, StringBuilder logStringBuilder) {
 			this.jobCount = jobCount;
 			this.callback = callback;
 			this.threadPool = threadPool;
 			this.exceptions = new ArrayList<>();
+			this.logSB = logStringBuilder;
 		}
 
 		@Override
 		public void success(String log) {
-			if (arguments.verboseLog) {
-				System.out.printf(log);
-			}
-			jobFinished();
+			logSB.append(log).append("\n");
+			jobFinished(log);
 		}
 
 		@Override
 		public void failure(Exception e) {
-			System.err.println("Error in convert worker: " + e.getMessage());
-
-			if (arguments.verboseLog) {
-				e.printStackTrace();
-			}
-
 			exceptions.add(e);
-			jobFinished();
+			jobFinished(null);
 
 			if (arguments.haltOnError) {
 				done = true;
 				threadPool.shutdownNow();
-				informFinished(true);
+				informFinished(logSB.toString(), true);
 			}
 		}
 
-		private void jobFinished() {
+		private void jobFinished(String log) {
 			if (!done) {
 				latch.countDown();
 				finished++;
 				if (callback != null) {
-					callback.onProgress((float) finished / (float) jobCount);
+					callback.onProgress((float) finished / (float) jobCount, log);
 				}
 				if (latch.getCount() == 0) {
 					done = true;
-					informFinished(false);
+					informFinished(logSB.toString(), false);
 				}
 			}
 		}
@@ -150,8 +147,8 @@ public class ConverterHandler {
 	}
 
 	public interface HandlerCallback {
-		void onProgress(float progress);
+		void onProgress(float progress, String log);
 
-		void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess);
+		void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log);
 	}
 }

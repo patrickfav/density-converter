@@ -38,21 +38,28 @@ public class Main {
 			private NumberFormat nf = NumberFormat.getInstance(Locale.getDefault());
 
 			@Override
-			public void onProgress(float progress) {
+			public void onProgress(float progress, String log) {
 				nf.setMaximumFractionDigits(2);
 				nf.setRoundingMode(RoundingMode.HALF_UP);
 				System.out.println(nf.format(progress * 100f) + "%");
 			}
 
 			@Override
-			public void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess) {
+			public void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
+				if (args.verboseLog) {
+					System.out.println(log);
+				}
+
 				if (haltedDuringProcess) {
 					System.err.println("abort due to error");
 				}
 				if (exceptions.size() > 0) {
 					System.err.println("found " + exceptions.size() + " errors during execution");
-					for (Exception exception : exceptions) {
-						System.err.println("error: " + exception.getMessage());
+					if (args.verboseLog) {
+						for (Exception exception : exceptions) {
+							System.err.println("\terror: " + exception.getMessage());
+							exception.printStackTrace();
+						}
 					}
 				}
 				System.out.println("execution finished (" + time + "ms)");

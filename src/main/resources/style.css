@@ -1,0 +1,36 @@
+.body {
+    -fx-background-color: #CFD8DC;
+}
+
+.footnote {
+    -fx-font-size: 10px;
+    -fx-text-fill: #5f6364;
+}
+
+.console {
+    -fx-font-size: 11px;
+    -fx-text-fill: #333;
+    -fx-font-family: monospace;
+    -fx-background-color: #37474F;
+}
+
+.text {
+    -fx-text-fill: #37474F;
+}
+
+.main_label {
+    -fx-text-fill: #37474F;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.main_button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #37474F;
+}
+
+.checkbox {
+    -fx-font-family: monospace;
+    -fx-text-fill: #37474F;
+}
