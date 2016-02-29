@@ -2,13 +2,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="at.favre.tools.converter.ui.GUIController"
-          stylesheets="style.css" styleClass="body" maxHeight="Infinity"
+          stylesheets="flatten.css" styleClass="body" maxHeight="Infinity"
           maxWidth="Infinity" alignment="CENTER" hgap="8" vgap="8">
     <padding>
         <Insets top="20" right="15" bottom="5" left="15"/>
     </padding>
 
-    <Label text="Source" styleClass="main_label" alignment="CENTER_RIGHT" maxWidth="Infinity"/>
+    <Label text="Source" styleClass="label" alignment="CENTER_RIGHT" maxWidth="Infinity"/>
     <TextField fx:id="textFieldSrcPath" disable="true" GridPane.columnIndex="1"
                GridPane.rowIndex="0" maxWidth="Infinity" GridPane.hgrow="always"/>
     <Button fx:id="btnSrcFile" text="File" GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity"
@@ -17,7 +17,7 @@
             GridPane.hgrow="always"/>
 
 
-    <Label text="Scale (x3.00)" styleClass="main_label" alignment="CENTER_RIGHT" maxWidth="Infinity"
+    <Label text="Scale (x3.00)" styleClass="label" alignment="CENTER_RIGHT" maxWidth="Infinity"
            fx:id="labelScale" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     <Slider fx:id="scaleSlider" min="0.5" max="6" value="3" majorTickUnit="1" blockIncrement="0.25"
             GridPane.columnIndex="1" GridPane.rowIndex="1" showTickLabels="true" snapToTicks="true"
@@ -28,7 +28,7 @@
         </tooltip>
     </Slider>
 
-    <Label text="Destination" style="-fx-font-style: italic" styleClass="text" alignment="CENTER_RIGHT"
+    <Label text="Destination" style="-fx-font-style: italic" styleClass="label" alignment="CENTER_RIGHT"
            maxWidth="Infinity" GridPane.columnIndex="0"
            GridPane.rowIndex="2"/>
     <TextField fx:id="textFieldDstPath" disable="true" maxWidth="Infinity" GridPane.columnIndex="1"
@@ -41,7 +41,7 @@
     <GridPane alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0" GridPane.rowIndex="5"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
 
-        <Label maxWidth="Infinity" styleClass="text" alignment="CENTER_RIGHT" text="Platform" GridPane.columnIndex="0"
+        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="Platform" GridPane.columnIndex="0"
                GridPane.rowIndex="0" GridPane.hgrow="always"/>
         <ChoiceBox fx:id="choicePlatform" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0"
                    GridPane.columnSpan="3" GridPane.hgrow="always">
@@ -50,7 +50,8 @@
             </tooltip>
         </ChoiceBox>
 
-        <Label maxWidth="Infinity" GridPane.hgrow="always" styleClass="text" alignment="CENTER_RIGHT" text="Compression"
+        <Label maxWidth="Infinity" GridPane.hgrow="always" styleClass="label" alignment="CENTER_RIGHT"
+               text="Compression"
                GridPane.columnIndex="0"
                GridPane.rowIndex="1"/>
         <ChoiceBox fx:id="choiceCompression" GridPane.hgrow="always" maxWidth="Infinity" GridPane.columnIndex="1"
@@ -60,7 +61,7 @@
             </tooltip>
         </ChoiceBox>
 
-        <Label maxWidth="Infinity" styleClass="text" alignment="CENTER_RIGHT" text="JPG Quality"
+        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="JPG Quality"
                GridPane.columnIndex="2"
                GridPane.rowIndex="1"/>
         <ChoiceBox fx:id="choiceCompressionQuality" maxWidth="Infinity" GridPane.columnIndex="3"
@@ -71,7 +72,7 @@
             </tooltip>
         </ChoiceBox>
 
-        <Label maxWidth="Infinity" styleClass="text" alignment="CENTER_RIGHT" text="Rounding" GridPane.columnIndex="0"
+        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="Rounding" GridPane.columnIndex="0"
                GridPane.rowIndex="2" GridPane.hgrow="always"/>
         <ChoiceBox fx:id="choiceRounding" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"
                    GridPane.hgrow="always">
@@ -80,7 +81,7 @@
             </tooltip>
         </ChoiceBox>
 
-        <Label maxWidth="Infinity" styleClass="text" alignment="CENTER_RIGHT" text="Threads" GridPane.columnIndex="2"
+        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="Threads" GridPane.columnIndex="2"
                GridPane.rowIndex="2" GridPane.hgrow="always"/>
         <ChoiceBox fx:id="choiceThreads" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="2"
                    GridPane.hgrow="always">
@@ -94,14 +95,14 @@
 
     <GridPane alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0" GridPane.rowIndex="7"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
-        <CheckBox fx:id="cbSkipExisting" styleClass="checkbox" alignment="CENTER_LEFT" maxWidth="Infinity"
+        <CheckBox fx:id="cbSkipExisting" styleClass="check-box" alignment="CENTER_LEFT" maxWidth="Infinity"
                   text="skip existing"
                   GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="always">
             <tooltip>
                 <Tooltip text="Does not overwrite existing files"/>
             </tooltip>
         </CheckBox>
-        <CheckBox fx:id="cbSkipUpscaling" styleClass="checkbox" maxWidth="Infinity" text="skip upscaling"
+        <CheckBox fx:id="cbSkipUpscaling" styleClass="check-box" maxWidth="Infinity" text="skip upscaling"
                   GridPane.columnIndex="1"
                   GridPane.rowIndex="0" GridPane.hgrow="always">
             <tooltip>
@@ -109,7 +110,8 @@
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="cbVerboseLog" styleClass="checkbox" alignment="CENTER_LEFT" selected="true" maxWidth="Infinity"
+        <CheckBox fx:id="cbVerboseLog" styleClass="check-box" alignment="CENTER_LEFT" selected="true"
+                  maxWidth="Infinity"
                   text="verbose"
                   GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="always">
             <tooltip>
@@ -124,7 +126,7 @@
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="cbHaltOnError" styleClass="checkbox" maxWidth="Infinity" text="halt on error"
+        <CheckBox fx:id="cbHaltOnError" styleClass="check-box" maxWidth="Infinity" text="halt on error"
                   GridPane.columnIndex="0"
                   GridPane.rowIndex="2" GridPane.hgrow="always"
                   GridPane.vgrow="always">
@@ -133,7 +135,7 @@
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="chEnablePngCrush" styleClass="checkbox" maxWidth="Infinity" text="pngcrush (slow)"
+        <CheckBox fx:id="chEnablePngCrush" styleClass="check-box" maxWidth="Infinity" text="pngcrush (slow)"
                   GridPane.columnIndex="1"
                   GridPane.rowIndex="2" GridPane.hgrow="always"
                   GridPane.vgrow="always">
@@ -143,7 +145,7 @@
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="cbPostConvertWebp" styleClass="checkbox" maxWidth="Infinity" text="post-convert webp"
+        <CheckBox fx:id="cbPostConvertWebp" styleClass="check-box" maxWidth="Infinity" text="post-convert webp"
                   GridPane.columnIndex="0"
                   GridPane.rowIndex="3" GridPane.hgrow="always"
                   GridPane.vgrow="always">
@@ -156,14 +158,14 @@
 
 
     <ProgressBar fx:id="progressBar" maxWidth="Infinity" disable="true" GridPane.columnIndex="0"
-                 GridPane.columnSpan="4"
+                 GridPane.columnSpan="4" styleClass="progress-bar"
                  GridPane.rowIndex="8" progress="0"/>
 
-    <TextArea fx:id="textFieldConsole" styleClass="console" maxWidth="Infinity" GridPane.columnIndex="0"
+    <TextArea fx:id="textFieldConsole" styleClass="text-area" maxWidth="Infinity" GridPane.columnIndex="0"
               GridPane.columnSpan="4"
               GridPane.rowIndex="9" visible="true" prefRowCount="40" prefColumnCount="80"/>
 
-    <Button fx:id="btnConvert" styleClass="main_button" maxWidth="Infinity" text="Convert" GridPane.columnIndex="0"
+    <Button fx:id="btnConvert" styleClass="button" maxWidth="Infinity" text="Convert" GridPane.columnIndex="0"
             GridPane.rowIndex="10"
             GridPane.columnSpan="4"
     />
