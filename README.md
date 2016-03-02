@@ -50,6 +50,7 @@ Will generate mdpi, hdpi, etc. folders in "C:/master-image/" containing the resi
 
 Full list of arguments:
 
+    -androidMipmapInsteadOfDrawable    For Android only: creates mipmap sub-folders instead of drawable.
     -compressionQuality <0.0-1.0>      Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is
                                        the highest quality. Default is 0.9
     -dst <path>                        The directory in which the converted files will be written. Will use
