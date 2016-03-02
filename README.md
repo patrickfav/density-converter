@@ -18,8 +18,7 @@ java -jar ./dconvert.jar
 
 will start the UI (or double click the jar file).
 
-**Download here: [dconvert.jar](misc/dconvert-0.2-SNAPSHOT.jar)**
-
+**Download here: [dconvert.jar](https://github.com/patrickfav/density-converter/releases/download/v0.2/dconvert.jar)**
 
 # Usage
 
@@ -153,8 +152,8 @@ The .jar file will be in the generated `/target` folder
 
 # Credits
 
-* JavaFx theme based on Flatter by (hendrikebbers)[https://github.com/guigarage/javafx-collection/tree/master/flatter]
-* Image file icon: Icon made by (Freepik)[http://www.freepik.com/]
+* JavaFx theme based on Flatter by [hendrikebbers](https://github.com/guigarage/javafx-collection/tree/master/flatter)
+* Image file icon: Icon made by [Freepik](http://www.freepik.com/)
 
 # License
 
