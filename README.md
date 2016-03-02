@@ -18,7 +18,7 @@ java -jar ./dconvert.jar
 
 will start the UI (or double click the jar file).
 
-**Download here: [dconvert.jar](https://github.com/patrickfav/density-converter/releases/download/v0.2/dconvert.jar)**
+**Download here: [dconvert.jar](https://github.com/patrickfav/density-converter/releases/download/v0.3/dconvert.jar)**
 
 # Usage
 
