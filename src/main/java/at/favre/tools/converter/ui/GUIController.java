@@ -27,6 +27,10 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
@@ -66,6 +70,12 @@ public class GUIController {
 	public Label labelResult;
 	public TextArea textFieldConsole;
 	public CheckBox cbPostConvertWebp;
+	public CheckBox cbMipmapInsteadDrawable;
+	public Label labelVersion;
+	public GridPane gridPaneChoiceBoxes;
+	public GridPane gridPanePostProcessors;
+	public GridPane gridPaneOptionsCheckboxes;
+	public Label labelScaleSubtitle;
 
 	public void onCreate() {
 		btnSrcFile.setOnAction(event -> {
@@ -127,8 +137,13 @@ public class GUIController {
 			}
 		});
 
+		btnDstFolder.setGraphic(new ImageView(new Image("img/folder-symbol.png")));
+		btnSrcFolder.setGraphic(new ImageView(new Image("img/folder-symbol.png")));
+		btnSrcFile.setGraphic(new ImageView(new Image("img/file-symbol.png")));
+
 		scaleSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
 			labelScale.setText("Scale (x" + String.format(Locale.US, "%.2f", Math.round(scaleSlider.getValue() * 4f) / 4f) + ")");
+			labelScaleSubtitle.setText(getNameForScale((float) scaleSlider.getValue()));
 		});
 
 		choicePlatform.setItems(FXCollections.observableArrayList(
@@ -157,6 +172,26 @@ public class GUIController {
 			{
 			}
 		});
+		labelVersion.setText("v" + GUIController.class.getPackage().getImplementationVersion());
+
+		ColumnConstraints column1 = new ColumnConstraints();
+		column1.setPercentWidth(20);
+		ColumnConstraints column2 = new ColumnConstraints();
+		column2.setPercentWidth(30);
+		ColumnConstraints column3 = new ColumnConstraints();
+		column3.setPercentWidth(20);
+		ColumnConstraints column4 = new ColumnConstraints();
+		column4.setPercentWidth(30);
+		gridPaneChoiceBoxes.getColumnConstraints().addAll(column1, column2, column3, column4);
+
+		ColumnConstraints column1C = new ColumnConstraints();
+		column1C.setPercentWidth(50);
+		ColumnConstraints column2C = new ColumnConstraints();
+		column2C.setPercentWidth(50);
+		gridPaneOptionsCheckboxes.getColumnConstraints().addAll(column1C, column2C);
+		gridPanePostProcessors.getColumnConstraints().addAll(column1C, column2C);
+
+
 	}
 
 	private Arguments getFromUI() throws InvalidArgumentException {
@@ -173,10 +208,30 @@ public class GUIController {
 		builder.verboseLog(cbVerboseLog.isSelected());
 		builder.includeObsoleteFormats(cbIncludeObsolete.isSelected());
 		builder.haltOnError(cbHaltOnError.isSelected());
+		builder.createMipMapInsteadOfDrawableDir(cbMipmapInsteadDrawable.isSelected());
 		builder.enablePngCrush(chEnablePngCrush.isSelected());
 		builder.postConvertWebp(cbPostConvertWebp.isSelected());
 
 		return builder.build();
+	}
+
+	private static String getNameForScale(float scale) {
+		String scaleString = String.format(Locale.US, "%.2f", Math.round(scale * 4f) / 4f);
+		switch (scaleString) {
+			case "0.75":
+				return "ldpi";
+			case "1.00":
+				return "mdpi / 1x";
+			case "1.50":
+				return "hdpi";
+			case "2.00":
+				return "xhdpi / 2x";
+			case "3.00":
+				return "xxhdpi / 3x";
+			case "4.00":
+				return "xxxhdpi";
+		}
+		return "";
 	}
 
 	private static class FolderPicker implements EventHandler<ActionEvent> {

@@ -2,23 +2,28 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="at.favre.tools.converter.ui.GUIController"
-          stylesheets="flatten.css" styleClass="body" maxHeight="Infinity"
+          stylesheets="flatten.css, style.css" styleClass="body" maxHeight="Infinity"
           maxWidth="Infinity" alignment="CENTER" hgap="8" vgap="8">
     <padding>
         <Insets top="20" right="15" bottom="5" left="15"/>
     </padding>
 
-    <Label text="Source" styleClass="label" alignment="CENTER_RIGHT" maxWidth="Infinity"/>
+    <Label text="Source" styleClass="label, label_main" alignment="CENTER_RIGHT" maxWidth="Infinity"/>
     <TextField fx:id="textFieldSrcPath" disable="true" GridPane.columnIndex="1"
                GridPane.rowIndex="0" maxWidth="Infinity" GridPane.hgrow="always"/>
-    <Button fx:id="btnSrcFile" text="File" GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity"
+    <Button fx:id="btnSrcFile" text="" GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity"
             GridPane.hgrow="always"/>
-    <Button fx:id="btnSrcFolder" text="Folder" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity"
+    <Button fx:id="btnSrcFolder" text="" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity"
             GridPane.hgrow="always"/>
 
-
-    <Label text="Scale (x3.00)" styleClass="label" alignment="CENTER_RIGHT" maxWidth="Infinity"
-           fx:id="labelScale" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    <GridPane alignment="center" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <Label text="Scale (x3.00)" styleClass="label, label_main" alignment="CENTER_RIGHT"
+               maxWidth="Infinity"
+               fx:id="labelScale" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <Label text="xxhdpi / 3x" styleClass="label, footnote" alignment="CENTER_RIGHT"
+               maxWidth="Infinity"
+               fx:id="labelScaleSubtitle" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+    </GridPane>
     <Slider fx:id="scaleSlider" min="0.5" max="6" value="3" majorTickUnit="1" blockIncrement="0.25"
             GridPane.columnIndex="1" GridPane.rowIndex="1" showTickLabels="true" snapToTicks="true"
             showTickMarks="true" GridPane.columnSpan="3">
@@ -28,17 +33,19 @@
         </tooltip>
     </Slider>
 
-    <Label text="Destination" style="-fx-font-style: italic" styleClass="label" alignment="CENTER_RIGHT"
+    <Label text="Destination" style="-fx-font-style: italic" styleClass="label, label_main"
+           alignment="CENTER_RIGHT"
            maxWidth="Infinity" GridPane.columnIndex="0"
            GridPane.rowIndex="2"/>
     <TextField fx:id="textFieldDstPath" disable="true" maxWidth="Infinity" GridPane.columnIndex="1"
                GridPane.rowIndex="2"/>
-    <Button fx:id="btnDstFolder" maxWidth="Infinity" text="Select" GridPane.columnIndex="2" GridPane.columnSpan="2"
+    <Button fx:id="btnDstFolder" maxWidth="Infinity" text="" GridPane.columnIndex="2" GridPane.columnSpan="2"
             GridPane.rowIndex="2"/>
 
-    <Separator GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4"/>
+    <VBox minHeight="0" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4"/>
 
-    <GridPane alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0" GridPane.rowIndex="5"
+    <GridPane fx:id="gridPaneChoiceBoxes" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
+              GridPane.rowIndex="5"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
 
         <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="Platform" GridPane.columnIndex="0"
@@ -91,9 +98,14 @@
         </ChoiceBox>
     </GridPane>
 
-    <Separator GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="4"/>
+    <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="4"/>
 
-    <GridPane alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0" GridPane.rowIndex="7"
+    <Label text="Options" styleClass="label,label_main" maxWidth="Infinity" GridPane.columnIndex="0"
+           GridPane.rowIndex="7"
+           GridPane.columnSpan="4"/>
+
+    <GridPane fx:id="gridPaneOptionsCheckboxes" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
+              GridPane.rowIndex="8"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
         <CheckBox fx:id="cbSkipExisting" styleClass="check-box" alignment="CENTER_LEFT" maxWidth="Infinity"
                   text="skip existing"
@@ -103,23 +115,23 @@
             </tooltip>
         </CheckBox>
         <CheckBox fx:id="cbSkipUpscaling" styleClass="check-box" maxWidth="Infinity" text="skip upscaling"
-                  GridPane.columnIndex="1"
+                  GridPane.columnIndex="1" alignment="CENTER_LEFT"
                   GridPane.rowIndex="0" GridPane.hgrow="always">
             <tooltip>
                 <Tooltip text="Skips all formats that need upscaling to prevent quality loss"/>
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="cbVerboseLog" styleClass="check-box" alignment="CENTER_LEFT" selected="true"
-                  maxWidth="Infinity"
+        <CheckBox fx:id="cbVerboseLog" styleClass="check-box" selected="true"
+                  maxWidth="Infinity" alignment="CENTER_LEFT"
                   text="verbose"
                   GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="always">
             <tooltip>
                 <Tooltip text="Shows verbose log"/>
             </tooltip>
         </CheckBox>
-        <CheckBox fx:id="cbIncludeObsolete" styleClass="checkbox" maxWidth="Infinity" text="include obsolete formats"
-                  GridPane.columnIndex="1"
+        <CheckBox fx:id="cbIncludeObsolete" styleClass="check-box" maxWidth="Infinity" text="include obsolete formats"
+                  GridPane.columnIndex="1" alignment="CENTER_LEFT"
                   GridPane.rowIndex="1" GridPane.hgrow="always">
             <tooltip>
                 <Tooltip text="Does not convert to some obsolete formats (e.g. ldpi in Android)"/>
@@ -127,7 +139,7 @@
         </CheckBox>
 
         <CheckBox fx:id="cbHaltOnError" styleClass="check-box" maxWidth="Infinity" text="halt on error"
-                  GridPane.columnIndex="0"
+                  GridPane.columnIndex="0" alignment="CENTER_LEFT"
                   GridPane.rowIndex="2" GridPane.hgrow="always"
                   GridPane.vgrow="always">
             <tooltip>
@@ -135,41 +147,68 @@
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="chEnablePngCrush" styleClass="check-box" maxWidth="Infinity" text="pngcrush (slow)"
-                  GridPane.columnIndex="1"
+        <CheckBox fx:id="cbMipmapInsteadDrawable" styleClass="check-box" maxWidth="Infinity"
+                  text="android: mipmap instead drawable"
+                  GridPane.columnIndex="1" alignment="CENTER_LEFT"
                   GridPane.rowIndex="2" GridPane.hgrow="always"
                   GridPane.vgrow="always">
             <tooltip>
-                <Tooltip text="Will post-process all pngs with pngcrush. The executable must be set in the system environment as 'pngcrush' i.e
-                executable from every path. Pngcrush is a tool to compress pngs. Requires v1.7.22+"/>
-            </tooltip>
-        </CheckBox>
-
-        <CheckBox fx:id="cbPostConvertWebp" styleClass="check-box" maxWidth="Infinity" text="post-convert webp"
-                  GridPane.columnIndex="0"
-                  GridPane.rowIndex="3" GridPane.hgrow="always"
-                  GridPane.vgrow="always">
-            <tooltip>
-                <Tooltip text="Will additionally convert all png/gif to lossless wepb and all jpg to lossy webp with cwebp. Does not delete source files.
-                The executable must be set in the system path as 'cwebp' i.e executable from every path. cwebp is the official converter from Google."/>
+                <Tooltip text="For Android only: creates mipmap sub-folders instead of drawable."/>
             </tooltip>
         </CheckBox>
     </GridPane>
 
+    <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.columnSpan="4"/>
+
+    <Label text="Post Processors" styleClass="label,label_main" maxWidth="Infinity" GridPane.columnIndex="0"
+           GridPane.rowIndex="10"
+           GridPane.columnSpan="4"/>
+
+    <GridPane fx:id="gridPanePostProcessors" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
+              GridPane.rowIndex="11"
+              GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
+        <CheckBox fx:id="chEnablePngCrush" styleClass="check-box" maxWidth="Infinity" text="pngcrush (slow)"
+                  GridPane.columnIndex="0" alignment="CENTER_LEFT"
+                  GridPane.rowIndex="0" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip
+                        text="Will post-process all pngs with pngcrush. The executable must be set in the system environment as 'pngcrush' i.e executable from every path. Pngcrush is a tool to compress pngs. Requires v1.7.22+"/>
+            </tooltip>
+        </CheckBox>
+
+        <CheckBox fx:id="cbPostConvertWebp" styleClass="check-box" maxWidth="Infinity" text="convert webp"
+                  GridPane.columnIndex="1" alignment="CENTER_LEFT"
+                  GridPane.rowIndex="0" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip
+                        text="Will additionally convert all png/gif to lossless wepb and all jpg to lossy webp with cwebp. Does not delete source files. The executable must be set in the system path as 'cwebp' i.e executable from every path. cwebp is the official converter from Google."/>
+            </tooltip>
+        </CheckBox>
+    </GridPane>
+
+    <VBox minHeight="10" GridPane.columnIndex="0" GridPane.rowIndex="12" GridPane.columnSpan="4"/>
 
     <ProgressBar fx:id="progressBar" maxWidth="Infinity" disable="true" GridPane.columnIndex="0"
                  GridPane.columnSpan="4" styleClass="progress-bar"
-                 GridPane.rowIndex="8" progress="0"/>
+                 GridPane.rowIndex="13" progress="0"/>
 
-    <TextArea fx:id="textFieldConsole" styleClass="text-area" maxWidth="Infinity" GridPane.columnIndex="0"
+    <TextArea fx:id="textFieldConsole" styleClass="text-area, console" maxWidth="Infinity" GridPane.columnIndex="0"
               GridPane.columnSpan="4"
-              GridPane.rowIndex="9" visible="true" prefRowCount="40" prefColumnCount="80"/>
+              GridPane.rowIndex="14" visible="true" prefRowCount="40" prefColumnCount="80"/>
 
-    <Button fx:id="btnConvert" styleClass="button" maxWidth="Infinity" text="Convert" GridPane.columnIndex="0"
-            GridPane.rowIndex="10"
+    <Button fx:id="btnConvert" styleClass="button, button-convert"
+            maxWidth="Infinity" text="Convert" GridPane.columnIndex="0"
+            GridPane.rowIndex="15"
             GridPane.columnSpan="4"
     />
-    <Label fx:id="labelResult" alignment="CENTER_RIGHT" maxWidth="Infinity" GridPane.columnIndex="0"
-           GridPane.rowIndex="11"
-           GridPane.columnSpan="4" styleClass="footnote"/>
+
+    <Label fx:id="labelVersion" alignment="CENTER_LEFT" GridPane.columnIndex="0"
+           GridPane.rowIndex="16"
+           GridPane.columnSpan="1" styleClass="footnote"/>
+
+    <Label fx:id="labelResult" alignment="CENTER_RIGHT" maxWidth="Infinity" GridPane.columnIndex="1"
+           GridPane.rowIndex="16"
+           GridPane.columnSpan="3" styleClass="footnote"/>
 </GridPane>

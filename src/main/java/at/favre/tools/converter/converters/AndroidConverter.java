@@ -63,7 +63,8 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 
 	@Override
 	public File createFolderForOutputFile(File mainSubFolder, AndroidDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
-		return ConverterUtil.createAndCheckFolder(new File(mainSubFolder, density.folderName).getAbsolutePath());
+		String folderName = (arguments.createMipMapInsteadOfDrawableDir ? density.folderName.replaceAll("drawable", "mipmap") : density.folderName);
+		return ConverterUtil.createAndCheckFolder(new File(mainSubFolder, folderName).getAbsolutePath());
 	}
 
 	@Override

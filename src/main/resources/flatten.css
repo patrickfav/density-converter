@@ -11,7 +11,7 @@
     -fx-font-weight: 600;
     -fx-disabled-opacity: 0.6;
 
-    -flatter-red: rgb(237.0, 68.0, 37.0);
+    -flatter-red: rgb(197.0, 78.0, 56.0);
     -flatter-blue: rgb(0.0, 184.0, 222.0);
 }
 
@@ -69,7 +69,7 @@
     -fx-background-insets: 0.0;
     -fx-background-radius: 2.0;
     -fx-border-width: 0.0;
-    -fx-padding: 0.7em;
+    -fx-padding: 0.6em;
     -fx-text-fill: -fx-text-base-color;
     -fx-alignment: CENTER;
     -fx-content-display: LEFT;
@@ -103,7 +103,7 @@
     -fx-background-color: white;
     -fx-background-insets: 0.0;
     -fx-background-radius: 2.0;
-    -fx-padding: 0.7em;
+    -fx-padding: 0.6em;
     -fx-border-width: 0.0;
     -fx-prompt-text-fill: derive(-dark, 50.0%);
     -fx-highlight-fill: rgb(94.0, 203.0, 234.0);
@@ -168,9 +168,6 @@
  * ComboBox                                                                    *
  *                                                                             *
  ******************************************************************************/
-.combo-box-base {
-    -fx-skin: "com.guigarage.flatterfx.skin.FlatterComboBoxSkin";
-}
 
 .popup-overlay {
     -fx-background-color: -flatter-red;
@@ -221,7 +218,7 @@
 
 .combo-box-base > .label,
 .choice-box > .label {
-    -fx-padding: 0.7em 1.7em 0.7em 0.7em;
+    -fx-padding: 0.5em 1.6em 0.5em 0.7em;
 }
 
 .combo-box-base > .arrow-button,
@@ -433,4 +430,40 @@
 .progress-indicator:indeterminate .segment6 {-fx-shape:null;}
 .progress-indicator:indeterminate .segment7 {-fx-shape:null;} */
 
+/*******************************************************************************
+ *                                                                             *
+ * Slider                                                        *
+ *                                                                             *
+ ******************************************************************************/
+.slider {
+    -fx-padding: 0.7em 0 0.3em 0;
+}
 
+.slider .thumb {
+    -fx-background-color: -flatter-red;
+}
+
+.slider .thumb:focused {
+    -fx-background-color: derive(-flatter-red, 50.0%);
+}
+
+.slider .thumb:pressed {
+    -fx-background-color: derive(-flatter-red, 50.0%), derive(-flatter-red, -20.0%);
+    -fx-background-insets: 0.0, 0.2em;
+}
+
+.slider .thumb:armed,
+.slider .thumb:selected {
+    -fx-background-color: derive(-flatter-red, -20.0%);
+}
+
+.slider .axis {
+    -fx-tick-mark-stroke: #a5a7aa;
+    -fx-tick-label-font: 0.833333em System;
+    -fx-tick-label-fill: #dfdfdf;
+}
+
+.slider .track {
+    -fx-background-color: #828588;
+    -fx-background-insets: 0 -1 0 1, 0, 1;
+}

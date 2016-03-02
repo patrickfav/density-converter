@@ -1,4 +1,4 @@
-# ![logo](misc/density_converter_icon_36.png) Density Image Converter Tool for Android and iOS
+# ![logo](src/main/resources/img/density_converter_icon_36.png) Density Image Converter Tool for Android and iOS
 
 This is a simple tool that helps **converting single or batches of images** to **Android** and **iOS** specific formats and density
 versions given the base scale. It has a **graphical** and **command line** interface and supports changing of compression types
@@ -125,6 +125,8 @@ If the flag is set the converter tool will compress jpegs to lossy webp and png/
 
 ## Implementation Details
 
+Java 1.8, JavaFx and Apache CLI
+
 Rescaling happens with Java's native `Graphics2D` with high quality render flags (e.g. anti-aliasing and bicubic interpolation).
 Loading and compressing of images also happens with JDK methods.
 
@@ -149,6 +151,10 @@ mvn clean package
 
 The .jar file will be in the generated `/target` folder
 
+# Credits
+
+* JavaFx theme based on Flatter by (hendrikebbers)[https://github.com/guigarage/javafx-collection/tree/master/flatter]
+* Image file icon: Icon made by (Freepik)[http://www.freepik.com/]
 
 # License
 

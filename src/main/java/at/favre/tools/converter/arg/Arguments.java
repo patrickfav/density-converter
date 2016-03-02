@@ -52,6 +52,7 @@ public class Arguments {
 	public final boolean verboseLog;
 	public final boolean includeObsoleteFormats;
 	public final boolean haltOnError;
+	public final boolean createMipMapInsteadOfDrawableDir;
 	public final boolean enablePngCrush;
 	public final boolean postConvertWebp;
 	public final RoundingHandler.Strategy roundingHandler;
@@ -60,7 +61,8 @@ public class Arguments {
 
 	public Arguments(File src, File dst, float scrScale, EPlatform platform, EOutputCompressionMode outputCompressionMode,
 	                 float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
-	                 boolean verboseLog, boolean includeObsoleteFormats, boolean haltOnError, boolean enablePngCrush, boolean postConvertWebp, RoundingHandler.Strategy roundingHandler) {
+	                 boolean verboseLog, boolean includeObsoleteFormats, boolean haltOnError, boolean createMipMapInsteadOfDrawableDir,
+	                 boolean enablePngCrush, boolean postConvertWebp, RoundingHandler.Strategy roundingHandler) {
 		this.dst = dst;
 		this.src = src;
 		this.scrScale = scrScale;
@@ -73,6 +75,7 @@ public class Arguments {
 		this.verboseLog = verboseLog;
 		this.includeObsoleteFormats = includeObsoleteFormats;
 		this.haltOnError = haltOnError;
+		this.createMipMapInsteadOfDrawableDir = createMipMapInsteadOfDrawableDir;
 		this.enablePngCrush = enablePngCrush;
 		this.postConvertWebp = postConvertWebp;
 		this.roundingHandler = roundingHandler;
@@ -92,7 +95,7 @@ public class Arguments {
 	}
 
 	private Arguments() {
-		this(null, null, 0f, null, null, 0f, 0, false, false, false, false, false, false, false, null);
+		this(null, null, 0f, null, null, 0f, 0, false, false, false, false, false, false, false, false, null);
 	}
 
 	public double round(double raw) {
@@ -114,6 +117,7 @@ public class Arguments {
 				", verboseLog=" + verboseLog +
 				", includeObsoleteFormats=" + includeObsoleteFormats +
 				", haltOnError=" + haltOnError +
+				", createMipMapInsteadOfDrawableDir=" + createMipMapInsteadOfDrawableDir +
 				", enablePngCrush=" + enablePngCrush +
 				", postConvertWebp=" + postConvertWebp +
 				", roundingHandler=" + roundingHandler +
@@ -135,6 +139,7 @@ public class Arguments {
 		private boolean verboseLog = false;
 		private boolean includeObsoleteFormats = false;
 		private boolean haltOnError = false;
+		private boolean createMipMapInsteadOfDrawableDir = false;
 		private boolean enablePngCrush = false;
 		private boolean postConvertWebp = false;
 
@@ -194,6 +199,11 @@ public class Arguments {
 			return this;
 		}
 
+		public Builder createMipMapInsteadOfDrawableDir(boolean b) {
+			this.createMipMapInsteadOfDrawableDir = b;
+			return this;
+		}
+
 		public Builder enablePngCrush(boolean b) {
 			this.enablePngCrush = b;
 			return this;
@@ -235,7 +245,7 @@ public class Arguments {
 			}
 
 			return new Arguments(src, dst, srcScale, platform, outputCompressionMode, compressionQuality, threadCount, skipExistingFiles, skipUpscaling,
-					verboseLog, includeObsoleteFormats, haltOnError, enablePngCrush, postConvertWebp, roundingStrategy);
+					verboseLog, includeObsoleteFormats, haltOnError, createMipMapInsteadOfDrawableDir, enablePngCrush, postConvertWebp, roundingStrategy);
 		}
 	}
 

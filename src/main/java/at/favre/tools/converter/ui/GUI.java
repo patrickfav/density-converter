@@ -66,8 +66,8 @@ public class GUI extends Application {
 		column4.setPercentWidth(12);
 		((GridPane) root).getColumnConstraints().addAll(column1, column2, column3, column4);
 
-		Scene scene = new Scene(root, 500, 600);
+		Scene scene = new Scene(root, 550, 750);
 		primaryStage.setScene(scene);
-		primaryStage.getIcons().add(new Image("density_converter_icon_48.png"));
+		primaryStage.getIcons().add(new Image("img/density_converter_icon_36.png"));
 	}
 }

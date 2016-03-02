@@ -1,35 +1,25 @@
-.body {
-    -fx-background-color: #CFD8DC;
-}
-
 .footnote {
-    -fx-font-size: 10px;
-    -fx-text-fill: #5f6364;
+    -fx-font-size: 0.7em;
+    -fx-text-fill: #8a8e8f;
 }
 
 .console {
-    -fx-font-size: 11px;
+    -fx-font-size: 0.85em;
     -fx-text-fill: #333;
     -fx-font-family: monospace;
-    -fx-background-color: #37474F;
 }
 
-.text {
-    -fx-text-fill: #37474F;
-}
-
-.main_label {
-    -fx-text-fill: #37474F;
-    -fx-font-size: 14px;
+.label_main {
+    -fx-font-size: 1.15em;
     -fx-font-weight: bold;
 }
 
-.main_button {
-    -fx-font-size: 14px;
+.label_prominent {
+    -fx-font-size: 1.15em;
     -fx-font-weight: bold;
-    -fx-text-fill: #37474F;
 }
 
-.checkbox {
-    -fx-text-fill: #37474F;
+.button-convert {
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
 }

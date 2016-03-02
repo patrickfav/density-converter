@@ -133,6 +133,7 @@ public class CLInterpreter {
 			builder.includeObsoleteFormats(commandLine.hasOption("includeObsoleteFormats"));
 			builder.verboseLog(commandLine.hasOption(VERBOSE_ARG));
 			builder.haltOnError(commandLine.hasOption("haltOnError"));
+			builder.haltOnError(commandLine.hasOption("androidMipmapInsteadOfDrawable"));
 			builder.enablePngCrush(commandLine.hasOption("enablePngCrush"));
 			builder.postConvertWebp(commandLine.hasOption("postWebpConvert"));
 
@@ -168,6 +169,7 @@ public class CLInterpreter {
 		Option skipUpscaling = Option.builder("skipUpscaling").desc("If set will only scale down, but not up to prevent image quality loss").build();
 		Option verboseLog = Option.builder(VERBOSE_ARG).desc("If set will log to console more verbose").build();
 		Option haltOnError = Option.builder("haltOnError").desc("If set will stop the process if an error occurred during conversion").build();
+		Option mipmapInsteadOfDrawable = Option.builder("androidMipmapInsteadOfDrawable").desc("For Android only: creates mipmap sub-folders instead of drawable.").build();
 		Option enablePngCrush = Option.builder("enablePngCrush").desc("Will post-process all pngs with pngcrush. The executable must be set in the system path as 'pngcrush' i.e executable from every path. Pngcrush is a tool to compress pngs. Requires v1.7.22+").build();
 		Option postWebpConvert = Option.builder("postWebpConvert").desc("Will additionally convert all png/gif to lossless wepb and all jpg to lossy webp with cwebp. Does not delete source files. The executable must be set in the system path as 'cwebp' i.e executable from every path. cwebp is the official converter from Google.").build();
 
@@ -181,11 +183,10 @@ public class CLInterpreter {
 
 		options.addOption(srcScaleOpt).addOption(dstOpt);
 		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler);
-		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(includeObsoleteFormats).addOption(verboseLog).addOption(haltOnError).addOption(enablePngCrush).addOption(postWebpConvert);
-		;
+		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(includeObsoleteFormats).addOption(verboseLog)
+				.addOption(haltOnError).addOption(mipmapInsteadOfDrawable).addOption(enablePngCrush).addOption(postWebpConvert);
 
 		options.addOptionGroup(mainArgs);
-
 
 		return options;
 	}
