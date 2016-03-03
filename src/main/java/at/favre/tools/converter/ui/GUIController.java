@@ -62,7 +62,7 @@ public class GUIController {
 	public CheckBox cbSkipExisting;
 	public CheckBox cbSkipUpscaling;
 	public CheckBox cbVerboseLog;
-	public CheckBox cbIncludeObsolete;
+	public CheckBox cbAndroidIncludeLdpiTvdpi;
 	public CheckBox cbHaltOnError;
 	public CheckBox chEnablePngCrush;
 	public Slider scaleSlider;
@@ -76,15 +76,20 @@ public class GUIController {
 	public GridPane gridPanePostProcessors;
 	public GridPane gridPaneOptionsCheckboxes;
 	public Label labelScaleSubtitle;
+	public CheckBox cbAntiAliasing;
 
 	public void onCreate() {
 		btnSrcFile.setOnAction(event -> {
 			srcFileChooser.setTitle("Select Image");
-			File file = new File(btnSrcFile.getText());
-			if (btnSrcFile.getText().isEmpty() || !file.exists() || !file.isFile()) {
+			File file = new File(textFieldSrcPath.getText());
+			if (file != null && file.isFile()) {
+				file = file.getParentFile();
+			}
+
+			if (file == null || textFieldSrcPath.getText().isEmpty() || !file.exists() || !file.isDirectory()) {
 				srcFileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 			} else {
-				srcFileChooser.setInitialDirectory(new File(btnSrcFile.getText()));
+				srcFileChooser.setInitialDirectory(file);
 			}
 			srcFileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.gif"));
 			File srcFile = srcFileChooser.showOpenDialog(btnSrcFile.getScene().getWindow());
@@ -206,9 +211,10 @@ public class GUIController {
 		builder.skipExistingFiles(cbSkipExisting.isSelected());
 		builder.skipUpscaling(cbSkipUpscaling.isSelected());
 		builder.verboseLog(cbVerboseLog.isSelected());
-		builder.includeObsoleteFormats(cbIncludeObsolete.isSelected());
+		builder.includeAndroidLdpiTvdpi(cbAndroidIncludeLdpiTvdpi.isSelected());
 		builder.haltOnError(cbHaltOnError.isSelected());
 		builder.createMipMapInsteadOfDrawableDir(cbMipmapInsteadDrawable.isSelected());
+		builder.antiAliasing(cbAntiAliasing.isSelected());
 		builder.enablePngCrush(chEnablePngCrush.isSelected());
 		builder.postConvertWebp(cbPostConvertWebp.isSelected());
 
@@ -249,10 +255,15 @@ public class GUIController {
 		public void handle(ActionEvent event) {
 			directoryChooser.setTitle("Select Image Folder");
 			File dir = new File(textFieldPath.getText());
+
+			if (dir != null && dir.isFile()) {
+				dir = dir.getParentFile();
+			}
+
 			if (textFieldPath.getText().isEmpty() || !dir.exists() || !dir.isDirectory()) {
 				directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 			} else {
-				directoryChooser.setInitialDirectory(new File(textFieldPath.getText()));
+				directoryChooser.setInitialDirectory(dir);
 			}
 			File srcFile = directoryChooser.showDialog(textFieldPath.getScene().getWindow());
 			if (srcFile != null) {

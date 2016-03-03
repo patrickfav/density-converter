@@ -2,7 +2,7 @@
 
 This is a simple tool that helps **converting single or batches of images** to **Android** and **iOS** specific formats and density
 versions given the base scale. It has a **graphical** and **command line** interface and supports changing of compression types
-(e.g. png -> jpeg). It is designed to make conversion of images easy and fast while keeping the image quality high.
+(e.g. png -> jpeg). Using advanced scaling algorithms, it is designed to make conversion of images easy and fast while keeping the image quality high.
 
 Usage:
 
@@ -18,9 +18,9 @@ java -jar ./dconvert.jar
 
 will start the UI (or double click the jar file).
 
-**Download here: [dconvert.jar](https://github.com/patrickfav/density-converter/releases/download/v0.3/dconvert.jar)**
+**[Download here](https://github.com/patrickfav/density-converter/releases/)**
 
-# Usage
+# Details
 
 This tool is based on the idea that a developer gets the 'master' image in the highest needed resolution for his platform,
 e.g. xxxhdpi (x4) in Android. He then proceeds to generate every other density with it. This tool exist to make this step as
@@ -50,7 +50,11 @@ Will generate mdpi, hdpi, etc. folders in "C:/master-image/" containing the resi
 
 Full list of arguments:
 
-    -androidMipmapInsteadOfDrawable    For Android only: creates mipmap sub-folders instead of drawable.
+    -androidIncludeLdpiTvdpi           Android only: If set will include additional densities (ldpi and
+                                       tvdpi).
+    -androidMipmapInsteadOfDrawable    Android only: creates mipmap sub-folders instead of drawable.
+    -antiAliasing                      Anti-aliases images creating a little more blurred result; useful for
+                                       very small images
     -compressionQuality <0.0-1.0>      Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is
                                        the highest quality. Default is 0.9
     -dst <path>                        The directory in which the converted files will be written. Will use
@@ -61,7 +65,6 @@ Full list of arguments:
     -gui                               Starts graphical user interface
     -h,--help                          This help page
     -haltOnError                       If set will stop the process if an error occurred during conversion
-    -includeObsoleteFormats            If set will include obsolete densities (e.g. ldpi in android)
     -outCompression <png|jpg>          Sets the compression of the converted images. Can be 'png', 'jpg',
                                        'gif' or 'png+jpg'. By default the src compression type will be used
                                        (e.g. png will be re-compressed to png after scaling).
@@ -87,6 +90,7 @@ Full list of arguments:
                                        memory). Possible values are 1-8. Default is 3
     -v,--version                       Gets current version
     -verbose                           If set will log to console more verbose
+
 
 ## GUI
 
@@ -127,8 +131,7 @@ If the flag is set the converter tool will compress jpegs to lossy webp and png/
 
 Java 1.8, JavaFx and Apache CLI
 
-Rescaling happens with Java's native `Graphics2D` with high quality render flags (e.g. anti-aliasing and bicubic interpolation).
-Loading and compressing of images also happens with JDK methods.
+Rescaling happens with imgscalr which includes some sophisticated algorithms for correct resizing using ULTRA_QUALITY setting.
 
 For parallel execution, every source file spawns his own thread for each platform converter e.g. 3 files 2 converters -> 6 threads needed.
 
@@ -139,9 +142,8 @@ Both user interfaces use the same underlying logic.
 ## Limitations & Known Issues
 
 * There is no specific support for Android 9-patches ([see this project](https://github.com/redwarp/9-Patch-Resizer))
-* Jpeg compression seems to create false colors if source file has transparency
 
-# How to build
+## How to build
 
 Build with maven
 
@@ -151,11 +153,14 @@ mvn clean package
 
 The .jar file will be in the generated `/target` folder
 
-# Credits
+# About
 
+## Credits
+
+* HQ image resizing with [imgscalr](https://github.com/thebuzzmedia/imgscalr)
 * JavaFx theme based on Flatter by [hendrikebbers](https://github.com/guigarage/javafx-collection/tree/master/flatter)
 * Image file icon: Icon made by [Freepik](http://www.freepik.com/)
 
-# License
+## License
 
 [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0)

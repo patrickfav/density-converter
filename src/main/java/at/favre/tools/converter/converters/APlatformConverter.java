@@ -71,7 +71,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 					log.append("process ").append(imageFile).append(" with ").append(entry.getValue().width).append("x").append(entry.getValue().height).append(" (x").append(entry.getKey().scale).append(")\n");
 
 					List<File> files = ConverterUtil.compressToFile(imageFile, Arguments.getCompressionForType(args.outputCompressionMode, srcCompression), rawImage,
-							entry.getValue(), args.compressionQuality, args.skipExistingFiles);
+							entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing);
 
 					allResultingFiles.addAll(files);
 
@@ -87,9 +87,10 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 				}
 			}
 
-			rawImage.flush();
-
 			onPostExecute(args);
+
+			rawImage.flush();
+			rawImage = null;
 
 			if (callback != null) {
 				callback.success(log.toString(), allResultingFiles);

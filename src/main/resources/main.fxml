@@ -130,11 +130,12 @@
                 <Tooltip text="Shows verbose log"/>
             </tooltip>
         </CheckBox>
-        <CheckBox fx:id="cbIncludeObsolete" styleClass="check-box" maxWidth="Infinity" text="include obsolete formats"
+        <CheckBox fx:id="cbAndroidIncludeLdpiTvdpi" styleClass="check-box" maxWidth="Infinity"
+                  text="android: include ldpi + tvdpi"
                   GridPane.columnIndex="1" alignment="CENTER_LEFT"
                   GridPane.rowIndex="1" GridPane.hgrow="always">
             <tooltip>
-                <Tooltip text="Does not convert to some obsolete formats (e.g. ldpi in Android)"/>
+                <Tooltip text="Android only: If set will include additional densities (ldpi and tvdpi)"/>
             </tooltip>
         </CheckBox>
 
@@ -154,6 +155,17 @@
                   GridPane.vgrow="always">
             <tooltip>
                 <Tooltip text="For Android only: creates mipmap sub-folders instead of drawable."/>
+            </tooltip>
+        </CheckBox>
+
+        <CheckBox fx:id="cbAntiAliasing" styleClass="check-box" maxWidth="Infinity"
+                  text="anti aliasing"
+                  GridPane.columnIndex="0" alignment="CENTER_LEFT"
+                  GridPane.rowIndex="3" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip
+                        text="Anti-aliases images creating a little more blurred result; useful for very small images"/>
             </tooltip>
         </CheckBox>
     </GridPane>

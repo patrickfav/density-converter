@@ -50,19 +50,20 @@ public class Arguments {
 	public final boolean skipExistingFiles;
 	public final boolean skipUpscaling;
 	public final boolean verboseLog;
-	public final boolean includeObsoleteFormats;
+	public final boolean includeAndroidLdpiTvdpi;
 	public final boolean haltOnError;
 	public final boolean createMipMapInsteadOfDrawableDir;
 	public final boolean enablePngCrush;
 	public final boolean postConvertWebp;
+	public final boolean enableAntiAliasing;
 	public final RoundingHandler.Strategy roundingHandler;
 	public final List<File> filesToProcess;
 
 
 	public Arguments(File src, File dst, float scrScale, EPlatform platform, EOutputCompressionMode outputCompressionMode,
 	                 float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
-	                 boolean verboseLog, boolean includeObsoleteFormats, boolean haltOnError, boolean createMipMapInsteadOfDrawableDir,
-	                 boolean enablePngCrush, boolean postConvertWebp, RoundingHandler.Strategy roundingHandler) {
+	                 boolean verboseLog, boolean includeAndroidLdpiTvdpi, boolean haltOnError, boolean createMipMapInsteadOfDrawableDir,
+	                 boolean enablePngCrush, boolean postConvertWebp, boolean enableAntiAliasing, RoundingHandler.Strategy roundingHandler) {
 		this.dst = dst;
 		this.src = src;
 		this.scrScale = scrScale;
@@ -73,11 +74,12 @@ public class Arguments {
 		this.skipExistingFiles = skipExistingFiles;
 		this.skipUpscaling = skipUpscaling;
 		this.verboseLog = verboseLog;
-		this.includeObsoleteFormats = includeObsoleteFormats;
+		this.includeAndroidLdpiTvdpi = includeAndroidLdpiTvdpi;
 		this.haltOnError = haltOnError;
 		this.createMipMapInsteadOfDrawableDir = createMipMapInsteadOfDrawableDir;
 		this.enablePngCrush = enablePngCrush;
 		this.postConvertWebp = postConvertWebp;
+		this.enableAntiAliasing = enableAntiAliasing;
 		this.roundingHandler = roundingHandler;
 
 		this.filesToProcess = new ArrayList<>();
@@ -95,7 +97,7 @@ public class Arguments {
 	}
 
 	private Arguments() {
-		this(null, null, 0f, null, null, 0f, 0, false, false, false, false, false, false, false, false, null);
+		this(null, null, 0.27346f, null, null, 0.9362f, 996254, false, false, false, false, false, false, false, false, false, null);
 	}
 
 	public double round(double raw) {
@@ -115,11 +117,12 @@ public class Arguments {
 				", skipExistingFiles=" + skipExistingFiles +
 				", skipUpscaling=" + skipUpscaling +
 				", verboseLog=" + verboseLog +
-				", includeObsoleteFormats=" + includeObsoleteFormats +
+				", includeAndroidLdpiTvdpi=" + includeAndroidLdpiTvdpi +
 				", haltOnError=" + haltOnError +
 				", createMipMapInsteadOfDrawableDir=" + createMipMapInsteadOfDrawableDir +
 				", enablePngCrush=" + enablePngCrush +
 				", postConvertWebp=" + postConvertWebp +
+				", enableAntiAliasing=" + enableAntiAliasing +
 				", roundingHandler=" + roundingHandler +
 				", filesToProcess=" + filesToProcess +
 				'}';
@@ -137,9 +140,10 @@ public class Arguments {
 		private boolean skipExistingFiles = false;
 		private boolean skipUpscaling = false;
 		private boolean verboseLog = false;
-		private boolean includeObsoleteFormats = false;
+		private boolean includeAndroidLdpiTvdpi = false;
 		private boolean haltOnError = false;
 		private boolean createMipMapInsteadOfDrawableDir = false;
+		private boolean enableAntiAliasing = false;
 		private boolean enablePngCrush = false;
 		private boolean postConvertWebp = false;
 
@@ -189,8 +193,8 @@ public class Arguments {
 			return this;
 		}
 
-		public Builder includeObsoleteFormats(boolean b) {
-			this.includeObsoleteFormats = b;
+		public Builder includeAndroidLdpiTvdpi(boolean b) {
+			this.includeAndroidLdpiTvdpi = b;
 			return this;
 		}
 
@@ -201,6 +205,11 @@ public class Arguments {
 
 		public Builder createMipMapInsteadOfDrawableDir(boolean b) {
 			this.createMipMapInsteadOfDrawableDir = b;
+			return this;
+		}
+
+		public Builder antiAliasing(boolean b) {
+			this.enableAntiAliasing = b;
 			return this;
 		}
 
@@ -245,7 +254,7 @@ public class Arguments {
 			}
 
 			return new Arguments(src, dst, srcScale, platform, outputCompressionMode, compressionQuality, threadCount, skipExistingFiles, skipUpscaling,
-					verboseLog, includeObsoleteFormats, haltOnError, createMipMapInsteadOfDrawableDir, enablePngCrush, postConvertWebp, roundingStrategy);
+					verboseLog, includeAndroidLdpiTvdpi, haltOnError, createMipMapInsteadOfDrawableDir, enablePngCrush, postConvertWebp, enableAntiAliasing, roundingStrategy);
 		}
 	}
 

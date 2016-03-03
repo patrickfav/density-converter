@@ -19,6 +19,7 @@ package at.favre.tools.converter;
 
 import at.favre.tools.converter.arg.Arguments;
 import at.favre.tools.converter.arg.ECompression;
+import org.imgscalr.Scalr;
 
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
@@ -28,6 +29,7 @@ import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -113,7 +115,7 @@ public class ConverterUtil {
 	}
 
 	public static List<File> compressToFile(File targetFile, List<ECompression> compressionList, BufferedImage bufferedImage, Dimension targetDimension,
-	                                        float compressionQuality, boolean skipIfExists) throws Exception {
+	                                        float compressionQuality, boolean skipIfExists, boolean antiAlias) throws Exception {
 		List<File> files = new ArrayList<>(2);
 		for (ECompression compression : compressionList) {
 			File imageFile = new File(targetFile.getAbsolutePath() + "." + compression.name().toLowerCase());
@@ -122,7 +124,7 @@ public class ConverterUtil {
 				break;
 			}
 
-			BufferedImage scaledImage = scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.BLACK);
+			BufferedImage scaledImage = scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.white, antiAlias);
 
 			if (compression == ECompression.PNG || compression == ECompression.GIF) {
 				ImageIO.write(scaledImage, compression.name().toLowerCase(), imageFile);
@@ -151,30 +153,23 @@ public class ConverterUtil {
 		}
 	}
 
-	public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ECompression compression, Color background) {
+	public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ECompression compression, Color background, boolean antiAlias) {
 		BufferedImage scaledImage = null;
 		if (imageToScale != null) {
-			int imageType =  BufferedImage.TYPE_INT_RGB;
-			if (compression == ECompression.PNG || compression == ECompression.GIF || imageType == 0) {
-				imageType = BufferedImage.TYPE_INT_ARGB;
+
+			BufferedImageOp[] bufferedImageOpArray = new BufferedImageOp[]{};
+
+			if (antiAlias) {
+				bufferedImageOpArray = new BufferedImageOp[]{Scalr.OP_ANTIALIAS};
 			}
 
-			scaledImage = new BufferedImage(dWidth, dHeight, imageType);
-			Graphics2D graphics2D = scaledImage.createGraphics();
-			graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-			graphics2D.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
-			graphics2D.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
-			graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-			graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
+			scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY, dWidth, dHeight, bufferedImageOpArray);
 
 			if (compression == ECompression.JPG) {
-				graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
-			} else {
-				graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
+				BufferedImage convertedImg = new BufferedImage(scaledImage.getWidth(), scaledImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+				convertedImg.getGraphics().drawImage(scaledImage, 0, 0, background, null);
+				scaledImage = convertedImg;
 			}
-
-			graphics2D.dispose();
 		}
 		return scaledImage;
 	}

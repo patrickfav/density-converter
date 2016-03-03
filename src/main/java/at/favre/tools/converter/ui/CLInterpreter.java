@@ -130,10 +130,11 @@ public class CLInterpreter {
 
 			builder.skipUpscaling(commandLine.hasOption("skipUpscaling"));
 			builder.skipExistingFiles(commandLine.hasOption(SKIP_EXISTING_ARG));
-			builder.includeObsoleteFormats(commandLine.hasOption("includeObsoleteFormats"));
+			builder.includeAndroidLdpiTvdpi(commandLine.hasOption("androidIncludeLdpiTvdpi"));
 			builder.verboseLog(commandLine.hasOption(VERBOSE_ARG));
 			builder.haltOnError(commandLine.hasOption("haltOnError"));
-			builder.haltOnError(commandLine.hasOption("androidMipmapInsteadOfDrawable"));
+			builder.createMipMapInsteadOfDrawableDir(commandLine.hasOption("androidMipmapInsteadOfDrawable"));
+			builder.antiAliasing(commandLine.hasOption("antiAliasing"));
 			builder.enablePngCrush(commandLine.hasOption("enablePngCrush"));
 			builder.postConvertWebp(commandLine.hasOption("postWebpConvert"));
 
@@ -165,11 +166,12 @@ public class CLInterpreter {
 		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).hasArg(true).argName("0.0-1.0").desc("Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is the highest quality. Default is " + Arguments.DEFAULT_COMPRESSION_QUALITY).build();
 
 		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc("If set will not overwrite a already existing file").build();
-		Option includeObsoleteFormats = Option.builder("includeObsoleteFormats").desc("If set will include obsolete densities (e.g. ldpi in android)").build();
+		Option includeObsoleteFormats = Option.builder("androidIncludeLdpiTvdpi").desc("Android only: If set will include additional densities (ldpi and tvdpi).").build();
+		Option mipmapInsteadOfDrawable = Option.builder("androidMipmapInsteadOfDrawable").desc("Android only: creates mipmap sub-folders instead of drawable.").build();
 		Option skipUpscaling = Option.builder("skipUpscaling").desc("If set will only scale down, but not up to prevent image quality loss").build();
 		Option verboseLog = Option.builder(VERBOSE_ARG).desc("If set will log to console more verbose").build();
 		Option haltOnError = Option.builder("haltOnError").desc("If set will stop the process if an error occurred during conversion").build();
-		Option mipmapInsteadOfDrawable = Option.builder("androidMipmapInsteadOfDrawable").desc("For Android only: creates mipmap sub-folders instead of drawable.").build();
+		Option antiAliasing = Option.builder("antiAliasing").desc("Anti-aliases images creating a little more blurred result; useful for very small images").build();
 		Option enablePngCrush = Option.builder("enablePngCrush").desc("Will post-process all pngs with pngcrush. The executable must be set in the system path as 'pngcrush' i.e executable from every path. Pngcrush is a tool to compress pngs. Requires v1.7.22+").build();
 		Option postWebpConvert = Option.builder("postWebpConvert").desc("Will additionally convert all png/gif to lossless wepb and all jpg to lossy webp with cwebp. Does not delete source files. The executable must be set in the system path as 'cwebp' i.e executable from every path. cwebp is the official converter from Google.").build();
 
@@ -183,7 +185,7 @@ public class CLInterpreter {
 
 		options.addOption(srcScaleOpt).addOption(dstOpt);
 		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler);
-		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(includeObsoleteFormats).addOption(verboseLog)
+		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(includeObsoleteFormats).addOption(verboseLog).addOption(antiAliasing)
 				.addOption(haltOnError).addOption(mipmapInsteadOfDrawable).addOption(enablePngCrush).addOption(postWebpConvert);
 
 		options.addOptionGroup(mainArgs);
