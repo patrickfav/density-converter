@@ -154,7 +154,7 @@ public class ConverterUtil {
 	public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ECompression compression, Color background) {
 		BufferedImage scaledImage = null;
 		if (imageToScale != null) {
-			int imageType = imageToScale.getType();
+			int imageType =  BufferedImage.TYPE_INT_RGB;
 			if (compression == ECompression.PNG || compression == ECompression.GIF || imageType == 0) {
 				imageType = BufferedImage.TYPE_INT_ARGB;
 			}

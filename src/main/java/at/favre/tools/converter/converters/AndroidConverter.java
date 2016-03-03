@@ -38,9 +38,10 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 		List<AndroidDensityDescriptor> list = new ArrayList<>();
 		if (arguments.includeObsoleteFormats) {
 			list.add(new AndroidDensityDescriptor(0.75f, "ldpi", "drawable-ldpi"));
+			list.add(new AndroidDensityDescriptor(1.33f, "tvdpi", "drawable-tvdpi"));
 		}
 		list.add(new AndroidDensityDescriptor(1, "mdpi", "drawable-mdpi"));
-		list.add(new AndroidDensityDescriptor(1.5f, "hdpi", "drawable-mdpi"));
+		list.add(new AndroidDensityDescriptor(1.5f, "hdpi", "drawable-hdpi"));
 		list.add(new AndroidDensityDescriptor(2, "xhdpi", "drawable-xhdpi"));
 		list.add(new AndroidDensityDescriptor(3, "xxhdpi", "drawable-xxhdpi"));
 		list.add(new AndroidDensityDescriptor(4, "xxxhdpi", "drawable-xxxhdpi"));
