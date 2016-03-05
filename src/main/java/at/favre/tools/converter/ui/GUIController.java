@@ -133,6 +133,7 @@ public class GUIController {
 							resetUIAfterExecution();
 							labelResult.setText("Finished Jobs: " + finsihedJobs + " / Errors: " + exceptions.size() + " / Duration: " + MiscUtil.duration(time));
 							textFieldConsole.setText(log);
+							textFieldConsole.appendText("");
 
 							if (!exceptions.isEmpty()) {
 								Alert alert = new Alert(Alert.AlertType.WARNING);
