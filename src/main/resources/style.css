@@ -23,3 +23,8 @@
     -fx-font-size: 1.5em;
     -fx-font-weight: bold;
 }
+
+.button-sec {
+    -fx-font-size: 0.8em;
+    -fx-padding: 0.3em;
+}

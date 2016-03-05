@@ -16,7 +16,7 @@
     <Button fx:id="btnSrcFolder" text="" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity"
             GridPane.hgrow="always"/>
 
-    <GridPane alignment="center" GridPane.columnIndex="0" GridPane.rowIndex="1">
+    <GridPane alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="1" maxWidth="Infinity">
         <Label text="Scale (x3.00)" styleClass="label, label_main" alignment="CENTER_RIGHT"
                maxWidth="Infinity"
                fx:id="labelScale" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
@@ -102,8 +102,10 @@
 
     <Label text="Options" styleClass="label,label_main" maxWidth="Infinity" GridPane.columnIndex="0"
            GridPane.rowIndex="7"
-           GridPane.columnSpan="4"/>
-
+           GridPane.columnSpan="3"/>
+    <Button fx:id="btnReset" text="Reset" styleClass="button, button-sec" GridPane.columnIndex="3"
+            GridPane.rowIndex="7" alignment="CENTER_RIGHT"
+            GridPane.columnSpan="1" maxWidth="Infinity"/>
     <GridPane fx:id="gridPaneOptionsCheckboxes" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
               GridPane.rowIndex="8"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
@@ -208,7 +210,7 @@
 
     <TextArea fx:id="textFieldConsole" styleClass="text-area, console" maxWidth="Infinity" GridPane.columnIndex="0"
               GridPane.columnSpan="4"
-              GridPane.rowIndex="14" visible="true" prefRowCount="40" prefColumnCount="80"/>
+              GridPane.rowIndex="14" visible="true" prefRowCount="250" prefColumnCount="80"/>
 
     <Button fx:id="btnConvert" styleClass="button, button-convert"
             maxWidth="Infinity" text="Convert" GridPane.columnIndex="0"

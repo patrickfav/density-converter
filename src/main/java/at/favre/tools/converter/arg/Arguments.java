@@ -22,18 +22,23 @@ import at.favre.tools.converter.ui.InvalidArgumentException;
 import at.favre.tools.converter.util.MiscUtil;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * Handles all the arguments that can be set in the converter
  */
-public class Arguments {
+public class Arguments implements Serializable {
+	private static final long serialVersionUID = 1;
+
+	public static final float DEFAULT_SCALE = 3f;
 	public static final float DEFAULT_COMPRESSION_QUALITY = 0.9f;
 	public static final int DEFAULT_THREAD_COUNT = 4;
 	public static final RoundingHandler.Strategy DEFAULT_ROUNDING_STRATEGY = RoundingHandler.Strategy.ROUND_HALF_UP;
 	public static final EPlatform DEFAULT_PLATFORM = EPlatform.ALL;
+	public static final EOutputCompressionMode DEFAULT_OUT_COMPRESSION = EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG;
 
-	public final static Arguments START_GUI = new Arguments();
+	public final static Arguments START_GUI = new Arguments(null, null, 0.27346f, null, null, 0.9362f, 996254, false, false, false, false, false, false, false, false, false, null);
 
 	public final File src;
 	public final File dst;
@@ -52,7 +57,7 @@ public class Arguments {
 	public final boolean postConvertWebp;
 	public final boolean enableAntiAliasing;
 	public final RoundingHandler.Strategy roundingHandler;
-	public final List<File> filesToProcess;
+	public transient final List<File> filesToProcess;
 
 
 	public Arguments(File src, File dst, float scrScale, EPlatform platform, EOutputCompressionMode outputCompressionMode,
@@ -89,12 +94,14 @@ public class Arguments {
 				}
 			}
 		} else {
-			filesToProcess.add(src);
+			if (supportedFileTypes.contains(MiscUtil.getFileExtensionLowerCase(src))) {
+				filesToProcess.add(src);
+			}
 		}
 	}
 
-	private Arguments() {
-		this(null, null, 0.27346f, null, null, 0.9362f, 996254, false, false, false, false, false, false, false, false, false, null);
+	public Arguments() {
+		this(null, null, DEFAULT_SCALE, DEFAULT_PLATFORM, DEFAULT_OUT_COMPRESSION, DEFAULT_COMPRESSION_QUALITY, DEFAULT_THREAD_COUNT, false, false, true, false, false, false, false, false, false, DEFAULT_ROUNDING_STRATEGY);
 	}
 
 	public double round(double raw) {

@@ -62,7 +62,7 @@ public class CLInterpreter {
 				return null;
 			}
 
-			builder = new Arguments.Builder(new File(commandLine.getOptionValue(SOURCE_ARG)), Float.valueOf(commandLine.getOptionValue(SCALE_ARG, "3")));
+			builder = new Arguments.Builder(new File(commandLine.getOptionValue(SOURCE_ARG)), Float.valueOf(commandLine.getOptionValue(SCALE_ARG, String.valueOf(Arguments.DEFAULT_SCALE))));
 
 			if (commandLine.hasOption(DST_ARG)) {
 				builder.dstFolder(new File(commandLine.getOptionValue(DST_ARG)));

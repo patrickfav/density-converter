@@ -43,8 +43,10 @@ import java.util.Locale;
  * JavaFx main controller for GUI
  */
 public class GUIController {
-	final FileChooser srcFileChooser = new FileChooser();
-	final DirectoryChooser srcDirectoryChooser = new DirectoryChooser();
+
+	private final PreferenceStore preferenceStore = new PreferenceStore();
+	private final FileChooser srcFileChooser = new FileChooser();
+	private final DirectoryChooser srcDirectoryChooser = new DirectoryChooser();
 
 	public TextField textFieldSrcPath;
 	public Button btnSrcFile;
@@ -78,8 +80,10 @@ public class GUIController {
 	public GridPane gridPaneOptionsCheckboxes;
 	public Label labelScaleSubtitle;
 	public CheckBox cbAntiAliasing;
+	public Button btnReset;
 
 	public void onCreate() {
+
 		btnSrcFile.setOnAction(event -> {
 			srcFileChooser.setTitle("Select Image");
 			File file = new File(textFieldSrcPath.getText());
@@ -107,6 +111,7 @@ public class GUIController {
 
 			try {
 				Arguments arg = getFromUI();
+				saveToPrefs(arg);
 
 				btnConvert.setDisable(true);
 				progressBar.setDisable(true);
@@ -155,19 +160,25 @@ public class GUIController {
 		btnSrcFolder.setGraphic(new ImageView(new Image("img/folder-symbol.png")));
 		btnSrcFile.setGraphic(new ImageView(new Image("img/file-symbol.png")));
 
+		btnReset.setOnAction(event -> {
+			saveToPrefs(new Arguments());
+			loadPrefs();
+		});
+
 		scaleSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
 			labelScale.setText("Scale (x" + String.format(Locale.US, "%.2f", Math.round(scaleSlider.getValue() * 4f) / 4f) + ")");
 			labelScaleSubtitle.setText(getNameForScale((float) scaleSlider.getValue()));
 		});
+		scaleSlider.setValue(Arguments.DEFAULT_SCALE);
 
 		choicePlatform.setItems(FXCollections.observableArrayList(
 				EPlatform.ALL, new Separator(), EPlatform.ANROID, EPlatform.IOS));
-		choicePlatform.getSelectionModel().selectFirst();
+		choicePlatform.getSelectionModel().select(Arguments.DEFAULT_PLATFORM);
 
 		choiceCompression.setItems(FXCollections.observableArrayList(
 				EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, EOutputCompressionMode.SAME_AS_INPUT_STRICT, new Separator(), EOutputCompressionMode.AS_JPG,
 				EOutputCompressionMode.AS_PNG, EOutputCompressionMode.AS_GIF, EOutputCompressionMode.AS_BMP, EOutputCompressionMode.AS_JPG_AND_PNG));
-		choiceCompression.getSelectionModel().selectFirst();
+		choiceCompression.getSelectionModel().select(Arguments.DEFAULT_OUT_COMPRESSION);
 
 		choiceCompressionQuality.setItems(FXCollections.observableArrayList(
 				0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f));
@@ -175,7 +186,7 @@ public class GUIController {
 
 		choiceRounding.setItems(FXCollections.observableArrayList(
 				RoundingHandler.Strategy.ROUND_HALF_UP, RoundingHandler.Strategy.CEIL, RoundingHandler.Strategy.FLOOR));
-		choiceRounding.getSelectionModel().selectFirst();
+		choiceRounding.getSelectionModel().select(Arguments.DEFAULT_ROUNDING_STRATEGY);
 
 		choiceThreads.setItems(FXCollections.observableArrayList(
 				1, 2, 3, 4, 5, 6, 7, 8));
@@ -183,8 +194,6 @@ public class GUIController {
 
 		cbVerboseLog.selectedProperty().addListener((observable, oldValue, newValue) -> {
 			textFieldConsole.setVisible(cbVerboseLog.isSelected());
-			{
-			}
 		});
 		labelVersion.setText("v" + GUIController.class.getPackage().getImplementationVersion());
 
@@ -205,7 +214,37 @@ public class GUIController {
 		gridPaneOptionsCheckboxes.getColumnConstraints().addAll(column1C, column2C);
 		gridPanePostProcessors.getColumnConstraints().addAll(column1C, column2C);
 
+		loadPrefs();
+	}
 
+	private void saveToPrefs(Arguments arg) {
+		preferenceStore.save(arg);
+	}
+
+	private void loadPrefs() {
+		Arguments args = preferenceStore.get();
+		if (args != null) {
+			textFieldSrcPath.setText(args.src != null ? args.src.getAbsolutePath() : "");
+			textFieldDstPath.setText(args.dst != null ? args.dst.getAbsolutePath() : "");
+			scaleSlider.setValue(args.scrScale);
+
+			choicePlatform.getSelectionModel().select(args.platform);
+			choiceCompression.getSelectionModel().select(args.outputCompressionMode);
+			choiceCompressionQuality.getSelectionModel().select(args.compressionQuality);
+			choiceRounding.getSelectionModel().select(args.roundingHandler);
+			choiceThreads.getSelectionModel().select(Integer.valueOf(args.threadCount));
+
+			cbSkipExisting.setSelected(args.skipExistingFiles);
+			cbSkipUpscaling.setSelected(args.skipUpscaling);
+			cbVerboseLog.setSelected(args.verboseLog);
+			cbAndroidIncludeLdpiTvdpi.setSelected(args.includeAndroidLdpiTvdpi);
+			cbAntiAliasing.setSelected(args.enableAntiAliasing);
+			cbMipmapInsteadDrawable.setSelected(args.createMipMapInsteadOfDrawableDir);
+			cbHaltOnError.setSelected(args.haltOnError);
+
+			chEnablePngCrush.setSelected(args.enablePngCrush);
+			cbPostConvertWebp.setSelected(args.postConvertWebp);
+		}
 	}
 
 	private Arguments getFromUI() throws InvalidArgumentException {

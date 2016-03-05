@@ -44,6 +44,9 @@ public class MiscUtil {
 	}
 
 	public static String getFileExtensionLowerCase(File file) {
+		if (file == null) {
+			return "";
+		}
 		return file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
 	}
 
