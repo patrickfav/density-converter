@@ -35,6 +35,10 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 
 	@Override
 	public List<AndroidDensityDescriptor> usedOutputDensities(Arguments arguments) {
+		return getAndroidDensityDescriptors(arguments);
+	}
+
+	public static List<AndroidDensityDescriptor> getAndroidDensityDescriptors(Arguments arguments) {
 		List<AndroidDensityDescriptor> list = new ArrayList<>();
 		if (arguments.includeAndroidLdpiTvdpi) {
 			list.add(new AndroidDensityDescriptor(0.75f, "ldpi", "drawable-ldpi"));

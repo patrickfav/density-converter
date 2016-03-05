@@ -37,6 +37,10 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 
 	@Override
 	public List<IOSDensityDescriptor> usedOutputDensities(Arguments arguments) {
+		return getIosDescriptors();
+	}
+
+	public static List<IOSDensityDescriptor> getIosDescriptors() {
 		List<IOSDensityDescriptor> list = new ArrayList<>();
 		list.add(new IOSDensityDescriptor(1, "1x", ""));
 		list.add(new IOSDensityDescriptor(2, "2x", "_2x"));
