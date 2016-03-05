@@ -1,7 +1,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="at.favre.tools.converter.ui.GUIController"
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="at.favre.tools.dconvert.ui.GUIController"
           stylesheets="flatten.css, style.css" styleClass="body" maxHeight="Infinity"
           maxWidth="Infinity" alignment="CENTER" hgap="8" vgap="8">
     <padding>
