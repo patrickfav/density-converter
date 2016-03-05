@@ -1,8 +1,8 @@
 # ![logo](src/main/resources/img/density_converter_icon_36.png) Density Image Converter Tool for Android and iOS
 
 This is a simple tool that helps **converting single or batches of images** to **Android** and **iOS** specific formats and density
-versions given the base scale. It has a **graphical** and **command line** interface and supports changing of compression types
-(e.g. png -> jpeg). Using advanced scaling algorithms, it is designed to make conversion of images easy and fast while keeping the image quality high.
+versions given the base scale. It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
+including PNG, JPEG, SVG and PSD. Using advanced scaling algorithms, it is designed to make conversion of images easy and fast while keeping the image quality high.
 
 Usage:
 
@@ -50,46 +50,47 @@ Will generate mdpi, hdpi, etc. folders in "C:/master-image/" containing the resi
 
 Full list of arguments:
 
-    -androidIncludeLdpiTvdpi           Android only: If set will include additional densities (ldpi and
-                                       tvdpi).
-    -androidMipmapInsteadOfDrawable    Android only: creates mipmap sub-folders instead of drawable.
-    -antiAliasing                      Anti-aliases images creating a little more blurred result; useful for
-                                       very small images
-    -compressionQuality <0.0-1.0>      Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is
-                                       the highest quality. Default is 0.9
-    -dst <path>                        The directory in which the converted files will be written. Will use
-                                       the source folder if this argument is omitted.
-    -enablePngCrush                    Will post-process all pngs with pngcrush. The executable must be set in
-                                       the system path as 'pngcrush' i.e executable from every path. Pngcrush
-                                       is a tool to compress pngs. Requires v1.7.22+
-    -gui                               Starts graphical user interface
-    -h,--help                          This help page
-    -haltOnError                       If set will stop the process if an error occurred during conversion
-    -outCompression <png|jpg>          Sets the compression of the converted images. Can be 'png', 'jpg',
-                                       'gif' or 'png+jpg'. By default the src compression type will be used
-                                       (e.g. png will be re-compressed to png after scaling).
-    -platform <all|android|ios>        Can be 'all', 'android' or 'ios'. Sets what formats the converted
-                                       images will be generated for. E.g. set 'android' if you only want to
-                                       convert to android format. Default is ALL
-    -postWebpConvert                   Will additionally convert all png/gif to lossless wepb and all jpg to
-                                       lossy webp with cwebp. Does not delete source files. The executable
-                                       must be set in the system path as 'cwebp' i.e executable from every
-                                       path. cwebp is the official converter from Google.
-    -roundingMode <round|ceil|floor>   Defines the rounding mode when scaling the dimensions. Possible options
-                                       are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and 'ceil'
-                                       (rounds up). Default is ROUND_HALF_UP
-    -scale <float>                     The source scrScale factor (1,1.5,2,3,4,etc.), ie. the base scrScale
-                                       used to calculate if images need to be up- or downscaled. Ie. if you
-                                       have the src file in density xxxhdpi you pass '4'. This argument is
-                                       mandatory.
-    -skipExisting                      If set will not overwrite a already existing file
-    -skipUpscaling                     If set will only scale down, but not up to prevent image quality loss
-    -src <path to file or folder>      The source. Can be an image file or a folder containing image files to
-                                       be converted. This argument is mandatory.
-    -threads <1-8>                     Sets the count of max parallel threads (more is faster but uses more
-                                       memory). Possible values are 1-8. Default is 3
-    -v,--version                       Gets current version
-    -verbose                           If set will log to console more verbose
+    -androidIncludeLdpiTvdpi            Android only: If set will include additional densities (ldpi and
+                                        tvdpi).
+    -androidMipmapInsteadOfDrawable     Android only: creates mipmap sub-folders instead of drawable.
+    -antiAliasing                       Anti-aliases images creating a little more blurred result; useful for
+                                        very small images
+    -compressionQuality <0.0-1.0>       Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is
+                                        the highest quality. Default is 0.9
+    -dst <path>                         The directory in which the converted files will be written. Will use
+                                        the source folder if this argument is omitted.
+    -enablePngCrush                     Will post-process all pngs with pngcrush. The executable must be set
+                                        in the system path as 'pngcrush' i.e executable from every path.
+                                        Pngcrush is a tool to compress pngs. Requires v1.7.22+
+    -gui                                Starts graphical user interface
+    -h,--help                           This help page
+    -haltOnError                        If set will stop the process if an error occurred during conversion
+    -outCompression <png|jpg|gif|bmp>   Sets the compression of the converted images. Can be 'png', 'jpg',
+                                        'gif', 'bmp', 'png+jpg' or 'strict' which tries to use same
+                                        compression as source. By default will convert to png except if source
+                                        compression is jpeg.
+    -platform <all|android|ios>         Can be 'all', 'android' or 'ios'. Sets what formats the converted
+                                        images will be generated for. E.g. set 'android' if you only want to
+                                        convert to android format. Default is ALL
+    -postWebpConvert                    Will additionally convert all png/gif to lossless wepb and all jpg to
+                                        lossy webp with cwebp. Does not delete source files. The executable
+                                        must be set in the system path as 'cwebp' i.e executable from every
+                                        path. cwebp is the official converter from Google.
+    -roundingMode <round|ceil|floor>    Defines the rounding mode when scaling the dimensions. Possible
+                                        options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and
+                                        'ceil' (rounds up). Default is ROUND_HALF_UP
+    -scale <float>                      The source scrScale factor (1,1.5,2,3,4,etc.), ie. the base scrScale
+                                        used to calculate if images need to be up- or downscaled. Ie. if you
+                                        have the src file in density xxxhdpi you pass '4'. This argument is
+                                        mandatory.
+    -skipExisting                       If set will not overwrite a already existing file
+    -skipUpscaling                      If set will only scale down, but not up to prevent image quality loss
+    -src <path to file or folder>       The source. Can be an image file or a folder containing image files to
+                                        be converted. This argument is mandatory.
+    -threads <1-8>                      Sets the count of max parallel threads (more is faster but uses more
+                                        memory). Possible values are 1-8. Default is 3
+    -v,--version                        Gets current version
+    -verbose                            If set will log to console more verbose
 
 
 ## GUI
@@ -103,6 +104,26 @@ java -jar ./dconvert.jar
 provides the same features as the command line tool so see manpages.
 
 ![gui-screenshot](misc/screenshot1.png)
+
+## Supported File Types
+
+This tool can read & write the following file types:
+
+* PNG - read and write support
+* JPEG - read and write support with quality parameter
+* GIF - read and write support
+* SVG - can read svg, will compress with png per default
+* PSD - can read photoshop files, will compress with png per default
+* TIFF - read and write support
+* BMP - read and write support
+
+Out-compression has the following modes:
+
+* as input (prefer png): jpegs will output jpeg, all other types png
+* as input (strict): except PSD & SVG which will use png, every file will be compressed with the source compression
+* <force compression>: jpeg, png, gif and bmp can be forced
+
+If an image will be recompressed with a file type that does not support alpha, alpha will be replaced with white (e.g. when converting png -> jpeg)
 
 ## Post Processors
 
@@ -131,6 +152,8 @@ If the flag is set the converter tool will compress jpegs to lossy webp and png/
 
 Java 1.8, JavaFx and Apache CLI
 
+For support of various image types TwelveMonkey lib is used which claims to have wider support of even basic file types (jpeg, etc.)
+
 Rescaling happens with imgscalr which includes some sophisticated algorithms for correct resizing using ULTRA_QUALITY setting.
 
 For parallel execution, every source file spawns his own thread for each platform converter e.g. 3 files 2 converters -> 6 threads needed.
@@ -157,6 +180,7 @@ The .jar file will be in the generated `/target` folder
 
 ## Credits
 
+* TIFF, PSD, SVG image type support [TwelveMonkeys](https://github.com/haraldk/TwelveMonkeys)
 * HQ image resizing with [imgscalr](https://github.com/thebuzzmedia/imgscalr)
 * JavaFx theme based on Flatter by [hendrikebbers](https://github.com/guigarage/javafx-collection/tree/master/flatter)
 * Image file icon: Icon made by [Freepik](http://www.freepik.com/)

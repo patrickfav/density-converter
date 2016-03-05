@@ -75,17 +75,23 @@ public class CLInterpreter {
 
 			if (commandLine.hasOption(OUT_COMPRESSION_ARG)) {
 				switch (commandLine.getOptionValue(OUT_COMPRESSION_ARG)) {
+					case "strict":
+						builder.compression(EOutputCompressionMode.SAME_AS_INPUT_STRICT);
+						break;
 					case "png":
-						builder.compression(EOutputCompressionMode.PNG);
+						builder.compression(EOutputCompressionMode.AS_PNG);
 						break;
 					case "jpg":
-						builder.compression(EOutputCompressionMode.JPG, compressionQuality);
+						builder.compression(EOutputCompressionMode.AS_JPG, compressionQuality);
 						break;
 					case "gif":
-						builder.compression(EOutputCompressionMode.GIF);
+						builder.compression(EOutputCompressionMode.AS_GIF);
+						break;
+					case "bmp":
+						builder.compression(EOutputCompressionMode.AS_BMP);
 						break;
 					case "png+jpg":
-						builder.compression(EOutputCompressionMode.JPG_AND_PNG, compressionQuality);
+						builder.compression(EOutputCompressionMode.AS_JPG_AND_PNG, compressionQuality);
 						break;
 					default:
 						System.err.println("unknown compression type: " + commandLine.getOptionValue(OUT_COMPRESSION_ARG));
@@ -162,7 +168,7 @@ public class CLInterpreter {
 		Option platform = Option.builder(PLATFORM_ARG).hasArg(true).argName("all|android|ios").desc("Can be 'all', 'android' or 'ios'. Sets what formats the converted images will be generated for. E.g. set 'android' if you only want to convert to android format. Default is " + Arguments.DEFAULT_PLATFORM).build();
 		Option threadCount = Option.builder(THREADS_ARG).argName("1-8").hasArg(true).desc("Sets the count of max parallel threads (more is faster but uses more memory). Possible values are 1-8. Default is " + Arguments.DEFAULT_THREAD_COUNT).build();
 		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc("Defines the rounding mode when scaling the dimensions. Possible options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and 'ceil' (rounds up). Default is " + Arguments.DEFAULT_ROUNDING_STRATEGY).build();
-		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg").desc("Sets the compression of the converted images. Can be 'png', 'jpg', 'gif' or 'png+jpg'. By default the src compression type will be used (e.g. png will be re-compressed to png after scaling).").build();
+		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg|gif|bmp").desc("Sets the compression of the converted images. Can be 'png', 'jpg', 'gif', 'bmp', 'png+jpg' or 'strict' which tries to use same compression as source. By default will convert to png except if source compression is jpeg.").build();
 		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).hasArg(true).argName("0.0-1.0").desc("Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is the highest quality. Default is " + Arguments.DEFAULT_COMPRESSION_QUALITY).build();
 
 		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc("If set will not overwrite a already existing file").build();

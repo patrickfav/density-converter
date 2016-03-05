@@ -30,6 +30,7 @@ import java.util.Locale;
 public class Main {
 	public static void main(String[] rawArgs) {
 
+
 		if (rawArgs.length < 1) {
 			new GUI().launchApp(rawArgs);
 			return;

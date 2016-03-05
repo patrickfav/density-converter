@@ -15,10 +15,10 @@
  *
  */
 
-package at.favre.tools.converter;
+package at.favre.tools.converter.util;
 
 import at.favre.tools.converter.arg.Arguments;
-import at.favre.tools.converter.arg.ECompression;
+import at.favre.tools.converter.arg.ImageType;
 import org.imgscalr.Scalr;
 
 import javax.imageio.IIOImage;
@@ -41,46 +41,20 @@ import java.util.List;
 /**
  * Main Util class containing all
  */
-public class ConverterUtil {
-
-	public static String getFileNameWithoutExtension(File file) {
-		String fileName = file.getName();
-		int pos = fileName.lastIndexOf(".");
-		if (pos > 0) {
-			fileName = fileName.substring(0, pos);
-		}
-		return fileName;
-	}
-
-	public static String getFileExtension(File file) {
-		return file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
-	}
-
-	public static File createAndCheckFolder(String path) {
-		File f = new File(path);
-
-		if (!f.exists()) {
-			f.mkdir();
-		}
-
-		if (!f.exists() || !f.isDirectory()) {
-			throw new IllegalStateException("could not create folder: " + path);
-		}
-		return f;
-	}
+public class ImageUtil {
 
 	public static BufferedImage loadImage(String filePath) throws Exception {
 		return ImageIO.read(new File(filePath));
 	}
 
 	public static String runWebP(File target, String[] additionalArgs, File outFile) {
-		String[] cmdArray = concat(concat(new String[]{"cwebp"}, additionalArgs), new String[]{"\"" + target.getAbsoluteFile() + "\"", "-o", "\"" + outFile.getAbsoluteFile() + "\""});
+		String[] cmdArray = MiscUtil.concat(MiscUtil.concat(new String[]{"cwebp"}, additionalArgs), new String[]{"\"" + target.getAbsoluteFile() + "\"", "-o", "\"" + outFile.getAbsoluteFile() + "\""});
 		return runCmd(cmdArray);
 	}
 
 	public static String runPngCrush(File target, String[] additionalArgs) {
-		if (Arguments.getCompressionType(target) == ECompression.PNG && target.exists() && target.isFile()) {
-			String[] cmdArray = concat(concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"-ow", "\"" + target.getAbsoluteFile() + "\""});
+		if (Arguments.getImageType(target) == ImageType.PNG && target.exists() && target.isFile()) {
+			String[] cmdArray = MiscUtil.concat(MiscUtil.concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"-ow", "\"" + target.getAbsoluteFile() + "\""});
 			return runCmd(cmdArray);
 		}
 		return "";
@@ -108,17 +82,11 @@ public class ConverterUtil {
 
 	}
 
-	public static <T> T[] concat(T[] first, T[] second) {
-		T[] result = Arrays.copyOf(first, first.length + second.length);
-		System.arraycopy(second, 0, result, first.length, second.length);
-		return result;
-	}
-
-	public static List<File> compressToFile(File targetFile, List<ECompression> compressionList, BufferedImage bufferedImage, Dimension targetDimension,
+	public static List<File> compressToFile(File targetFile, List<ImageType.ECompression> compressionList, BufferedImage bufferedImage, Dimension targetDimension,
 	                                        float compressionQuality, boolean skipIfExists, boolean antiAlias) throws Exception {
 		List<File> files = new ArrayList<>(2);
-		for (ECompression compression : compressionList) {
-			File imageFile = new File(targetFile.getAbsolutePath() + "." + compression.name().toLowerCase());
+		for (ImageType.ECompression compression : compressionList) {
+			File imageFile = new File(targetFile.getAbsolutePath() + "." + compression.extension);
 
 			if (imageFile.exists() && skipIfExists) {
 				break;
@@ -126,10 +94,10 @@ public class ConverterUtil {
 
 			BufferedImage scaledImage = scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.white, antiAlias);
 
-			if (compression == ECompression.PNG || compression == ECompression.GIF) {
-				ImageIO.write(scaledImage, compression.name().toLowerCase(), imageFile);
-			} else if (compression == ECompression.JPG) {
+			if (compression == ImageType.ECompression.JPG) {
 				compressJpeg(imageFile, scaledImage, compressionQuality);
+			} else {
+				ImageIO.write(scaledImage, compression.name().toLowerCase(), imageFile);
 			}
 			scaledImage.flush();
 			files.add(imageFile);
@@ -153,7 +121,7 @@ public class ConverterUtil {
 		}
 	}
 
-	public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ECompression compression, Color background, boolean antiAlias) {
+	public static BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, Color background, boolean antiAlias) {
 		BufferedImage scaledImage = null;
 		if (imageToScale != null) {
 
@@ -165,7 +133,7 @@ public class ConverterUtil {
 
 			scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY, dWidth, dHeight, bufferedImageOpArray);
 
-			if (compression == ECompression.JPG) {
+			if (!compression.hasTransparency) {
 				BufferedImage convertedImg = new BufferedImage(scaledImage.getWidth(), scaledImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 				convertedImg.getGraphics().drawImage(scaledImage, 0, 0, background, null);
 				scaledImage = convertedImg;
@@ -173,4 +141,5 @@ public class ConverterUtil {
 		}
 		return scaledImage;
 	}
+
 }

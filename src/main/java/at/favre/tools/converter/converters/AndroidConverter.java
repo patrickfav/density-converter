@@ -17,11 +17,11 @@
 
 package at.favre.tools.converter.converters;
 
-import at.favre.tools.converter.ConverterUtil;
 import at.favre.tools.converter.arg.Arguments;
-import at.favre.tools.converter.arg.ECompression;
 import at.favre.tools.converter.arg.EPlatform;
+import at.favre.tools.converter.arg.ImageType;
 import at.favre.tools.converter.converters.descriptors.AndroidDensityDescriptor;
+import at.favre.tools.converter.util.MiscUtil;
 
 import java.awt.*;
 import java.io.File;
@@ -56,7 +56,7 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
 		if (arguments.platform != EPlatform.ANROID) {
-			return ConverterUtil.createAndCheckFolder(new File(destinationFolder, "android").getAbsolutePath());
+			return MiscUtil.createAndCheckFolder(new File(destinationFolder, "android").getAbsolutePath());
 		} else {
 			return destinationFolder;
 		}
@@ -65,7 +65,7 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 	@Override
 	public File createFolderForOutputFile(File mainSubFolder, AndroidDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
 		String folderName = (arguments.createMipMapInsteadOfDrawableDir ? density.folderName.replaceAll("drawable", "mipmap") : density.folderName);
-		return ConverterUtil.createAndCheckFolder(new File(mainSubFolder, folderName).getAbsolutePath());
+		return MiscUtil.createAndCheckFolder(new File(mainSubFolder, folderName).getAbsolutePath());
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 	}
 
 	@Override
-	public void onPreExecute(File dstFolder, String targetFileName, List<AndroidDensityDescriptor> densityDescriptions, ECompression srcCompression, Arguments arguments) throws Exception {
+	public void onPreExecute(File dstFolder, String targetFileName, List<AndroidDensityDescriptor> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception {
 		//nothing
 	}
 

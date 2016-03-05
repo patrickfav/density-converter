@@ -17,7 +17,7 @@
 
 package at.favre.tools.converter.converters.postprocessing;
 
-import at.favre.tools.converter.ConverterUtil;
+import at.favre.tools.converter.util.ImageUtil;
 
 import java.io.File;
 
@@ -38,6 +38,6 @@ public class PngCrushProcessor implements PostProcessor {
 
 	@Override
 	public String process(File rawFile) {
-		return ConverterUtil.runPngCrush(rawFile, additionalArgs);
+		return ImageUtil.runPngCrush(rawFile, additionalArgs);
 	}
 }

@@ -17,10 +17,11 @@
 
 package at.favre.tools.converter.converters;
 
-import at.favre.tools.converter.ConverterUtil;
 import at.favre.tools.converter.arg.Arguments;
-import at.favre.tools.converter.arg.ECompression;
+import at.favre.tools.converter.arg.ImageType;
 import at.favre.tools.converter.converters.descriptors.DensityDescriptor;
+import at.favre.tools.converter.util.ImageUtil;
+import at.favre.tools.converter.util.MiscUtil;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -46,9 +47,11 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 	}
 
 	@Override
-	public void convert(File destinationFolder, File srcImage, String targetImageFileName, ECompression srcCompression, Arguments args, ConverterCallback callback) {
+	public void convert(File destinationFolder, File srcImage, Arguments args, ConverterCallback callback) {
 		try {
-			BufferedImage rawImage = ConverterUtil.loadImage(srcImage.getAbsolutePath());
+			BufferedImage rawImage = ImageUtil.loadImage(srcImage.getAbsolutePath());
+			String targetImageFileName = MiscUtil.getFileNameWithoutExtension(srcImage);
+			ImageType imageType = Arguments.getImageType(srcImage);
 
 			StringBuilder log = new StringBuilder();
 			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ")
@@ -58,7 +61,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 			File mainSubFolder = createMainSubFolder(destinationFolder, targetImageFileName, args);
 
-			onPreExecute(mainSubFolder, targetImageFileName, usedOutputDensities(args), srcCompression, args);
+			onPreExecute(mainSubFolder, targetImageFileName, usedOutputDensities(args), imageType, args);
 
 			List<File> allResultingFiles = new ArrayList<>();
 
@@ -70,7 +73,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 					log.append("process ").append(imageFile).append(" with ").append(entry.getValue().width).append("x").append(entry.getValue().height).append(" (x").append(entry.getKey().scale).append(")\n");
 
-					List<File> files = ConverterUtil.compressToFile(imageFile, Arguments.getCompressionForType(args.outputCompressionMode, srcCompression), rawImage,
+					List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), rawImage,
 							entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing);
 
 					allResultingFiles.addAll(files);
@@ -114,7 +117,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 	public abstract String createDestinationFileNameWithoutExtension(T density, Dimension dimension, String targetFileName, Arguments arguments);
 
-	public abstract void onPreExecute(File dstFolder, String targetFileName, List<T> densityDescriptions, ECompression srcCompression, Arguments arguments) throws Exception;
+	public abstract void onPreExecute(File dstFolder, String targetFileName, List<T> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception;
 
 	public abstract void onPostExecute(Arguments arguments);
 }

@@ -18,25 +18,20 @@
 
 package at.favre.tools.converter.arg;
 
-import at.favre.tools.converter.ConverterUtil;
 import at.favre.tools.converter.ui.InvalidArgumentException;
+import at.favre.tools.converter.util.MiscUtil;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Handles all the arguments that can be set in the converter
  */
 public class Arguments {
 	public static final float DEFAULT_COMPRESSION_QUALITY = 0.9f;
-	public static final int DEFAULT_THREAD_COUNT = 3;
+	public static final int DEFAULT_THREAD_COUNT = 4;
 	public static final RoundingHandler.Strategy DEFAULT_ROUNDING_STRATEGY = RoundingHandler.Strategy.ROUND_HALF_UP;
 	public static final EPlatform DEFAULT_PLATFORM = EPlatform.ALL;
-
-
-	public final static String[] VALID_FILE_EXTENSIONS = new String[]{ECompression.GIF.name().toLowerCase(), ECompression.JPG.name().toLowerCase(), ECompression.PNG.name().toLowerCase(), "jpeg"};
 
 	public final static Arguments START_GUI = new Arguments();
 
@@ -84,10 +79,12 @@ public class Arguments {
 
 		this.filesToProcess = new ArrayList<>();
 
+		Set<String> supportedFileTypes = getSupportedFileTypes();
+
 		if (src != null && src.isDirectory()) {
 			for (File file : src.listFiles()) {
-				String extension = ConverterUtil.getFileExtension(file);
-				if (Arrays.asList(VALID_FILE_EXTENSIONS).contains(extension)) {
+				String extension = MiscUtil.getFileExtensionLowerCase(file);
+				if (supportedFileTypes.contains(extension)) {
 					filesToProcess.add(file);
 				}
 			}
@@ -128,12 +125,23 @@ public class Arguments {
 				'}';
 	}
 
+	public static Set<String> getSupportedFileTypes() {
+		Set<String> set = new HashSet<>();
+		for (ImageType imageType : ImageType.values()) {
+			if (imageType.supportRead) {
+				set.addAll(Arrays.asList(imageType.extensions));
+			}
+		}
+
+		return set;
+	}
+
 	public static class Builder {
 		private File dst;
 		private float srcScale;
 		private File src = null;
 		private EPlatform platform = DEFAULT_PLATFORM;
-		private EOutputCompressionMode outputCompressionMode = EOutputCompressionMode.SAME_AS_INPUT;
+		private EOutputCompressionMode outputCompressionMode = EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG;
 		private float compressionQuality = DEFAULT_COMPRESSION_QUALITY;
 		private int threadCount = DEFAULT_THREAD_COUNT;
 		private RoundingHandler.Strategy roundingStrategy = DEFAULT_ROUNDING_STRATEGY;
@@ -258,40 +266,56 @@ public class Arguments {
 		}
 	}
 
-	public static ECompression getCompressionType(File srcFile) {
-		String extension = ConverterUtil.getFileExtension(srcFile);
+	public static ImageType getImageType(File srcFile) {
+		String extension = MiscUtil.getFileExtensionLowerCase(srcFile);
 		switch (extension) {
 			case "jpg":
 			case "jpeg":
-				return ECompression.JPG;
+				return ImageType.JPG;
 			case "png":
-				return ECompression.PNG;
+				return ImageType.PNG;
+			case "svg":
+				return ImageType.SVG;
+			case "tif":
+			case "tiff":
+				return ImageType.TIFF;
+			case "psd":
+				return ImageType.PSD;
 			case "gif":
-				return ECompression.GIF;
+				return ImageType.GIF;
+			case "bmp":
+				return ImageType.BMP;
 			default:
 				throw new IllegalArgumentException("unknown file extension " + extension + " in srcFile " + srcFile);
 		}
 	}
 
-	public static List<ECompression> getCompressionForType(EOutputCompressionMode type, ECompression srcCompression) {
-		List<ECompression> list = new ArrayList<>(2);
+
+	public static List<ImageType.ECompression> getOutCompressionForType(EOutputCompressionMode type, ImageType imageType) {
+		List<ImageType.ECompression> list = new ArrayList<>(2);
 		switch (type) {
-			case GIF:
-				list.add(ECompression.GIF);
+			case AS_GIF:
+				list.add(ImageType.ECompression.GIF);
 				break;
-			case PNG:
-				list.add(ECompression.PNG);
+			case AS_PNG:
+				list.add(ImageType.ECompression.PNG);
 				break;
-			case JPG:
-				list.add(ECompression.JPG);
+			case AS_JPG:
+				list.add(ImageType.ECompression.JPG);
 				break;
-			case JPG_AND_PNG:
-				list.add(ECompression.JPG);
-				list.add(ECompression.PNG);
+			case AS_JPG_AND_PNG:
+				list.add(ImageType.ECompression.JPG);
+				list.add(ImageType.ECompression.PNG);
+				break;
+			case AS_BMP:
+				list.add(ImageType.ECompression.BMP);
+				break;
+			case SAME_AS_INPUT_PREF_PNG:
+				list.add(imageType.outCompressionCompat);
 				break;
 			default:
-			case SAME_AS_INPUT:
-				list.add(srcCompression);
+			case SAME_AS_INPUT_STRICT:
+				list.add(imageType.outCompressionStrict);
 				break;
 		}
 		return list;

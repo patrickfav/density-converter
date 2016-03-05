@@ -17,11 +17,11 @@
 
 package at.favre.tools.converter.converters;
 
-import at.favre.tools.converter.ConverterUtil;
 import at.favre.tools.converter.arg.Arguments;
-import at.favre.tools.converter.arg.ECompression;
 import at.favre.tools.converter.arg.EPlatform;
+import at.favre.tools.converter.arg.ImageType;
 import at.favre.tools.converter.converters.descriptors.IOSDensityDescriptor;
+import at.favre.tools.converter.util.MiscUtil;
 
 import java.awt.*;
 import java.io.File;
@@ -52,9 +52,9 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
 		if (arguments.platform != EPlatform.IOS) {
-			destinationFolder = ConverterUtil.createAndCheckFolder(new File(destinationFolder, "ios").getAbsolutePath());
+			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, "ios").getAbsolutePath());
 		}
-		return ConverterUtil.createAndCheckFolder(new File(destinationFolder, targetImageFileName + ".imageset").getAbsolutePath());
+		return MiscUtil.createAndCheckFolder(new File(destinationFolder, targetImageFileName + ".imageset").getAbsolutePath());
 	}
 
 	@Override
@@ -68,8 +68,8 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 	}
 
 	@Override
-	public void onPreExecute(File dstFolder, String targetFileName, List<IOSDensityDescriptor> densityDescriptions, ECompression srcCompression, Arguments arguments) throws Exception {
-		writeContentJson(dstFolder, targetFileName, densityDescriptions, Arguments.getCompressionForType(arguments.outputCompressionMode, srcCompression));
+	public void onPreExecute(File dstFolder, String targetFileName, List<IOSDensityDescriptor> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception {
+		writeContentJson(dstFolder, targetFileName, densityDescriptions, Arguments.getOutCompressionForType(arguments.outputCompressionMode, imageType));
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 
 	}
 
-	private void writeContentJson(File dstFolder, String targetFileName, List<IOSDensityDescriptor> iosDensityDescriptions, List<ECompression> compressions) throws IOException {
+	private void writeContentJson(File dstFolder, String targetFileName, List<IOSDensityDescriptor> iosDensityDescriptions, List<ImageType.ECompression> compressions) throws IOException {
 		File contentJson = new File(dstFolder, "Content.json");
 
 		if (contentJson.exists()) {
@@ -90,9 +90,9 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 		}
 	}
 
-	private String createContentJson(String targetFileName, List<IOSDensityDescriptor> iosDensityDescriptions, List<ECompression> compressions) {
+	private String createContentJson(String targetFileName, List<IOSDensityDescriptor> iosDensityDescriptions, List<ImageType.ECompression> compressions) {
 		StringBuilder sb = new StringBuilder("{\n\t\"images\": [");
-		for (ECompression compression : compressions) {
+		for (ImageType.ECompression compression : compressions) {
 			for (IOSDensityDescriptor densityDescription : iosDensityDescriptions) {
 				sb.append("\n\t\t{\n" +
 						"\t\t\t\"filename\": \"" + targetFileName + densityDescription.postFix + "." + compression.name().toLowerCase() + "\",\n" +

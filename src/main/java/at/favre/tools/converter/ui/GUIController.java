@@ -22,6 +22,7 @@ import at.favre.tools.converter.arg.Arguments;
 import at.favre.tools.converter.arg.EOutputCompressionMode;
 import at.favre.tools.converter.arg.EPlatform;
 import at.favre.tools.converter.arg.RoundingHandler;
+import at.favre.tools.converter.util.MiscUtil;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -124,20 +125,28 @@ public class GUIController {
 					@Override
 					public void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
 						Platform.runLater(() -> {
-							progressBar.setProgress(1);
-							btnConvert.setDisable(false);
-							labelResult.setText("Finished Jobs: " + finsihedJobs + " / Errors: " + exceptions.size() + " / Duration: " + time + "ms");
-							textFieldConsole.setDisable(false);
+							resetUIAfterExecution();
+							labelResult.setText("Finished Jobs: " + finsihedJobs + " / Errors: " + exceptions.size() + " / Duration: " + MiscUtil.duration(time));
 							textFieldConsole.setText(log);
+
+							if (!exceptions.isEmpty()) {
+								Alert alert = new Alert(Alert.AlertType.WARNING);
+								alert.setTitle("Errors during exection");
+								alert.setHeaderText(null);
+								alert.setContentText("There were " + exceptions.size() + " errors while execution. See log for details.");
+								alert.showAndWait();
+							}
 						});
 
 					}
 				}, false);
 			} catch (Exception e) {
+				resetUIAfterExecution();
+				labelResult.setText("Error: " + e.getClass().getSimpleName());
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle(e.getClass().getSimpleName());
-				alert.setHeaderText(null);
-				alert.setContentText(e.getMessage());
+				alert.setHeaderText(e.getMessage());
+				alert.setContentText(MiscUtil.getStackTrace(e));
 				alert.showAndWait();
 			}
 		});
@@ -156,8 +165,8 @@ public class GUIController {
 		choicePlatform.getSelectionModel().selectFirst();
 
 		choiceCompression.setItems(FXCollections.observableArrayList(
-				EOutputCompressionMode.SAME_AS_INPUT, new Separator(), EOutputCompressionMode.JPG,
-				EOutputCompressionMode.PNG, EOutputCompressionMode.GIF, EOutputCompressionMode.JPG_AND_PNG));
+				EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, EOutputCompressionMode.SAME_AS_INPUT_STRICT, new Separator(), EOutputCompressionMode.AS_JPG,
+				EOutputCompressionMode.AS_PNG, EOutputCompressionMode.AS_GIF, EOutputCompressionMode.AS_BMP, EOutputCompressionMode.AS_JPG_AND_PNG));
 		choiceCompression.getSelectionModel().selectFirst();
 
 		choiceCompressionQuality.setItems(FXCollections.observableArrayList(
@@ -219,6 +228,12 @@ public class GUIController {
 		builder.postConvertWebp(cbPostConvertWebp.isSelected());
 
 		return builder.build();
+	}
+
+	private void resetUIAfterExecution() {
+		progressBar.setProgress(1);
+		btnConvert.setDisable(false);
+		textFieldConsole.setDisable(false);
 	}
 
 	private static String getNameForScale(float scale) {

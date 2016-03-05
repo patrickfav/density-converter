@@ -17,9 +17,10 @@
 
 package at.favre.tools.converter.converters.postprocessing;
 
-import at.favre.tools.converter.ConverterUtil;
 import at.favre.tools.converter.arg.Arguments;
-import at.favre.tools.converter.arg.ECompression;
+import at.favre.tools.converter.arg.ImageType;
+import at.favre.tools.converter.util.ImageUtil;
+import at.favre.tools.converter.util.MiscUtil;
 
 import java.io.File;
 
@@ -30,14 +31,14 @@ public class WebpProcessor implements PostProcessor {
 
 	@Override
 	public String process(File rawFile) {
-		ECompression compression = Arguments.getCompressionType(rawFile);
-		File out = new File(rawFile.getParentFile(), ConverterUtil.getFileNameWithoutExtension(rawFile) + ".webp");
+		ImageType compression = Arguments.getImageType(rawFile);
+		File out = new File(rawFile.getParentFile(), MiscUtil.getFileNameWithoutExtension(rawFile) + ".webp");
 		String[] args = new String[]{};
-		if (compression == ECompression.PNG || compression == ECompression.GIF) {
+		if (compression == ImageType.PNG || compression == ImageType.GIF) {
 			args = new String[]{"-lossless", "-alpha_filter", "best", "-m", "6"};
-		} else if (compression == ECompression.JPG) {
+		} else if (compression == ImageType.JPG) {
 			args = new String[]{"-m", "6", "-q", "90"};
 		}
-		return ConverterUtil.runWebP(rawFile, args, out);
+		return ImageUtil.runWebP(rawFile, args, out);
 	}
 }

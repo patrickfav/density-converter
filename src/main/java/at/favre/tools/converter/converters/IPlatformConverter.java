@@ -18,7 +18,6 @@
 package at.favre.tools.converter.converters;
 
 import at.favre.tools.converter.arg.Arguments;
-import at.favre.tools.converter.arg.ECompression;
 
 import java.io.File;
 
@@ -32,10 +31,8 @@ public interface IPlatformConverter {
 	 *
 	 * @param destinationFolder   the (sub) folder to save output files
 	 * @param srcImageFile        source image file to be used as base to scale
-	 * @param targetImageFileName how the file should be named (without extenstion)
-	 * @param srcCompression      compression type of the source file
 	 * @param arguments           all tool args
 	 * @param callback            if not null need to be called if finished or failed
 	 */
-	void convert(File destinationFolder, File srcImageFile, String targetImageFileName, ECompression srcCompression, Arguments arguments, ConverterCallback callback);
+	void convert(File destinationFolder, File srcImageFile, Arguments arguments, ConverterCallback callback);
 }

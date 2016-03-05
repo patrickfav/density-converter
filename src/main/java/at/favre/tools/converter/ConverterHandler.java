@@ -27,15 +27,17 @@ import at.favre.tools.converter.converters.postprocessing.PngCrushProcessor;
 import at.favre.tools.converter.converters.postprocessing.PostProcessor;
 import at.favre.tools.converter.converters.postprocessing.WebpProcessor;
 
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.ImageWriter;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.*;
 
 /**
  * This is the main class handling all of the converters and post processors.
  * This handles the threading and orchestration of the threads.
- *
+ * <p>
  * All user interfaces will call this class to execute.
  */
 public class ConverterHandler {
@@ -60,63 +62,73 @@ public class ConverterHandler {
 		beginMs = System.currentTimeMillis();
 		handlerCallback = callback;
 
+		logStringBuilder.append("registered image readers:\n").append(getRegisteredImageReadersAndWriters()).append("\n");
 		logStringBuilder.append("begin execution using ").append(args.threadCount).append(" theads\n");
 		logStringBuilder.append("args: ").append(args).append("\n");
 
-		List<IPlatformConverter> converters = new ArrayList<>();
+		if (!args.filesToProcess.isEmpty()) {
+			List<IPlatformConverter> converters = new ArrayList<>();
 
-		ExecutorService threadPool = new ThreadPoolExecutor(args.threadCount, args.threadCount, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<>(256));
+			ExecutorService threadPool = new ThreadPoolExecutor(args.threadCount, args.threadCount, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<>(256));
 
-		if (args.platform == EPlatform.ANROID || args.platform == EPlatform.ALL) {
-			logStringBuilder.append("add android converter\n");
-			converters.add(new AndroidConverter());
-		}
-		if (args.platform == EPlatform.IOS || args.platform == EPlatform.ALL) {
-			logStringBuilder.append("add ios converter\n");
-			converters.add(new IOSConverter());
-		}
-
-		if (args.enablePngCrush) {
-			logStringBuilder.append("add pngcrush postprocessor\n");
-			postProcessors.add(new PngCrushProcessor());
-		}
-		if (args.postConvertWebp) {
-			logStringBuilder.append("add webp postprocessor\n");
-			postProcessors.add(new WebpProcessor());
-		}
-
-		int convertJobs = args.filesToProcess.size() * converters.size();
-		int allJobs = convertJobs + (convertJobs * postProcessors.size());
-
-		mainLatch = new CountDownLatch(allJobs);
-		converterCallback = new LocalCallback(allJobs, new CountDownLatch(convertJobs), threadPool, logStringBuilder);
-
-		for (File srcFile : args.filesToProcess) {
-			logStringBuilder.append("add ").append(srcFile).append(" to processing queue\n");
-
-			if (!srcFile.exists() || !srcFile.isFile()) {
-				throw new IllegalStateException("srcFile " + srcFile + " does not exist");
+			if (args.platform == EPlatform.ANROID || args.platform == EPlatform.ALL) {
+				logStringBuilder.append("add android converter\n");
+				converters.add(new AndroidConverter());
+			}
+			if (args.platform == EPlatform.IOS || args.platform == EPlatform.ALL) {
+				logStringBuilder.append("add ios converter\n");
+				converters.add(new IOSConverter());
 			}
 
-			for (IPlatformConverter converter : converters) {
-				threadPool.execute(new ConverterWorker(converter, srcFile, args, converterCallback));
+			if (args.enablePngCrush) {
+				logStringBuilder.append("add pngcrush postprocessor\n");
+				postProcessors.add(new PngCrushProcessor());
 			}
-		}
-		threadPool.shutdown();
+			if (args.postConvertWebp) {
+				logStringBuilder.append("add webp postprocessor\n");
+				postProcessors.add(new WebpProcessor());
+			}
 
-		if (blockingWaitForFinish) {
-			try {
-				mainLatch.await(30, TimeUnit.MINUTES);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			int convertJobs = args.filesToProcess.size() * converters.size();
+			int allJobs = convertJobs + (convertJobs * postProcessors.size());
+
+			mainLatch = new CountDownLatch(allJobs);
+			converterCallback = new LocalCallback(allJobs, new CountDownLatch(convertJobs), threadPool, logStringBuilder);
+
+			for (File srcFile : args.filesToProcess) {
+				logStringBuilder.append("add ").append(srcFile).append(" to processing queue\n");
+
+				if (!srcFile.exists() || !srcFile.isFile()) {
+					throw new IllegalStateException("srcFile " + srcFile + " does not exist");
+				}
+
+				for (IPlatformConverter converter : converters) {
+					threadPool.execute(new ConverterWorker(converter, srcFile, args, converterCallback));
+				}
 			}
+			threadPool.shutdown();
+
+			if (blockingWaitForFinish) {
+				try {
+					mainLatch.await(30, TimeUnit.MINUTES);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			logStringBuilder.append("no files to convert\n");
+			informFinished(logStringBuilder.toString(), false);
 		}
 	}
 
 	private void informFinished(String log, boolean halted) {
 		System.gc();
 		if (handlerCallback != null) {
-			handlerCallback.onFinished(converterCallback.getFinished(), converterCallback.getExceptions(), (System.currentTimeMillis() - beginMs), halted, log);
+			if (converterCallback != null) {
+				handlerCallback.onFinished(converterCallback.getFinished(), converterCallback.getExceptions(), (System.currentTimeMillis() - beginMs), halted, log);
+			} else {
+				handlerCallback.onFinished(0, Collections.emptyList(), (System.currentTimeMillis() - beginMs), halted, log);
+			}
 		}
 	}
 
@@ -221,7 +233,7 @@ public class ConverterHandler {
 		@Override
 		public void run() {
 			try {
-				converter.convert(arguments.dst, srcFile, ConverterUtil.getFileNameWithoutExtension(srcFile), Arguments.getCompressionType(srcFile), arguments, callback);
+				converter.convert(arguments.dst, srcFile, arguments, callback);
 			} catch (Exception e) {
 				callback.failure(e);
 			}
@@ -232,5 +244,24 @@ public class ConverterHandler {
 		void onProgress(float progress, String log);
 
 		void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log);
+	}
+
+	public String getRegisteredImageReadersAndWriters() {
+		String[] formats = new String[]{"JPEG", "PNG", "TIFF", "PSD", "SVG", "BMP"};
+
+		StringBuilder sb = new StringBuilder();
+		for (String format : Arrays.asList(formats)) {
+			Iterator<ImageReader> reader = ImageIO.getImageReadersByFormatName(format);
+			while (reader.hasNext()) {
+				ImageReader next = reader.next();
+				sb.append("reader: ").append(next).append("\n");
+			}
+			Iterator<ImageWriter> writer = ImageIO.getImageWritersByFormatName(format);
+			while (writer.hasNext()) {
+				ImageWriter next = writer.next();
+				sb.append("writer: ").append(next).append("\n");
+			}
+		}
+		return sb.toString();
 	}
 }

@@ -21,5 +21,5 @@ package at.favre.tools.converter.arg;
  * Different output compression modes
  */
 public enum EOutputCompressionMode {
-	SAME_AS_INPUT, JPG, PNG, GIF, JPG_AND_PNG
+	SAME_AS_INPUT_PREF_PNG, SAME_AS_INPUT_STRICT, AS_JPG, AS_PNG, AS_GIF, AS_BMP, AS_JPG_AND_PNG
 }
