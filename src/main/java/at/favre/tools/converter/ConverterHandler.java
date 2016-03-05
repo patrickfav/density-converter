@@ -161,7 +161,8 @@ public class ConverterHandler {
 		public void failure(Exception e) {
 			exceptions.add(e);
 			jobFinished(null);
-			logSB.append("error: ").append(e.getMessage()).append("\n");
+			logSB.append("error: ").append(e.getClass().getSimpleName()).append(" / ").append(e.getMessage()).append("\n");
+			e.printStackTrace();
 			if (arguments.haltOnError) {
 				done = true;
 				threadPool.shutdownNow();
