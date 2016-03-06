@@ -1,52 +1,44 @@
 # ![logo](src/main/resources/img/density_converter_icon_36.png) Density Image Converter Tool for Android and iOS
 
 This is a simple tool that helps **converting single or batches of images** to **Android** and **iOS** specific formats and density
-versions given the base scale. It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
-including PNG, JPEG, SVG and PSD. Using advanced scaling algorithms, it is designed to make conversion of images easy and fast while keeping the image quality high.
+versions given the base scale or target width in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
+It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
+including PNG, JPEG, SVG and PSD. Using advanced scaling algorithms, it is designed to make conversion of images easy and
+fast while keeping the image quality high. To further optimize the output post processors like **pngcrush** can be used (see section below).
 
 Usage:
 
 ```
-java -jar ./dconvert.jar -src "C:/your-folder/image-folder" -scale 3
+java -jar ./dconvert.jar -src "C:/your-folder/image-folder" -scale 4
 ```
 
 or
 
 ```
+java -jar ./dconvert.jar -src "C:/your-folder/image-folder" -scale 48dp
+```
+
+while
+
+```
 java -jar ./dconvert.jar
 ```
 
-will start the UI (or double click the jar file).
+will start the UI (_or double click the jar file_).
 
 **[Download here](https://github.com/patrickfav/density-converter/releases/)**
 
-# Details
-
-This tool is based on the idea that a developer gets the 'master' image in the highest needed resolution for his platform,
-e.g. xxxhdpi (x4) in Android. He then proceeds to generate every other density with it. This tool exist to make this step as
-easy and fast as possible.
-
-To better understand, here is a practical example for Android: Source file is `ic_my_icon.png` in density xxxhdpi with resolution 144x144 (this will be 36dp x 36dp).
-The tool will generated the following images in the following resolutions:
-```
-* mdpi 36x36 (x1)
-* hdpi 54x54 (x1.5)
-* xhdpi 72x72 (x2)
-* xxhdpi 108x108 (x3)
-* xxxhdpi 144x144 (x4)
-```
-To further optimize the output post processors can be used (see section below). This tool supports processing single files
-or batches that are in a folder. Batch mode only processes direct child files and will NOT recursively search for images.
+# Usage
 
 ## Command Line
 
-Continuing the above example of a xxxhdpi (x4) icon:
+E.g. with `xxxhdpi` (x4) source files:
 
 ```
 java -jar ./dconvert.jar -src "C:/master-image/ic_my_icon.png" -scale 4 -platform android
 ```
 
-Will generate mdpi, hdpi, etc. folders in "C:/master-image/" containing the resized images
+Will generate `mdpi`, `hdpi`, etc. folders in "C:/master-image/" containing the resized images
 
 Full list of arguments:
 
@@ -79,16 +71,19 @@ Full list of arguments:
     -roundingMode <round|ceil|floor>    Defines the rounding mode when scaling the dimensions. Possible
                                         options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and
                                         'ceil' (rounds up). Default is ROUND_HALF_UP
-    -scale <float>                      The source scrScale factor (1,1.5,2,3,4,etc.), ie. the base scrScale
-                                        used to calculate if images need to be up- or downscaled. Ie. if you
-                                        have the src file in density xxxhdpi you pass '4'. This argument is
-                                        mandatory.
+    -scale <<float>|<int>dp>            The source scale. This can either be a factor (1,1.5,2,3,4,etc.) used
+                                        if the images already have the correct resolution for one scale factor
+                                        and up- and downscaling for all other densities are needed. Ie. if you
+                                        have the src file in density xxxhdpi you pass '4'. You could also pass
+                                        a value in dp (density independent pixels) which denotes the output
+                                        pixel width in mdpi/x1. In this mode all output images will have the
+                                        same width. This argument is mandatory.
     -skipExisting                       If set will not overwrite a already existing file
     -skipUpscaling                      If set will only scale down, but not up to prevent image quality loss
     -src <path to file or folder>       The source. Can be an image file or a folder containing image files to
                                         be converted. This argument is mandatory.
     -threads <1-8>                      Sets the count of max parallel threads (more is faster but uses more
-                                        memory). Possible values are 1-8. Default is 3
+                                        memory). Possible values are 1-8. Default is 4
     -v,--version                        Gets current version
     -verbose                            If set will log to console more verbose
 
@@ -101,9 +96,49 @@ Start with
 java -jar ./dconvert.jar
 ```
 
-provides the same features as the command line tool so see manpages.
+provides the same features as the command line tool so see help page of command line or tooltips.
 
 ![gui-screenshot](misc/screenshot1.png)
+
+# Details
+
+## Scale Factor vs. DP Width
+
+There are 2 modes available for the user:
+
+### Scale Factor Mode
+
+This mode is based on the idea that a developer gets the 'master' images in the highest needed resolution for his platform,
+e.g. `xxxhdpi` (x4) in Android. He then proceeds to generate every other density with it.
+
+To better understand, here is a practical example for Android: Source file is `ic_my_icon.png` in density xxxhdpi with resolution 144x144 (this will be 36dp x 36dp).
+The tool will generated the following images in the following resolutions:
+
+```
+* mdpi 36x36 (x1)
+* hdpi 54x54 (x1.5)
+* xhdpi 72x72 (x2)
+* xxhdpi 108x108 (x3)
+* xxxhdpi 144x144 (x4)
+```
+
+
+### Fixed Width in DP Mode
+
+This mode is suitable if the source image is in an arbitrary resolution (but usually greater resolution than needed) and
+the needed density independent pixel (dp) dimensions are known to the developer. The set dp value is always the width, while
+the height will scale accordingly (keeping aspect ration). In this mode all images will have the same pixel width for the
+same density bucket. Here is a practical example:
+
+You get an icon in 512x512 and want to display it in 48x48dp. The tool will generate the following resolutions:
+
+```
+* mdpi 48x48 (x1)
+* hdpi 72x72 (x1.5)
+* xhdpi 108x108 (x2)
+* xxhdpi 144x144 (x3)
+* xxxhdpi 192x192 (x4)
+```
 
 ## Supported File Types
 
