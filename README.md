@@ -130,7 +130,7 @@ The tool will generated the following images in the following resolutions:
 
 This mode is suitable if the source image is in an arbitrary resolution (but usually greater resolution than needed) and
 the needed density independent pixel (dp) dimensions are known to the developer. Either the width or height can be fixed
-with a dp value, while calculating the other dimension accordingly (keeping aspect ration). In this mode all images will
+with a dp value, while calculating the other dimension accordingly (keeping aspect ratio). In this mode all images will
 have the same pixel width (or height) for the same density bucket. Here is a practical example with fixed width:
 
 You get an icon in 512x512 and want to display it in 48x48dp. The tool will generate the following resolutions:
@@ -151,9 +151,11 @@ This tool can read & write the following file types:
 * JPEG - read and write support with quality parameter
 * GIF - read and write support
 * SVG - can read svg, will compress with png per default
-* PSD - can read photoshop files, will compress with png per default
+* PSD - can read some Photoshop files, will compress with png per default
 * TIFF - read and write support
 * BMP - read and write support
+
+Details on the [supported features of each format see here](https://github.com/haraldk/TwelveMonkeys/blob/master/README.md).
 
 Out-compression has the following modes:
 
@@ -161,7 +163,7 @@ Out-compression has the following modes:
 * as input (strict): except PSD & SVG which will use png, every file will be compressed with the source compression
 * [force compression]: jpeg, png, gif and bmp can be forced
 
-If an image will be recompressed with a file type that does not support alpha, alpha will be replaced with white (e.g. when converting png -> jpeg)
+If an image will be re-compressed with a file type that does not support alpha, alpha will be replaced with white (e.g. when converting png -> jpeg)
 
 ## Post Processors
 
