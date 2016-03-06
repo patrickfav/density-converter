@@ -1,9 +1,6 @@
 package at.favre.tools.dconvert.test;
 
-import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EOutputCompressionMode;
-import at.favre.tools.dconvert.arg.EPlatform;
-import at.favre.tools.dconvert.arg.RoundingHandler;
+import at.favre.tools.dconvert.arg.*;
 import at.favre.tools.dconvert.ui.CLInterpreter;
 import at.favre.tools.dconvert.ui.InvalidArgumentException;
 import org.apache.tools.ant.types.Commandline;
@@ -63,6 +60,26 @@ public class CLITest {
 			check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + scale,
 					new Arguments.Builder(defaultSrc, scale).build());
 		}
+	}
+
+	@Test
+	public void testScalesInDp() throws Exception {
+		for (Integer scale : Arrays.asList(new Integer[]{1, 12, 24, 48, 106, 33, 500, 96, 256, 480})) {
+			check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + scale + "dp",
+					new Arguments.Builder(defaultSrc, scale).scaleType(EScaleType.DP).build());
+		}
+	}
+
+	@Test(expected = InvalidArgumentException.class)
+	public void test0ScalesInDp() throws Exception {
+		check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + 0 + "dp",
+				new Arguments.Builder(defaultSrc, 0).scaleType(EScaleType.DP).build());
+	}
+
+	@Test(expected = InvalidArgumentException.class)
+	public void test9999ScalesInDp() throws Exception {
+		check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + 9999 + "dp",
+				new Arguments.Builder(defaultSrc, 9999).scaleType(EScaleType.DP).build());
 	}
 
 	@Test(expected = InvalidArgumentException.class)

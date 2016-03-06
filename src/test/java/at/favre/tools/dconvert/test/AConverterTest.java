@@ -1,9 +1,6 @@
 package at.favre.tools.dconvert.test;
 
-import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EOutputCompressionMode;
-import at.favre.tools.dconvert.arg.EPlatform;
-import at.favre.tools.dconvert.arg.RoundingHandler;
+import at.favre.tools.dconvert.arg.*;
 import at.favre.tools.dconvert.converters.AndroidConverter;
 import at.favre.tools.dconvert.converters.ConverterCallback;
 import at.favre.tools.dconvert.converters.IOSConverter;
@@ -130,6 +127,18 @@ public abstract class AConverterTest {
 	}
 
 	@Test
+	public void testScaleInDp() throws Exception {
+		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
+		test(new Arguments.Builder(defaultSrc, 24).dstFolder(defaultDst).scaleType(EScaleType.DP).platform(getType()).build(), files);
+	}
+
+	@Test
+	public void testMultipleScaleInDp() throws Exception {
+		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "gif_example_640.gif", "jpg_example_1920.jpg");
+		test(new Arguments.Builder(defaultSrc, 24).dstFolder(defaultDst).scaleType(EScaleType.DP).platform(getType()).build(), files);
+	}
+
+	@Test
 	public void testMultiplePng() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example2_alpha_144.png", "png_example3_alpha_128.png");
 		defaultTest(files);
@@ -200,9 +209,20 @@ public abstract class AConverterTest {
 		return map;
 	}
 
-	protected static Dimension getScaledDimension(Arguments args, Dimension dimension, float scale) {
-		double baseWidth = (double) dimension.width / args.scale;
-		double baseHeight = (double) dimension.height / args.scale;
+	protected static Dimension getScaledDimension(File srcFile, Arguments args, Dimension dimension, float scale) throws IOException {
+		double baseWidth;
+		double baseHeight;
+
+		if (args.scaleType == EScaleType.DP) {
+			Dimension srcDimension = ImageUtil.getImageDimension(srcFile);
+			float scaleFactor = args.scale / (float) srcDimension.width;
+
+			baseWidth = (int) args.round(args.scale);
+			baseHeight = (int) args.round(scaleFactor * (float) srcDimension.height);
+		} else {
+			baseWidth = (double) dimension.width / args.scale;
+			baseHeight = (double) dimension.height / args.scale;
+		}
 
 		return new Dimension((int) args.round(baseWidth * scale),
 				(int) args.round(baseHeight * scale));

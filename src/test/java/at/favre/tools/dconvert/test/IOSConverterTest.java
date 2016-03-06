@@ -69,7 +69,7 @@ public class IOSConverterTest extends AConverterTest {
 					if (dstImageFile.getName().equals(expectedFile.targetFileName)) {
 						expectedFile.found = true;
 
-						Dimension expectedDimension = getScaledDimension(arguments, dimensionMap.get(expectedFile.srcFile), expectedFile.scale);
+						Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedFile.scale);
 						assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(dstImageFile));
 					}
 				}

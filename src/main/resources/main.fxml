@@ -26,7 +26,7 @@
             <ToggleGroup fx:id="scaleTypeToggleGroup"/>
         </fx:define>
         <children>
-            <RadioButton fx:id="rbFactor" text="Scale Factor" toggleGroup="$scaleTypeToggleGroup"
+            <RadioButton fx:id="rbFactor" text="Source Scale Factor" toggleGroup="$scaleTypeToggleGroup"
                          GridPane.columnIndex="0" selected="true" style="-fx-padding: 0 8 0 0">
                 <tooltip>
                     <Tooltip

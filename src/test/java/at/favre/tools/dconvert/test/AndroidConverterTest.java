@@ -70,11 +70,11 @@ public class AndroidConverterTest extends AConverterTest {
 					assertTrue("files count should match input", files.isEmpty() == expectedFiles.isEmpty());
 
 					for (ImageCheck expectedFile : expectedFiles) {
-						for (File childFile : new File(dstDir, path).listFiles()) {
-							if (expectedFile.targetFile.equals(childFile)) {
+						for (File imageFile : new File(dstDir, path).listFiles()) {
+							if (expectedFile.targetFile.equals(imageFile)) {
 								expectedFile.found = true;
-								Dimension expectedDimension = getScaledDimension(arguments, dimensionMap.get(expectedFile.srcFile), expectedDir.scaleFactor);
-								assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(childFile));
+								Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedDir.scaleFactor);
+								assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(imageFile));
 							}
 						}
 					}
