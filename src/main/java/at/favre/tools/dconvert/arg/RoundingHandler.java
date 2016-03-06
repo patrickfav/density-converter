@@ -37,11 +37,11 @@ public class RoundingHandler {
 		switch (strategy) {
 			default:
 			case ROUND_HALF_UP:
-				return Math.round(value);
+				return Math.max(1, Math.round(value));
 			case CEIL:
-				return (long) Math.ceil(value);
+				return Math.max(1, (long) Math.ceil(value));
 			case FLOOR:
-				return (long) Math.floor(value);
+				return Math.max(1, (long) Math.floor(value));
 		}
 	}
 }
