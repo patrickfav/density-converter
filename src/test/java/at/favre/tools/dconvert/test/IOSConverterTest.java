@@ -100,17 +100,4 @@ public class IOSConverterTest extends AConverterTest {
 		}
 		System.out.println();
 	}
-
-	private static class ImageInfo {
-		public final File srcFile;
-		public final String targetFileName;
-		public final float scale;
-		public boolean found = false;
-
-		public ImageInfo(File srcFile, String targetFileName, float scale) {
-			this.srcFile = srcFile;
-			this.targetFileName = targetFileName;
-			this.scale = scale;
-		}
-	}
 }

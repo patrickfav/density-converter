@@ -1,6 +1,6 @@
-# ![logo](src/main/resources/img/density_converter_icon_36.png) Density Image Converter Tool for Android and iOS
+# ![logo](src/main/resources/img/density_converter_icon_36.png) Density Image Converter Tool for Android, iOS and Windows
 
-This is a simple tool that helps **converting single or batches of images** to **Android** and **iOS** specific formats and density
+This is a simple tool that helps **converting single or batches of images** to **Android**, **iOS** and **Windows** specific formats and density
 versions given the source scale factor or target width/height in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
 It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
 including PNG, JPEG, SVG and PSD. Using advanced scaling algorithms, it is designed to make conversion of images easy and
@@ -142,6 +142,14 @@ You get an icon in 512x512 and want to display it in 48x48dp. The tool will gene
 * xxhdpi 144x144 (x3)
 * xxxhdpi 192x192 (x4)
 ```
+
+## Supported Platforms
+
+This tool can converts to formats used in Android, iOS and Windows:
+
+ * The Android converter will create `drawable-ldpi`, `drawable-mdpi`, etc. folders and saves images with the original name in there.
+ * The iOS converter will create a folder for each image with the `.imageset` postfix and creates 3 images in them with no, `_2x` and `_3x` postfix; also including is the `Content.json`
+ * The Windows converter will create an `Assets` folder containing all the images with `.scale-100`, `.scale-140` etc. postfixes
 
 ## Supported File Types
 

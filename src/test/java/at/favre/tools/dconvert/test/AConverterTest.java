@@ -18,10 +18,7 @@
 package at.favre.tools.dconvert.test;
 
 import at.favre.tools.dconvert.arg.*;
-import at.favre.tools.dconvert.converters.AndroidConverter;
-import at.favre.tools.dconvert.converters.ConverterCallback;
-import at.favre.tools.dconvert.converters.IOSConverter;
-import at.favre.tools.dconvert.converters.IPlatformConverter;
+import at.favre.tools.dconvert.converters.*;
 import at.favre.tools.dconvert.util.ImageUtil;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
@@ -67,7 +64,7 @@ public abstract class AConverterTest {
 	public void setUp() throws IOException {
 		defaultDst = temporaryFolder.newFolder("android-converter-test", "out");
 		defaultSrc = temporaryFolder.newFolder("android-converter-test", "src");
-		converter = getType() == EPlatform.ANROID ? new AndroidConverter() : getType() == EPlatform.IOS ? new IOSConverter() : null;
+		converter = getType() == EPlatform.ANROID ? new AndroidConverter() : getType() == EPlatform.IOS ? new IOSConverter() : getType() == EPlatform.WINDOWS ? new WindowsConverter() : null;
 		countDownLatch = new CountDownLatch(1);
 		defaultCallback = new ConverterCallback() {
 			@Override
@@ -261,6 +258,20 @@ public abstract class AConverterTest {
 
 		return new Dimension((int) args.round(baseWidth * scale),
 				(int) args.round(baseHeight * scale));
+	}
+
+
+	protected static class ImageInfo {
+		public final File srcFile;
+		public final String targetFileName;
+		public final float scale;
+		public boolean found = false;
+
+		public ImageInfo(File srcFile, String targetFileName, float scale) {
+			this.srcFile = srcFile;
+			this.targetFileName = targetFileName;
+			this.scale = scale;
+		}
 	}
 
 }

@@ -124,6 +124,9 @@ public class CLInterpreter {
 					case "ios":
 						builder.platform(EPlatform.IOS);
 						break;
+					case "win":
+						builder.platform(EPlatform.WINDOWS);
+						break;
 					default:
 						System.err.println("unknown mode: " + commandLine.getOptionValue(PLATFORM_ARG));
 				}
@@ -181,7 +184,7 @@ public class CLInterpreter {
 				" file in density xxxhdpi you pass '4'. You could also pass a value in dp (density independent pixels) which denotes the output pixel width (or height if the flag is set) in mdpi/x1. In this mode all output images will have the same width (height). This argument is mandatory.").build();
 		Option dstOpt = Option.builder(DST_ARG).hasArg(true).argName("path").desc("The directory in which the converted files will be written. Will use the source folder if this argument is omitted.").build();
 
-		Option platform = Option.builder(PLATFORM_ARG).hasArg(true).argName("all|android|ios").desc("Can be 'all', 'android' or 'ios'. Sets what formats the converted images will be generated for. E.g. set 'android' if you only want to convert to android format. Default is " + Arguments.DEFAULT_PLATFORM).build();
+		Option platform = Option.builder(PLATFORM_ARG).hasArg(true).argName("all|android|ios|win").desc("Can be 'all', 'android' or 'ios'. Sets what formats the converted images will be generated for. E.g. set 'android' if you only want to convert to android format. Default is " + Arguments.DEFAULT_PLATFORM).build();
 		Option threadCount = Option.builder(THREADS_ARG).argName("1-8").hasArg(true).desc("Sets the count of max parallel threads (more is faster but uses more memory). Possible values are 1-8. Default is " + Arguments.DEFAULT_THREAD_COUNT).build();
 		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc("Defines the rounding mode when scaling the dimensions. Possible options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and 'ceil' (rounds up). Default is " + Arguments.DEFAULT_ROUNDING_STRATEGY).build();
 		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg|gif|bmp").desc("Sets the compression of the converted images. Can be 'png', 'jpg', 'gif', 'bmp', 'png+jpg' or 'strict' which tries to use same compression as source. By default will convert to png except if source compression is jpeg.").build();

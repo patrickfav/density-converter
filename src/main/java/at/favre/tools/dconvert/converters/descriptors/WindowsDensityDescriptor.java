@@ -15,11 +15,16 @@
  *
  */
 
-package at.favre.tools.dconvert.arg;
+package at.favre.tools.dconvert.converters.descriptors;
 
 /**
- * Defines platforms to convert to
+ * Needed info to convert for iOS
  */
-public enum EPlatform {
-	ALL, ANROID, IOS, WINDOWS
+public class WindowsDensityDescriptor extends DensityDescriptor {
+	public final String postFix;
+
+	public WindowsDensityDescriptor(float scale, String name, String postFix) {
+		super(scale, name);
+		this.postFix = postFix;
+	}
 }

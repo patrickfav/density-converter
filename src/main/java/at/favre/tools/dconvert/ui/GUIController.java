@@ -188,7 +188,7 @@ public class GUIController {
 		scaleSlider.setValue(Arguments.DEFAULT_SCALE);
 
 		choicePlatform.setItems(FXCollections.observableArrayList(
-				EPlatform.ALL, new Separator(), EPlatform.ANROID, EPlatform.IOS));
+				EPlatform.ALL, new Separator(), EPlatform.ANROID, EPlatform.IOS, EPlatform.WINDOWS));
 		choicePlatform.getSelectionModel().select(Arguments.DEFAULT_PLATFORM);
 
 		choiceCompression.setItems(FXCollections.observableArrayList(

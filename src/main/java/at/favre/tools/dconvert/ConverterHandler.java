@@ -19,10 +19,7 @@ package at.favre.tools.dconvert;
 
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EPlatform;
-import at.favre.tools.dconvert.converters.AndroidConverter;
-import at.favre.tools.dconvert.converters.ConverterCallback;
-import at.favre.tools.dconvert.converters.IOSConverter;
-import at.favre.tools.dconvert.converters.IPlatformConverter;
+import at.favre.tools.dconvert.converters.*;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PostProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
@@ -78,6 +75,10 @@ public class ConverterHandler {
 			if (args.platform == EPlatform.IOS || args.platform == EPlatform.ALL) {
 				logStringBuilder.append("add ios converter\n");
 				converters.add(new IOSConverter());
+			}
+			if (args.platform == EPlatform.WINDOWS || args.platform == EPlatform.ALL) {
+				logStringBuilder.append("add windows converter\n");
+				converters.add(new WindowsConverter());
 			}
 
 			if (args.enablePngCrush) {
