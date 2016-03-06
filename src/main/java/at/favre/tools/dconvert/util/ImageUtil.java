@@ -43,8 +43,8 @@ import java.util.List;
  */
 public class ImageUtil {
 
-	public static BufferedImage loadImage(String filePath) throws Exception {
-		return ImageIO.read(new File(filePath));
+	public static BufferedImage loadImage(File file) throws Exception {
+		return ImageIO.read(file);
 	}
 
 	public static String runWebP(File target, String[] additionalArgs, File outFile) {
@@ -76,7 +76,7 @@ public class ImageUtil {
 			}
 			process.waitFor();
 		} catch (Exception e) {
-			logStringBuilder.append("error: could not png crush - ").append(e.getMessage()).append(" - is it set in PATH?\n");
+			logStringBuilder.append("error: could not run command - ").append(Arrays.toString(cmdArray)).append(" - ").append(e.getMessage()).append(" - is it set in PATH?\n");
 		}
 		return logStringBuilder.toString();
 
@@ -140,6 +140,26 @@ public class ImageUtil {
 			}
 		}
 		return scaledImage;
+	}
+
+	@Deprecated
+	public static BufferedImage readSvg(File file, Dimension sourceDimension) throws Exception {
+		try (ImageInputStream input = ImageIO.createImageInputStream(file)) {
+			Iterator<ImageReader> readers = ImageIO.getImageReaders(input);
+			if (!readers.hasNext()) {
+				throw new IllegalArgumentException("No reader for: " + file);
+			}
+
+			ImageReader reader = readers.next();
+			try {
+				reader.setInput(input);
+				ImageReadParam param = reader.getDefaultReadParam();
+				param.setSourceRenderSize(sourceDimension);
+				return reader.read(0, param);
+			} finally {
+				reader.dispose();
+			}
+		}
 	}
 
 	/**
