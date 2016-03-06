@@ -1,7 +1,7 @@
 # ![logo](src/main/resources/img/density_converter_icon_36.png) Density Image Converter Tool for Android and iOS
 
 This is a simple tool that helps **converting single or batches of images** to **Android** and **iOS** specific formats and density
-versions given the source scale factor or target width in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
+versions given the source scale factor or target width/height in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
 It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
 including PNG, JPEG, SVG and PSD. Using advanced scaling algorithms, it is designed to make conversion of images easy and
 fast while keeping the image quality high. To further optimize the output post processors like **pngcrush** can be used (see section below).
@@ -76,8 +76,11 @@ Full list of arguments:
                                         and up- and downscaling for all other densities are needed. Ie. if you
                                         have the src file in density xxxhdpi you pass '4'. You could also pass
                                         a value in dp (density independent pixels) which denotes the output
-                                        pixel width in mdpi/x1. In this mode all output images will have the
-                                        same width. This argument is mandatory.
+                                        pixel width (or height if the flag is set) in mdpi/x1. In this mode
+                                        all output images will have the same width (height). This argument is
+                                        mandatory.
+    -scaleIsHeightDp                    If set and scale is in dp it will be interpreted as fixed height not
+                                        width
     -skipExisting                       If set will not overwrite a already existing file
     -skipUpscaling                      If set will only scale down, but not up to prevent image quality loss
     -src <path to file or folder>       The source. Can be an image file or a folder containing image files to
@@ -103,7 +106,7 @@ will save its settings persistently making it easier for power users.
 
 # Details
 
-## Scale Factor vs. DP Width
+## Scale Factor vs. Fixed DP Width/Height
 
 There are 2 modes available for the user:
 
@@ -123,13 +126,12 @@ The tool will generated the following images in the following resolutions:
 * xxxhdpi 144x144 (x4)
 ```
 
-
-### Fixed Width in DP Mode
+### Fixed Width/Height in DP Mode
 
 This mode is suitable if the source image is in an arbitrary resolution (but usually greater resolution than needed) and
-the needed density independent pixel (dp) dimensions are known to the developer. The set dp value is always the width, while
-the height will scale accordingly (keeping aspect ration). In this mode all images will have the same pixel width for the
-same density bucket. Here is a practical example:
+the needed density independent pixel (dp) dimensions are known to the developer. Either the width or height can be fixed
+with a dp value, while calculating the other dimension accordingly (keeping aspect ration). In this mode all images will
+have the same pixel width (or height) for the same density bucket. Here is a practical example with fixed width:
 
 You get an icon in 512x512 and want to display it in 48x48dp. The tool will generate the following resolutions:
 
@@ -201,6 +203,11 @@ Both user interfaces use the same underlying logic.
 ## Limitations & Known Issues
 
 * There is no specific support for Android 9-patches ([see this project](https://github.com/redwarp/9-Patch-Resizer))
+
+## Possible Future Features
+
+* change SVG source resolution to max needed resolution so no upscaling is needed
+* 9-patch support
 
 ## How to build
 

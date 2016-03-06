@@ -79,10 +79,12 @@ public class GUIController {
 	public CheckBox cbAntiAliasing;
 	public Button btnReset;
 	public TextField textFieldDp;
-	public Label labelDp;
+	public Label labelDpWidth;
+	public Label labelDpHeight;
 	public ToggleGroup scaleTypeToggleGroup;
 	public RadioButton rbFactor;
-	public RadioButton rbDp;
+	public RadioButton rbDpWidth;
+	public RadioButton rbDpHeight;
 	public GridPane gridPaneScaleFactorLabel;
 	public Label labelDpPostFix;
 
@@ -171,11 +173,12 @@ public class GUIController {
 		});
 
 		scaleTypeToggleGroup.selectedToggleProperty().addListener((ov, old_toggle, new_toggle) -> {
-			scaleSlider.setVisible(!rbDp.isSelected());
-			gridPaneScaleFactorLabel.setVisible(!rbDp.isSelected());
-			textFieldDp.setVisible(rbDp.isSelected());
-			labelDpPostFix.setVisible(rbDp.isSelected());
-			labelDp.setVisible(rbDp.isSelected());
+			scaleSlider.setVisible(!rbDpWidth.isSelected() && !rbDpHeight.isSelected());
+			gridPaneScaleFactorLabel.setVisible(!rbDpWidth.isSelected() && !rbDpHeight.isSelected());
+			textFieldDp.setVisible(rbDpWidth.isSelected() || rbDpHeight.isSelected());
+			labelDpPostFix.setVisible(rbDpWidth.isSelected() || rbDpHeight.isSelected());
+			labelDpWidth.setVisible(rbDpWidth.isSelected());
+			labelDpHeight.setVisible(rbDpHeight.isSelected());
 		});
 
 		scaleSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -251,14 +254,17 @@ public class GUIController {
 			textFieldSrcPath.setText(args.src != null ? args.src.getAbsolutePath() : "");
 			textFieldDstPath.setText(args.dst != null ? args.dst.getAbsolutePath() : "");
 
+			scaleSlider.setValue(Arguments.DEFAULT_SCALE);
+			textFieldDp.setText(String.valueOf((int) args.scale));
+
 			if (args.scaleType == EScaleType.FACTOR) {
 				rbFactor.setSelected(true);
 				scaleSlider.setValue(args.scale);
 				textFieldDp.setText("");
-			} else {
-				rbDp.setSelected(true);
-				scaleSlider.setValue(Arguments.DEFAULT_SCALE);
-				textFieldDp.setText(String.valueOf((int) args.scale));
+			} else if (args.scaleType == EScaleType.DP_WIDTH) {
+				rbDpWidth.setSelected(true);
+			} else if (args.scaleType == EScaleType.DP_HEIGHT) {
+				rbDpHeight.setSelected(true);
 			}
 
 			choicePlatform.getSelectionModel().select(args.platform);
@@ -290,7 +296,7 @@ public class GUIController {
 
 		Arguments.Builder builder = new Arguments.Builder(new File(textFieldSrcPath.getText()), scale);
 		builder.dstFolder(textFieldDstPath.getText() != null && !textFieldDstPath.getText().trim().isEmpty() ? new File(textFieldDstPath.getText()) : null);
-		builder.scaleType(rbFactor.isSelected() ? EScaleType.FACTOR : EScaleType.DP);
+		builder.scaleType(rbFactor.isSelected() ? EScaleType.FACTOR : rbDpWidth.isSelected() ? EScaleType.DP_WIDTH : EScaleType.DP_HEIGHT);
 		builder.platform((EPlatform) choicePlatform.getSelectionModel().getSelectedItem());
 		builder.compression((EOutputCompressionMode) choiceCompression.getSelectionModel().getSelectedItem(), (Float) choiceCompressionQuality.getSelectionModel().getSelectedItem());
 		builder.scaleRoundingStragy((RoundingHandler.Strategy) choiceRounding.getSelectionModel().getSelectedItem());

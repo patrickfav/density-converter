@@ -36,6 +36,7 @@ public class CLInterpreter {
 	public static final String DST_ARG = "dst";
 	public static final String VERBOSE_ARG = "verbose";
 	public static final String SKIP_EXISTING_ARG = "skipExisting";
+	public static final String SCALE_IS_HEIGHT_DP_ARG = "scaleIsHeightDp";
 
 	public static Arguments parse(String[] args) {
 		Options options = setupOptions();
@@ -70,8 +71,10 @@ public class CLInterpreter {
 
 			builder = new Arguments.Builder(new File(commandLine.getOptionValue(SOURCE_ARG)), Float.parseFloat(scaleRawParam));
 
-			if (dp) {
-				builder.scaleType(EScaleType.DP);
+			if (dp && commandLine.hasOption(SCALE_IS_HEIGHT_DP_ARG)) {
+				builder.scaleType(EScaleType.DP_HEIGHT);
+			} else if (dp && !commandLine.hasOption(SCALE_IS_HEIGHT_DP_ARG)) {
+				builder.scaleType(EScaleType.DP_WIDTH);
 			} else {
 				builder.scaleType(EScaleType.FACTOR);
 			}
@@ -175,7 +178,7 @@ public class CLInterpreter {
 
 		Option srcOpt = Option.builder(SOURCE_ARG).required().argName("path to file or folder").hasArg(true).desc("The source. Can be an image file or a folder containing image files to be converted. This argument is mandatory.").build();
 		Option srcScaleOpt = Option.builder(SCALE_ARG).argName("<float>|<int>dp").hasArg(true).desc("The source scale. This can either be a factor (1,1.5,2,3,4,etc.) used if the images already have the correct resolution for one scale factor and up- and downscaling for all other densities are needed. Ie. if you have the src" +
-				" file in density xxxhdpi you pass '4'. You could also pass a value in dp (density independent pixels) which denotes the output pixel width in mdpi/x1. In this mode all output images will have the same width. This argument is mandatory.").build();
+				" file in density xxxhdpi you pass '4'. You could also pass a value in dp (density independent pixels) which denotes the output pixel width (or height if the flag is set) in mdpi/x1. In this mode all output images will have the same width (height). This argument is mandatory.").build();
 		Option dstOpt = Option.builder(DST_ARG).hasArg(true).argName("path").desc("The directory in which the converted files will be written. Will use the source folder if this argument is omitted.").build();
 
 		Option platform = Option.builder(PLATFORM_ARG).hasArg(true).argName("all|android|ios").desc("Can be 'all', 'android' or 'ios'. Sets what formats the converted images will be generated for. E.g. set 'android' if you only want to convert to android format. Default is " + Arguments.DEFAULT_PLATFORM).build();
@@ -193,6 +196,7 @@ public class CLInterpreter {
 		Option antiAliasing = Option.builder("antiAliasing").desc("Anti-aliases images creating a little more blurred result; useful for very small images").build();
 		Option enablePngCrush = Option.builder("enablePngCrush").desc("Will post-process all pngs with pngcrush. The executable must be set in the system path as 'pngcrush' i.e executable from every path. Pngcrush is a tool to compress pngs. Requires v1.7.22+").build();
 		Option postWebpConvert = Option.builder("postWebpConvert").desc("Will additionally convert all png/gif to lossless wepb and all jpg to lossy webp with cwebp. Does not delete source files. The executable must be set in the system path as 'cwebp' i.e executable from every path. cwebp is the official converter from Google.").build();
+		Option dpScaleIsHeight = Option.builder(SCALE_IS_HEIGHT_DP_ARG).desc("If set and scale is in dp it will be interpreted as fixed height not width").build();
 
 		Option help = Option.builder("h").longOpt("help").desc("This help page").build();
 		Option version = Option.builder("v").longOpt("version").desc("Gets current version").build();
@@ -205,7 +209,7 @@ public class CLInterpreter {
 		options.addOption(srcScaleOpt).addOption(dstOpt);
 		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler);
 		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(includeObsoleteFormats).addOption(verboseLog).addOption(antiAliasing)
-				.addOption(haltOnError).addOption(mipmapInsteadOfDrawable).addOption(enablePngCrush).addOption(postWebpConvert);
+				.addOption(haltOnError).addOption(mipmapInsteadOfDrawable).addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight);
 
 		options.addOptionGroup(mainArgs);
 

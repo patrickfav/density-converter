@@ -33,11 +33,18 @@
                             text="Base source scale as factor (1,1.5,2,3,4,etc.); used if the images already have the correct resolution for one scale factor and up- and downscaling for all other densities is needed."/>
                 </tooltip>
             </RadioButton>
-            <RadioButton fx:id="rbDp" text="Width in density independent pixels (dp)"
+            <RadioButton fx:id="rbDpWidth" text="Width in dp" style="-fx-padding: 0 8 0 0"
                          toggleGroup="$scaleTypeToggleGroup" GridPane.columnIndex="1">
                 <tooltip>
                     <Tooltip
                             text="Set the width in dp (density independent pixels) which denotes the pixel output in mdpi/x1. In this mode all output images will have the same width."/>
+                </tooltip>
+            </RadioButton>
+            <RadioButton fx:id="rbDpHeight" text="Height in dp"
+                         toggleGroup="$scaleTypeToggleGroup" GridPane.columnIndex="2">
+                <tooltip>
+                    <Tooltip
+                            text="Set the height in dp (density independent pixels) which denotes the pixel output in mdpi/x1. In this mode all output images will have the same width."/>
                 </tooltip>
             </RadioButton>
         </children>
@@ -46,7 +53,10 @@
 
     <Label text="Fixed Width:" styleClass="label, label_main" alignment="CENTER_RIGHT"
            maxWidth="Infinity" visible="false"
-           fx:id="labelDp" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+           fx:id="labelDpWidth" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <Label text="Fixed Height:" styleClass="label, label_main" alignment="CENTER_RIGHT"
+           maxWidth="Infinity" visible="false"
+           fx:id="labelDpHeight" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
     <TextField fx:id="textFieldDp" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="Infinity"
                alignment="CENTER_RIGHT" visible="false"/>
     <Label fx:id="labelDpPostFix" GridPane.columnIndex="2" text="dp" GridPane.rowIndex="2" alignment="CENTER_RIGHT"

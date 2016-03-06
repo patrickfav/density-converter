@@ -43,8 +43,10 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 			default:
 			case FACTOR:
 				return getDensityBucketsWithFactorScale(densities, dimensionForScalingFactor, args, scale);
-			case DP:
+			case DP_WIDTH:
 				return getDensityBucketsWithDpScale(srcFile, densities, args, scale);
+			case DP_HEIGHT:
+				return getDensityBucketsHeightDpScale(srcFile, densities, args, scale);
 		}
 	}
 
@@ -57,6 +59,21 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 		Map<T, Dimension> bucketMap = new TreeMap<>();
 		densities.stream().filter(density -> (int) args.round(baseWidth * density.scale) <= srcDimension.width || !args.skipUpscaling).forEach(density -> {
+			bucketMap.put(density, new Dimension((int) args.round(baseWidth * density.scale),
+					(int) args.round(baseHeight * density.scale)));
+		});
+		return bucketMap;
+	}
+
+	private Map<T, Dimension> getDensityBucketsHeightDpScale(File srcFile, List<T> densities, Arguments args, float scale) throws IOException {
+		Dimension srcDimension = ImageUtil.getImageDimension(srcFile);
+		float scaleFactor = scale / (float) srcDimension.height;
+
+		int baseWidth = (int) args.round(scaleFactor * (float) srcDimension.width);
+		int baseHeight = (int) args.round(scale);
+
+		Map<T, Dimension> bucketMap = new TreeMap<>();
+		densities.stream().filter(density -> (int) args.round(baseHeight * density.scale) <= srcDimension.height || !args.skipUpscaling).forEach(density -> {
 			bucketMap.put(density, new Dimension((int) args.round(baseWidth * density.scale),
 					(int) args.round(baseHeight * density.scale)));
 		});
@@ -151,8 +168,11 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 		Dimension hqDimension;
 		if (args.scaleType == EScaleType.FACTOR && args.scale < SVG_UPSCALE_FACTOR) {
 			hqDimension = new Dimension((int) args.round(SVG_UPSCALE_FACTOR / args.scale * (float) srcDimension.width), (int) args.round(SVG_UPSCALE_FACTOR / args.scale * (float) srcDimension.width));
-		} else if (args.scaleType == EScaleType.DP && (args.scale * SVG_UPSCALE_FACTOR < srcDimension.width)) {
+		} else if (args.scaleType == EScaleType.DP_WIDTH && (args.scale * SVG_UPSCALE_FACTOR < srcDimension.width)) {
 			float scaleFactor = args.scale / (float) srcDimension.width * SVG_UPSCALE_FACTOR;
+			hqDimension = new Dimension((int) args.round(scaleFactor * (float) srcDimension.width), (int) args.round(scaleFactor * (float) srcDimension.height));
+		} else if (args.scaleType == EScaleType.DP_HEIGHT && (args.scale * SVG_UPSCALE_FACTOR < srcDimension.height)) {
+			float scaleFactor = args.scale / (float) srcDimension.height * SVG_UPSCALE_FACTOR;
 			hqDimension = new Dimension((int) args.round(scaleFactor * (float) srcDimension.width), (int) args.round(scaleFactor * (float) srcDimension.height));
 		} else {
 			hqDimension = srcDimension;

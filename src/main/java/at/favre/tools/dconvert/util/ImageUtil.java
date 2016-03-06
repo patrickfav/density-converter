@@ -131,7 +131,7 @@ public class ImageUtil {
 				bufferedImageOpArray = new BufferedImageOp[]{Scalr.OP_ANTIALIAS};
 			}
 
-			scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY, dWidth, dHeight, bufferedImageOpArray);
+			scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_EXACT, dWidth, dHeight, bufferedImageOpArray);
 
 			if (!compression.hasTransparency) {
 				BufferedImage convertedImg = new BufferedImage(scaledImage.getWidth(), scaledImage.getHeight(), BufferedImage.TYPE_INT_RGB);

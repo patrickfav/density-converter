@@ -334,7 +334,8 @@ public class Arguments implements Serializable {
 						throw new InvalidArgumentException("invalid src scale factor given '" + srcScale + "' - must be between (excluding) 0.0 and 100");
 					}
 					break;
-				case DP:
+				case DP_WIDTH:
+				case DP_HEIGHT:
 					if (srcScale <= 0 || srcScale >= 9999) {
 						throw new InvalidArgumentException("invalid src scale dp given '" + srcScale + "' - must be between 1dp and 9999dp");
 					}

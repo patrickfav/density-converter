@@ -16,7 +16,7 @@ import static junit.framework.TestCase.assertEquals;
 /**
  * Unit test of command line parser
  */
-public class CLITest {
+public class CLIParserTest {
 	private static final String FOLDER1 = "test-out";
 	private static final float DEFAULT_SCALE = 4;
 
@@ -63,23 +63,31 @@ public class CLITest {
 	}
 
 	@Test
-	public void testScalesInDp() throws Exception {
+	public void testScalesWidthInDp() throws Exception {
 		for (Integer scale : Arrays.asList(new Integer[]{1, 12, 24, 48, 106, 33, 500, 96, 256, 480})) {
 			check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + scale + "dp",
-					new Arguments.Builder(defaultSrc, scale).scaleType(EScaleType.DP).build());
+					new Arguments.Builder(defaultSrc, scale).scaleType(EScaleType.DP_WIDTH).build());
 		}
 	}
 
 	@Test(expected = InvalidArgumentException.class)
-	public void test0ScalesInDp() throws Exception {
+	public void test0ScalesWidthInDp() throws Exception {
 		check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + 0 + "dp",
-				new Arguments.Builder(defaultSrc, 0).scaleType(EScaleType.DP).build());
+				new Arguments.Builder(defaultSrc, 0).scaleType(EScaleType.DP_WIDTH).build());
 	}
 
 	@Test(expected = InvalidArgumentException.class)
-	public void test9999ScalesInDp() throws Exception {
+	public void test9999ScalesWidthInDp() throws Exception {
 		check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + 9999 + "dp",
-				new Arguments.Builder(defaultSrc, 9999).scaleType(EScaleType.DP).build());
+				new Arguments.Builder(defaultSrc, 9999).scaleType(EScaleType.DP_WIDTH).build());
+	}
+
+	@Test
+	public void testScalesHeightInDp() throws Exception {
+		for (Integer scale : Arrays.asList(new Integer[]{1, 12, 24, 48, 106, 33, 500, 96, 256, 480})) {
+			check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\" -" + CLInterpreter.SCALE_IS_HEIGHT_DP_ARG + "  -" + CLInterpreter.SCALE_ARG + " " + scale + "dp",
+					new Arguments.Builder(defaultSrc, scale).scaleType(EScaleType.DP_HEIGHT).build());
+		}
 	}
 
 	@Test(expected = InvalidArgumentException.class)

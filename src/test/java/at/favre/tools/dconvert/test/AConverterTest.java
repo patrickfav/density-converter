@@ -127,15 +127,27 @@ public abstract class AConverterTest {
 	}
 
 	@Test
-	public void testScaleInDp() throws Exception {
-		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
-		test(new Arguments.Builder(defaultSrc, 24).dstFolder(defaultDst).scaleType(EScaleType.DP).platform(getType()).build(), files);
+	public void testScaleWidthInDp() throws Exception {
+		List<File> files = copyToTestPath(defaultSrc, "jpg_example_1920.jpg");
+		test(new Arguments.Builder(defaultSrc, 24).dstFolder(defaultDst).scaleType(EScaleType.DP_WIDTH).platform(getType()).build(), files);
 	}
 
 	@Test
-	public void testMultipleScaleInDp() throws Exception {
-		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "gif_example_640.gif", "jpg_example_1920.jpg");
-		test(new Arguments.Builder(defaultSrc, 24).dstFolder(defaultDst).scaleType(EScaleType.DP).platform(getType()).build(), files);
+	public void testMultipleScaleWidthInDp() throws Exception {
+		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example4_500.png", "jpg_example_1920.jpg");
+		test(new Arguments.Builder(defaultSrc, 48).dstFolder(defaultDst).scaleType(EScaleType.DP_WIDTH).platform(getType()).build(), files);
+	}
+
+	@Test
+	public void testScaleHeightInDp() throws Exception {
+		List<File> files = copyToTestPath(defaultSrc, "jpg_example_1920.jpg");
+		test(new Arguments.Builder(defaultSrc, 128).dstFolder(defaultDst).scaleType(EScaleType.DP_HEIGHT).platform(getType()).build(), files);
+	}
+
+	@Test
+	public void testMultipleScaleHeightInDp() throws Exception {
+		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example4_500.png", "jpg_example_1920.jpg");
+		test(new Arguments.Builder(defaultSrc, 48).dstFolder(defaultDst).scaleType(EScaleType.DP_HEIGHT).platform(getType()).build(), files);
 	}
 
 	@Test
@@ -213,12 +225,18 @@ public abstract class AConverterTest {
 		double baseWidth;
 		double baseHeight;
 
-		if (args.scaleType == EScaleType.DP) {
+		if (args.scaleType == EScaleType.DP_WIDTH) {
 			Dimension srcDimension = ImageUtil.getImageDimension(srcFile);
 			float scaleFactor = args.scale / (float) srcDimension.width;
 
 			baseWidth = (int) args.round(args.scale);
 			baseHeight = (int) args.round(scaleFactor * (float) srcDimension.height);
+		} else if (args.scaleType == EScaleType.DP_HEIGHT) {
+			Dimension srcDimension = ImageUtil.getImageDimension(srcFile);
+			float scaleFactor = args.scale / (float) srcDimension.height;
+
+			baseWidth = (int) args.round(scaleFactor * (float) srcDimension.width);
+			baseHeight = (int) args.round(args.scale);
 		} else {
 			baseWidth = (double) dimension.width / args.scale;
 			baseHeight = (double) dimension.height / args.scale;
