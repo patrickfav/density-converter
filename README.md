@@ -1,7 +1,7 @@
 # ![logo](src/main/resources/img/density_converter_icon_36.png) Density Image Converter Tool for Android and iOS
 
 This is a simple tool that helps **converting single or batches of images** to **Android** and **iOS** specific formats and density
-versions given the base scale or target width in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
+versions given the source scale factor or target width in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
 It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
 including PNG, JPEG, SVG and PSD. Using advanced scaling algorithms, it is designed to make conversion of images easy and
 fast while keeping the image quality high. To further optimize the output post processors like **pngcrush** can be used (see section below).
@@ -96,7 +96,8 @@ Start with
 java -jar ./dconvert.jar
 ```
 
-provides the same features as the command line tool so see help page of command line or tooltips.
+provides the same features as the command line tool so see help page of command line or tooltips. Additionally the UI
+will save its settings persistently making it easier for power users.
 
 ![gui-screenshot](misc/screenshot1.png)
 
@@ -156,7 +157,7 @@ Out-compression has the following modes:
 
 * as input (prefer png): jpegs will output jpeg, all other types png
 * as input (strict): except PSD & SVG which will use png, every file will be compressed with the source compression
-* <force compression>: jpeg, png, gif and bmp can be forced
+* [force compression]: jpeg, png, gif and bmp can be forced
 
 If an image will be recompressed with a file type that does not support alpha, alpha will be replaced with white (e.g. when converting png -> jpeg)
 
