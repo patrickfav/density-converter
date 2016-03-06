@@ -16,7 +16,44 @@
     <Button fx:id="btnSrcFolder" text="" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity"
             GridPane.hgrow="always"/>
 
-    <GridPane alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="1" maxWidth="Infinity">
+    <Label text="Scale Type" styleClass="label, label_main" alignment="CENTER_RIGHT" maxWidth="Infinity"
+           GridPane.columnIndex="0"
+           GridPane.rowIndex="1"/>
+
+    <GridPane alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity"
+              GridPane.columnSpan="3" hgap="3" vgap="3" style="-fx-padding: 10 0 5 0">
+        <fx:define>
+            <ToggleGroup fx:id="scaleTypeToggleGroup"/>
+        </fx:define>
+        <children>
+            <RadioButton fx:id="rbFactor" text="Scale Factor" toggleGroup="$scaleTypeToggleGroup"
+                         GridPane.columnIndex="0" selected="true" style="-fx-padding: 0 8 0 0">
+                <tooltip>
+                    <Tooltip
+                            text="Base source scale as factor (1,1.5,2,3,4,etc.); used if the images already have the correct resolution for one scale factor and up- and downscaling for all other densities is needed."/>
+                </tooltip>
+            </RadioButton>
+            <RadioButton fx:id="rbDp" text="Width in density independent pixels (dp)"
+                         toggleGroup="$scaleTypeToggleGroup" GridPane.columnIndex="1">
+                <tooltip>
+                    <Tooltip
+                            text="Set the width in dp (density independent pixels) which denotes the pixel output in mdpi/x1. In this mode all output images will have the same width."/>
+                </tooltip>
+            </RadioButton>
+        </children>
+
+    </GridPane>
+
+    <Label text="Fixed Width:" styleClass="label, label_main" alignment="CENTER_RIGHT"
+           maxWidth="Infinity" visible="false"
+           fx:id="labelDp" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+    <TextField fx:id="textFieldDp" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="Infinity"
+               alignment="CENTER_RIGHT" visible="false"/>
+    <Label fx:id="labelDpPostFix" GridPane.columnIndex="2" text="dp" GridPane.rowIndex="2" alignment="CENTER_RIGHT"
+           visible="false"/>
+
+    <GridPane fx:id="gridPaneScaleFactorLabel" alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="2"
+              maxWidth="Infinity">
         <Label text="Scale (x3.00)" styleClass="label, label_main" alignment="CENTER_RIGHT"
                maxWidth="Infinity"
                fx:id="labelScale" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
@@ -25,7 +62,7 @@
                fx:id="labelScaleSubtitle" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     </GridPane>
     <Slider fx:id="scaleSlider" min="0.5" max="6" value="3" majorTickUnit="1" blockIncrement="0.25"
-            GridPane.columnIndex="1" GridPane.rowIndex="1" showTickLabels="true" snapToTicks="true"
+            GridPane.columnIndex="1" GridPane.rowIndex="2" showTickLabels="true" snapToTicks="true"
             showTickMarks="true" GridPane.columnSpan="3">
         <tooltip>
             <Tooltip
@@ -36,11 +73,11 @@
     <Label text="Destination" style="-fx-font-style: italic" styleClass="label, label_main"
            alignment="CENTER_RIGHT"
            maxWidth="Infinity" GridPane.columnIndex="0"
-           GridPane.rowIndex="2"/>
+           GridPane.rowIndex="3"/>
     <TextField fx:id="textFieldDstPath" disable="true" maxWidth="Infinity" GridPane.columnIndex="1"
-               GridPane.rowIndex="2"/>
+               GridPane.rowIndex="3"/>
     <Button fx:id="btnDstFolder" maxWidth="Infinity" text="" GridPane.columnIndex="2" GridPane.columnSpan="2"
-            GridPane.rowIndex="2"/>
+            GridPane.rowIndex="3"/>
 
     <VBox minHeight="0" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4"/>
 

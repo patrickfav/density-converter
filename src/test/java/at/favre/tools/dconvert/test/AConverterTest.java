@@ -201,8 +201,8 @@ public abstract class AConverterTest {
 	}
 
 	protected static Dimension getScaledDimension(Arguments args, Dimension dimension, float scale) {
-		double baseWidth = (double) dimension.width / args.scrScale;
-		double baseHeight = (double) dimension.height / args.scrScale;
+		double baseWidth = (double) dimension.width / args.scale;
+		double baseHeight = (double) dimension.height / args.scale;
 
 		return new Dimension((int) args.round(baseWidth * scale),
 				(int) args.round(baseHeight * scale));

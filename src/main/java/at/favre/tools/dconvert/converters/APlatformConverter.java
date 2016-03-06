@@ -18,6 +18,7 @@
 package at.favre.tools.dconvert.converters;
 
 import at.favre.tools.dconvert.arg.Arguments;
+import at.favre.tools.dconvert.arg.EScaleType;
 import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.converters.descriptors.DensityDescriptor;
 import at.favre.tools.dconvert.util.ImageUtil;
@@ -26,6 +27,7 @@ import at.favre.tools.dconvert.util.MiscUtil;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -34,12 +36,36 @@ import java.util.List;
  */
 public abstract class APlatformConverter<T extends DensityDescriptor> implements IPlatformConverter {
 
-	private Map<T, Dimension> getDensityBuckets(List<T> densities, Dimension dimensionForScalingFactor, Arguments args) {
-		double baseWidth = (double) dimensionForScalingFactor.width / args.scrScale;
-		double baseHeight = (double) dimensionForScalingFactor.height / args.scrScale;
+	private Map<T, Dimension> getDensityBuckets(File srcFile, List<T> densities, Dimension dimensionForScalingFactor, Arguments args) throws IOException {
+		switch (args.scaleType) {
+			default:
+			case FACTOR:
+				return getDensityBucketsWithFactorScale(densities, dimensionForScalingFactor, args);
+			case DP:
+				return getDensityBucketsWithDpScale(srcFile, densities, args);
+		}
+	}
 
+	private Map<T, Dimension> getDensityBucketsWithDpScale(File srcFile, List<T> densities, Arguments args) throws IOException {
+		Dimension srcDimension = ImageUtil.getImageDimension(srcFile);
+		float scaleFactor = args.scale / (float) srcDimension.width;
+
+		int baseWidth = (int) args.round(args.scale);
+		int baseHeight = (int) args.round(scaleFactor * (float) srcDimension.height);
+
+		return getDimensionMap(densities, args, baseWidth, baseHeight);
+	}
+
+	private Map<T, Dimension> getDensityBucketsWithFactorScale(List<T> densities, Dimension dimensionForScalingFactor, Arguments args) {
+		double baseWidth = (double) dimensionForScalingFactor.width / args.scale;
+		double baseHeight = (double) dimensionForScalingFactor.height / args.scale;
+
+		return getDimensionMap(densities, args, baseWidth, baseHeight);
+	}
+
+	private Map<T, Dimension> getDimensionMap(List<T> densities, Arguments args, double baseWidth, double baseHeight) {
 		Map<T, Dimension> bucketMap = new TreeMap<>();
-		densities.stream().filter(density -> args.scrScale >= density.scale || !args.skipUpscaling).forEach(density -> {
+		densities.stream().filter(density -> args.scale >= density.scale || !args.skipUpscaling).forEach(density -> {
 			bucketMap.put(density, new Dimension((int) args.round(baseWidth * density.scale),
 					(int) args.round(baseHeight * density.scale)));
 		});
@@ -56,9 +82,9 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 			StringBuilder log = new StringBuilder();
 			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ")
-					.append(rawImage.getWidth()).append("x").append(rawImage.getHeight()).append(" (x").append(args.scrScale).append(")\n");
+					.append(rawImage.getWidth()).append("x").append(rawImage.getHeight()).append(" (").append(args.scale).append(args.scaleType == EScaleType.FACTOR ? "x" : "dp").append(")\n");
 
-			Map<T, Dimension> densityMap = getDensityBuckets(usedOutputDensities(args), new Dimension(rawImage.getWidth(), rawImage.getHeight()), args);
+			Map<T, Dimension> densityMap = getDensityBuckets(srcImage, usedOutputDensities(args), new Dimension(rawImage.getWidth(), rawImage.getHeight()), args);
 
 			File mainSubFolder = createMainSubFolder(destinationFolder, targetImageFileName, args);
 

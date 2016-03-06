@@ -18,10 +18,7 @@
 package at.favre.tools.dconvert.ui;
 
 import at.favre.tools.dconvert.ConverterHandler;
-import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EOutputCompressionMode;
-import at.favre.tools.dconvert.arg.EPlatform;
-import at.favre.tools.dconvert.arg.RoundingHandler;
+import at.favre.tools.dconvert.arg.*;
 import at.favre.tools.dconvert.util.MiscUtil;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -81,6 +78,13 @@ public class GUIController {
 	public Label labelScaleSubtitle;
 	public CheckBox cbAntiAliasing;
 	public Button btnReset;
+	public TextField textFieldDp;
+	public Label labelDp;
+	public ToggleGroup scaleTypeToggleGroup;
+	public RadioButton rbFactor;
+	public RadioButton rbDp;
+	public GridPane gridPaneScaleFactorLabel;
+	public Label labelDpPostFix;
 
 	public void onCreate() {
 
@@ -166,8 +170,16 @@ public class GUIController {
 			loadPrefs();
 		});
 
+		scaleTypeToggleGroup.selectedToggleProperty().addListener((ov, old_toggle, new_toggle) -> {
+			scaleSlider.setVisible(!rbDp.isSelected());
+			gridPaneScaleFactorLabel.setVisible(!rbDp.isSelected());
+			textFieldDp.setVisible(rbDp.isSelected());
+			labelDpPostFix.setVisible(rbDp.isSelected());
+			labelDp.setVisible(rbDp.isSelected());
+		});
+
 		scaleSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-			labelScale.setText("Scale (x" + String.format(Locale.US, "%.2f", Math.round(scaleSlider.getValue() * 4f) / 4f) + ")");
+			labelScale.setText("Factor (x" + String.format(Locale.US, "%.2f", Math.round(scaleSlider.getValue() * 4f) / 4f) + ")");
 			labelScaleSubtitle.setText(getNameForScale((float) scaleSlider.getValue()));
 		});
 		scaleSlider.setValue(Arguments.DEFAULT_SCALE);
@@ -215,6 +227,17 @@ public class GUIController {
 		gridPaneOptionsCheckboxes.getColumnConstraints().addAll(column1C, column2C);
 		gridPanePostProcessors.getColumnConstraints().addAll(column1C, column2C);
 
+		textFieldDp.textProperty().addListener((observable, oldValue, newValue) -> {
+			if (!newValue.matches("\\d*")) {
+				textFieldDp.setText(newValue.replaceAll("[^\\d]", ""));
+			}
+			if (textFieldDp.getText().length() > 10) {
+				String s = textFieldDp.getText().substring(0, 10);
+				textFieldDp.setText(s);
+			}
+		});
+
+
 		loadPrefs();
 	}
 
@@ -227,7 +250,16 @@ public class GUIController {
 		if (args != null) {
 			textFieldSrcPath.setText(args.src != null ? args.src.getAbsolutePath() : "");
 			textFieldDstPath.setText(args.dst != null ? args.dst.getAbsolutePath() : "");
-			scaleSlider.setValue(args.scrScale);
+
+			if (args.scaleType == EScaleType.FACTOR) {
+				rbFactor.setSelected(true);
+				scaleSlider.setValue(args.scale);
+				textFieldDp.setText("");
+			} else {
+				rbDp.setSelected(true);
+				scaleSlider.setValue(Arguments.DEFAULT_SCALE);
+				textFieldDp.setText(String.valueOf((int) args.scale));
+			}
 
 			choicePlatform.getSelectionModel().select(args.platform);
 			choiceCompression.getSelectionModel().select(args.outputCompressionMode);
@@ -249,9 +281,16 @@ public class GUIController {
 	}
 
 	private Arguments getFromUI() throws InvalidArgumentException {
-		Arguments.Builder builder = new Arguments.Builder(new File(textFieldSrcPath.getText()), (float) scaleSlider.getValue());
-		builder.dstFolder(textFieldDstPath.getText() != null && !textFieldDstPath.getText().trim().isEmpty() ? new File(textFieldDstPath.getText()) : null);
+		float scale;
+		try {
+			scale = rbFactor.isSelected() ? (float) scaleSlider.getValue() : Float.valueOf(textFieldDp.getText());
+		} catch (NumberFormatException e) {
+			throw new InvalidArgumentException("could not parse dp: " + textFieldDp.getText() + " must be a number");
+		}
 
+		Arguments.Builder builder = new Arguments.Builder(new File(textFieldSrcPath.getText()), scale);
+		builder.dstFolder(textFieldDstPath.getText() != null && !textFieldDstPath.getText().trim().isEmpty() ? new File(textFieldDstPath.getText()) : null);
+		builder.scaleType(rbFactor.isSelected() ? EScaleType.FACTOR : EScaleType.DP);
 		builder.platform((EPlatform) choicePlatform.getSelectionModel().getSelectedItem());
 		builder.compression((EOutputCompressionMode) choiceCompression.getSelectionModel().getSelectedItem(), (Float) choiceCompressionQuality.getSelectionModel().getSelectedItem());
 		builder.scaleRoundingStragy((RoundingHandler.Strategy) choiceRounding.getSelectionModel().getSelectedItem());

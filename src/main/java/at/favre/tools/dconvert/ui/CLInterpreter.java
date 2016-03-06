@@ -17,10 +17,7 @@
 
 package at.favre.tools.dconvert.ui;
 
-import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EOutputCompressionMode;
-import at.favre.tools.dconvert.arg.EPlatform;
-import at.favre.tools.dconvert.arg.RoundingHandler;
+import at.favre.tools.dconvert.arg.*;
 import org.apache.commons.cli.*;
 
 import java.io.File;
@@ -62,7 +59,22 @@ public class CLInterpreter {
 				return null;
 			}
 
-			builder = new Arguments.Builder(new File(commandLine.getOptionValue(SOURCE_ARG)), Float.valueOf(commandLine.getOptionValue(SCALE_ARG, String.valueOf(Arguments.DEFAULT_SCALE))));
+			String scaleRawParam = commandLine.getOptionValue(SCALE_ARG).toLowerCase();
+
+			boolean dp = false;
+
+			if (scaleRawParam.contains("dp")) {
+				dp = true;
+				scaleRawParam = scaleRawParam.replace("dp", "").trim();
+			}
+
+			builder = new Arguments.Builder(new File(commandLine.getOptionValue(SOURCE_ARG)), Float.parseFloat(scaleRawParam));
+
+			if (dp) {
+				builder.scaleType(EScaleType.DP);
+			} else {
+				builder.scaleType(EScaleType.FACTOR);
+			}
 
 			if (commandLine.hasOption(DST_ARG)) {
 				builder.dstFolder(new File(commandLine.getOptionValue(DST_ARG)));
@@ -162,7 +174,8 @@ public class CLInterpreter {
 		Options options = new Options();
 
 		Option srcOpt = Option.builder(SOURCE_ARG).required().argName("path to file or folder").hasArg(true).desc("The source. Can be an image file or a folder containing image files to be converted. This argument is mandatory.").build();
-		Option srcScaleOpt = Option.builder(SCALE_ARG).argName("float").hasArg(true).desc("The source scrScale factor (1,1.5,2,3,4,etc.), ie. the base scrScale used to calculate if images need to be up- or downscaled. Ie. if you have the src file in density xxxhdpi you pass '4'. This argument is mandatory.").build();
+		Option srcScaleOpt = Option.builder(SCALE_ARG).argName("<float>|<int>dp").hasArg(true).desc("The source scale. This can either be a factor (1,1.5,2,3,4,etc.) used if the images already have the correct resolution for one scale factor and up- and downscaling for all other densities are needed. Ie. if you have the src" +
+				" file in density xxxhdpi you pass '4'. You could also pass a value in dp (density independent pixels) which denotes the output pixel width in mdpi/x1. In this mode all output images will have the same width. This argument is mandatory.").build();
 		Option dstOpt = Option.builder(DST_ARG).hasArg(true).argName("path").desc("The directory in which the converted files will be written. Will use the source folder if this argument is omitted.").build();
 
 		Option platform = Option.builder(PLATFORM_ARG).hasArg(true).argName("all|android|ios").desc("Can be 'all', 'android' or 'ios'. Sets what formats the converted images will be generated for. E.g. set 'android' if you only want to convert to android format. Default is " + Arguments.DEFAULT_PLATFORM).build();
