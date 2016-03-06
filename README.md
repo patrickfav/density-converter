@@ -102,7 +102,7 @@ java -jar ./dconvert.jar
 provides the same features as the command line tool so see help page of command line or tooltips. Additionally the UI
 will save its settings persistently making it easier for power users.
 
-![gui-screenshot](misc/screenshot1.png)
+![gui-screenshot](misc/screenshot1.jpg)
 
 # Details
 
