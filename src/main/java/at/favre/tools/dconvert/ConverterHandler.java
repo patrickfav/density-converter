@@ -68,7 +68,7 @@ public class ConverterHandler {
 
 			ExecutorService threadPool = new ThreadPoolExecutor(args.threadCount, args.threadCount, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<>(256));
 
-			if (args.platform == EPlatform.ANROID || args.platform == EPlatform.ALL) {
+			if (args.platform == EPlatform.ANDROID || args.platform == EPlatform.ALL) {
 				logStringBuilder.append("add android converter\n");
 				converters.add(new AndroidConverter());
 			}

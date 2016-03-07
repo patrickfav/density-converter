@@ -144,7 +144,7 @@ public class CLIParserTest {
 	@Test
 	public void testPlatforms() throws Exception {
 		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " all", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(EPlatform.ALL).build());
-		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " android", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(EPlatform.ANROID).build());
+		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " android", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(EPlatform.ANDROID).build());
 		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " ios", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(EPlatform.IOS).build());
 	}
 
@@ -207,6 +207,11 @@ public class CLIParserTest {
 		check(defaultCmd + " -skipUpscaling -haltOnError -enablePngCrush", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).haltOnError(true).enablePngCrush(true).skipUpscaling(true).build());
 		check(defaultCmd + " -antiAliasing -androidIncludeLdpiTvdpi", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).includeAndroidLdpiTvdpi(true).build());
 		check(defaultCmd + " -postWebpConvert -" + CLInterpreter.VERBOSE_ARG + " -skipUpscaling -antiAliasing", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).postConvertWebp(true).verboseLog(true).skipUpscaling(true).build());
+	}
+
+	@Test
+	public void testDryRun() throws Exception {
+		check(defaultCmd + " -dryRun", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dryRun(true).build());
 	}
 
 	public static void check(String cmd, Arguments ref) {

@@ -63,22 +63,24 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 			for (Map.Entry<T, Dimension> entry : densityMap.entrySet()) {
 				File dstFolder = createFolderForOutputFile(mainSubFolder, entry.getKey(), entry.getValue(), targetImageFileName, args);
 
-				if (dstFolder.isDirectory() && dstFolder.exists()) {
+				if ((dstFolder.isDirectory() && dstFolder.exists()) || args.dryRun) {
 					File imageFile = new File(dstFolder, createDestinationFileNameWithoutExtension(entry.getKey(), entry.getValue(), targetImageFileName, args));
 
 					log.append("process ").append(imageFile).append(" with ").append(entry.getValue().width).append("x").append(entry.getValue().height).append(" (x").append(entry.getKey().scale).append(")\n");
 
-					List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), rawImage,
-							entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing);
+					if (!args.dryRun) {
+						List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), rawImage,
+								entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing);
 
-					allResultingFiles.addAll(files);
+						allResultingFiles.addAll(files);
 
-					for (File file : files) {
-						log.append("compressed to disk: ").append(file).append(" (").append(String.format(Locale.US, "%.2f", (float) file.length() / 1024f)).append("kB)\n");
-					}
+						for (File file : files) {
+							log.append("compressed to disk: ").append(file).append(" (").append(String.format(Locale.US, "%.2f", (float) file.length() / 1024f)).append("kB)\n");
+						}
 
-					if (files.isEmpty()) {
-						log.append("files skipped\n");
+						if (files.isEmpty()) {
+							log.append("files skipped\n");
+						}
 					}
 				} else {
 					throw new IllegalStateException("could not create " + dstFolder);

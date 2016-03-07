@@ -54,7 +54,7 @@ public class AndroidConverterTest extends AConverterTest {
 
 	@Override
 	protected EPlatform getType() {
-		return EPlatform.ANROID;
+		return EPlatform.ANDROID;
 	}
 
 	@Override

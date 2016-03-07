@@ -59,8 +59,8 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
-		if (arguments.platform != EPlatform.ANROID) {
-			return MiscUtil.createAndCheckFolder(new File(destinationFolder, "android").getAbsolutePath());
+		if (arguments.platform != EPlatform.ANDROID) {
+			return MiscUtil.createAndCheckFolder(new File(destinationFolder, "android").getAbsolutePath(), arguments.dryRun);
 		} else {
 			return destinationFolder;
 		}
@@ -69,7 +69,7 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 	@Override
 	public File createFolderForOutputFile(File mainSubFolder, AndroidDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
 		String folderName = (arguments.createMipMapInsteadOfDrawableDir ? density.folderName.replaceAll("drawable", "mipmap") : density.folderName);
-		return MiscUtil.createAndCheckFolder(new File(mainSubFolder, folderName).getAbsolutePath());
+		return MiscUtil.createAndCheckFolder(new File(mainSubFolder, folderName).getAbsolutePath(), arguments.dryRun);
 	}
 
 	@Override

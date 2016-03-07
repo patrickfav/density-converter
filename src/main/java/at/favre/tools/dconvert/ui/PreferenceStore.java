@@ -15,14 +15,13 @@ public class PreferenceStore {
 
 	public PreferenceStore() {
 		this.prefs = Preferences.userNodeForPackage(GUI.class);
-		String args = prefs.get(ARGS_KEY, null);
 	}
 
 	public void save(Serializable obj) {
 		try {
 			prefs.put(ARGS_KEY, serialize(obj));
 		} catch (Exception e) {
-			prefs.put(ARGS_KEY, null);
+			prefs.remove(ARGS_KEY);
 			e.printStackTrace();
 		}
 	}
@@ -37,6 +36,7 @@ public class PreferenceStore {
 			Object out = unserialize(saved);
 			return (Arguments) out;
 		} catch (Exception e) {
+			prefs.remove(ARGS_KEY);
 			e.printStackTrace();
 			return null;
 		}

@@ -87,6 +87,7 @@ public class GUIController {
 	public RadioButton rbDpHeight;
 	public GridPane gridPaneScaleFactorLabel;
 	public Label labelDpPostFix;
+	public CheckBox cbDryRun;
 
 	public void onCreate() {
 
@@ -188,7 +189,7 @@ public class GUIController {
 		scaleSlider.setValue(Arguments.DEFAULT_SCALE);
 
 		choicePlatform.setItems(FXCollections.observableArrayList(
-				EPlatform.ALL, new Separator(), EPlatform.ANROID, EPlatform.IOS, EPlatform.WINDOWS));
+				EPlatform.ALL, new Separator(), EPlatform.ANDROID, EPlatform.IOS, EPlatform.WINDOWS));
 		choicePlatform.getSelectionModel().select(Arguments.DEFAULT_PLATFORM);
 
 		choiceCompression.setItems(FXCollections.observableArrayList(
@@ -280,7 +281,7 @@ public class GUIController {
 			cbAntiAliasing.setSelected(args.enableAntiAliasing);
 			cbMipmapInsteadDrawable.setSelected(args.createMipMapInsteadOfDrawableDir);
 			cbHaltOnError.setSelected(args.haltOnError);
-
+			cbDryRun.setSelected(args.dryRun);
 			chEnablePngCrush.setSelected(args.enablePngCrush);
 			cbPostConvertWebp.setSelected(args.postConvertWebp);
 		}
@@ -309,6 +310,7 @@ public class GUIController {
 		builder.haltOnError(cbHaltOnError.isSelected());
 		builder.createMipMapInsteadOfDrawableDir(cbMipmapInsteadDrawable.isSelected());
 		builder.antiAliasing(cbAntiAliasing.isSelected());
+		builder.dryRun(cbDryRun.isSelected());
 		builder.enablePngCrush(chEnablePngCrush.isSelected());
 		builder.postConvertWebp(cbPostConvertWebp.isSelected());
 

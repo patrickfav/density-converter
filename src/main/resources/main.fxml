@@ -8,15 +8,15 @@
         <Insets top="20" right="15" bottom="5" left="15"/>
     </padding>
 
-    <Label text="Source" styleClass="label, label_main" alignment="CENTER_RIGHT" maxWidth="Infinity"/>
+    <Label text="%main.label.source" styleClass="label, label_main" alignment="CENTER_RIGHT" maxWidth="Infinity"/>
     <TextField fx:id="textFieldSrcPath" disable="true" GridPane.columnIndex="1"
                GridPane.rowIndex="0" maxWidth="Infinity" GridPane.hgrow="always"/>
-    <Button fx:id="btnSrcFile" text="" GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity"
+    <Button fx:id="btnSrcFile" GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity"
             GridPane.hgrow="always"/>
-    <Button fx:id="btnSrcFolder" text="" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity"
+    <Button fx:id="btnSrcFolder" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity"
             GridPane.hgrow="always"/>
 
-    <Label text="Scale Type" styleClass="label, label_main" alignment="CENTER_RIGHT" maxWidth="Infinity"
+    <Label text="%main.label.scaletype" styleClass="label, label_main" alignment="CENTER_RIGHT" maxWidth="Infinity"
            GridPane.columnIndex="0"
            GridPane.rowIndex="1"/>
 
@@ -26,40 +26,38 @@
             <ToggleGroup fx:id="scaleTypeToggleGroup"/>
         </fx:define>
         <children>
-            <RadioButton fx:id="rbFactor" text="Source Scale Factor" toggleGroup="$scaleTypeToggleGroup"
+            <RadioButton fx:id="rbFactor" text="%main.rb.factor" toggleGroup="$scaleTypeToggleGroup"
                          GridPane.columnIndex="0" selected="true" style="-fx-padding: 0 8 0 0">
                 <tooltip>
-                    <Tooltip
-                            text="Base source scale as factor (1,1.5,2,3,4,etc.); used if the images already have the correct resolution for one scale factor and up- and downscaling for all other densities is needed."/>
+                    <Tooltip text="%arg.descr.scalefactor"/>
                 </tooltip>
             </RadioButton>
-            <RadioButton fx:id="rbDpWidth" text="Width in dp" style="-fx-padding: 0 8 0 0"
+            <RadioButton fx:id="rbDpWidth" text="%main.rb.widthdp" style="-fx-padding: 0 8 0 0"
                          toggleGroup="$scaleTypeToggleGroup" GridPane.columnIndex="1">
                 <tooltip>
-                    <Tooltip
-                            text="Set the width in dp (density independent pixels) which denotes the pixel output in mdpi/x1. In this mode all output images will have the same width."/>
+                    <Tooltip text="%arg.descr.widthdp"/>
                 </tooltip>
             </RadioButton>
-            <RadioButton fx:id="rbDpHeight" text="Height in dp"
+            <RadioButton fx:id="rbDpHeight" text="%main.rb.heightdp"
                          toggleGroup="$scaleTypeToggleGroup" GridPane.columnIndex="2">
                 <tooltip>
-                    <Tooltip
-                            text="Set the height in dp (density independent pixels) which denotes the pixel output in mdpi/x1. In this mode all output images will have the same width."/>
+                    <Tooltip text="%arg.descr.heightdp"/>
                 </tooltip>
             </RadioButton>
         </children>
 
     </GridPane>
 
-    <Label text="Fixed Width:" styleClass="label, label_main" alignment="CENTER_RIGHT"
+    <Label text="%main.label.fixedW" styleClass="label, label_main" alignment="CENTER_RIGHT"
            maxWidth="Infinity" visible="false"
            fx:id="labelDpWidth" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <Label text="Fixed Height:" styleClass="label, label_main" alignment="CENTER_RIGHT"
+    <Label text="%main.label.fixedH" styleClass="label, label_main" alignment="CENTER_RIGHT"
            maxWidth="Infinity" visible="false"
            fx:id="labelDpHeight" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
     <TextField fx:id="textFieldDp" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="Infinity"
                alignment="CENTER_RIGHT" visible="false"/>
-    <Label fx:id="labelDpPostFix" GridPane.columnIndex="2" text="dp" GridPane.rowIndex="2" alignment="CENTER_RIGHT"
+    <Label fx:id="labelDpPostFix" GridPane.columnIndex="2" text="%main.label.dp" GridPane.rowIndex="2"
+           alignment="CENTER_RIGHT"
            visible="false"/>
 
     <GridPane fx:id="gridPaneScaleFactorLabel" alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="2"
@@ -76,17 +74,17 @@
             showTickMarks="true" GridPane.columnSpan="3">
         <tooltip>
             <Tooltip
-                    text="Sets the scale factor of the source file(s). Based on this all the other scale types will be calculated."/>
+                    text="%arg.descr.scaleslider"/>
         </tooltip>
     </Slider>
 
-    <Label text="Destination" style="-fx-font-style: italic" styleClass="label, label_main"
+    <Label text="%main.label.dst" style="-fx-font-style: italic" styleClass="label, label_main"
            alignment="CENTER_RIGHT"
            maxWidth="Infinity" GridPane.columnIndex="0"
            GridPane.rowIndex="3"/>
     <TextField fx:id="textFieldDstPath" disable="true" maxWidth="Infinity" GridPane.columnIndex="1"
                GridPane.rowIndex="3"/>
-    <Button fx:id="btnDstFolder" maxWidth="Infinity" text="" GridPane.columnIndex="2" GridPane.columnSpan="2"
+    <Button fx:id="btnDstFolder" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.columnSpan="2"
             GridPane.rowIndex="3"/>
 
     <VBox minHeight="0" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4"/>
@@ -95,156 +93,164 @@
               GridPane.rowIndex="5"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
 
-        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="Platform" GridPane.columnIndex="0"
+        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="%main.label.platform"
+               GridPane.columnIndex="0"
                GridPane.rowIndex="0" GridPane.hgrow="always"/>
         <ChoiceBox fx:id="choicePlatform" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0"
                    GridPane.columnSpan="3" GridPane.hgrow="always">
             <tooltip>
-                <Tooltip text="Defines which formats will be generated"/>
+                <Tooltip text="%arg.descr.platform"/>
             </tooltip>
         </ChoiceBox>
 
         <Label maxWidth="Infinity" GridPane.hgrow="always" styleClass="label" alignment="CENTER_RIGHT"
-               text="Compression"
+               text="%main.label.compression"
                GridPane.columnIndex="0"
                GridPane.rowIndex="1"/>
         <ChoiceBox fx:id="choiceCompression" GridPane.hgrow="always" maxWidth="Infinity" GridPane.columnIndex="1"
                    GridPane.rowIndex="1">
             <tooltip>
-                <Tooltip text="Sets the output compression type."/>
+                <Tooltip text="%arg.descr.compression"/>
             </tooltip>
         </ChoiceBox>
 
-        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="JPG Quality"
+        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="%main.label.jpgquality"
                GridPane.columnIndex="2"
                GridPane.rowIndex="1"/>
         <ChoiceBox fx:id="choiceCompressionQuality" maxWidth="Infinity" GridPane.columnIndex="3"
                    GridPane.rowIndex="1">
             <tooltip>
-                <Tooltip
-                        text="JPEG compression quality. 1.0 is best but biggest file size. Will be ignored for png and gif."/>
+                <Tooltip text="%arg.descr.jpegquality"/>
             </tooltip>
         </ChoiceBox>
 
-        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="Rounding" GridPane.columnIndex="0"
+        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="%main.label.rounding"
+               GridPane.columnIndex="0"
                GridPane.rowIndex="2" GridPane.hgrow="always"/>
         <ChoiceBox fx:id="choiceRounding" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"
                    GridPane.hgrow="always">
             <tooltip>
-                <Tooltip text="The used rounding mode for calculating the dimensions for the different scale factors"/>
+                <Tooltip text="%arg.descr.rounding"/>
             </tooltip>
         </ChoiceBox>
 
-        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="Threads" GridPane.columnIndex="2"
+        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="%main.label.threads"
+               GridPane.columnIndex="2"
                GridPane.rowIndex="2" GridPane.hgrow="always"/>
         <ChoiceBox fx:id="choiceThreads" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="2"
                    GridPane.hgrow="always">
             <tooltip>
-                <Tooltip text="Max parallel worker threads. More is faster but requires more memory."/>
+                <Tooltip text="%arg.descr.threads"/>
             </tooltip>
         </ChoiceBox>
     </GridPane>
 
     <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="4"/>
 
-    <Label text="Options" styleClass="label,label_main" maxWidth="Infinity" GridPane.columnIndex="0"
+    <Label text="%main.header.options" styleClass="label,label_main" maxWidth="Infinity" GridPane.columnIndex="0"
            GridPane.rowIndex="7"
            GridPane.columnSpan="3"/>
-    <Button fx:id="btnReset" text="Reset" styleClass="button, button-sec" GridPane.columnIndex="3"
+    <Button fx:id="btnReset" text="%main.btn.reset" styleClass="button, button-sec" GridPane.columnIndex="3"
             GridPane.rowIndex="7" alignment="CENTER_RIGHT"
             GridPane.columnSpan="1" maxWidth="Infinity"/>
     <GridPane fx:id="gridPaneOptionsCheckboxes" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
               GridPane.rowIndex="8"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
         <CheckBox fx:id="cbSkipExisting" styleClass="check-box" alignment="CENTER_LEFT" maxWidth="Infinity"
-                  text="skip existing"
+                  text="%main.cb.skipexisting"
                   GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.hgrow="always">
             <tooltip>
-                <Tooltip text="Does not overwrite existing files"/>
+                <Tooltip text="%arg.descr.skipexisting"/>
             </tooltip>
         </CheckBox>
-        <CheckBox fx:id="cbSkipUpscaling" styleClass="check-box" maxWidth="Infinity" text="skip upscaling"
+        <CheckBox fx:id="cbSkipUpscaling" styleClass="check-box" maxWidth="Infinity" text="%main.cb.skipupscaling"
                   GridPane.columnIndex="1" alignment="CENTER_LEFT"
                   GridPane.rowIndex="0" GridPane.hgrow="always">
             <tooltip>
-                <Tooltip text="Skips all formats that need upscaling to prevent quality loss"/>
+                <Tooltip text="%arg.descr.skipupscaling"/>
             </tooltip>
         </CheckBox>
 
         <CheckBox fx:id="cbVerboseLog" styleClass="check-box" selected="true"
                   maxWidth="Infinity" alignment="CENTER_LEFT"
-                  text="verbose"
+                  text="%main.cb.verbose"
                   GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="always">
             <tooltip>
-                <Tooltip text="Shows verbose log"/>
+                <Tooltip text="%arg.descr.verbose"/>
             </tooltip>
         </CheckBox>
-        <CheckBox fx:id="cbAndroidIncludeLdpiTvdpi" styleClass="check-box" maxWidth="Infinity"
-                  text="android: include ldpi + tvdpi"
+        <CheckBox fx:id="cbDryRun" styleClass="check-box" maxWidth="Infinity"
+                  text="%main.cb.dryrun"
                   GridPane.columnIndex="1" alignment="CENTER_LEFT"
                   GridPane.rowIndex="1" GridPane.hgrow="always">
             <tooltip>
-                <Tooltip text="Android only: If set will include additional densities (ldpi and tvdpi)"/>
+                <Tooltip text="%arg.descr.dryrun"/>
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="cbHaltOnError" styleClass="check-box" maxWidth="Infinity" text="halt on error"
+        <CheckBox fx:id="cbHaltOnError" styleClass="check-box" maxWidth="Infinity" text="%main.cb.halterror"
                   GridPane.columnIndex="0" alignment="CENTER_LEFT"
                   GridPane.rowIndex="2" GridPane.hgrow="always"
                   GridPane.vgrow="always">
             <tooltip>
-                <Tooltip text="Halts process on first error"/>
+                <Tooltip text="%arg.descr.halterror"/>
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="cbMipmapInsteadDrawable" styleClass="check-box" maxWidth="Infinity"
-                  text="android: mipmap instead drawable"
+        <CheckBox fx:id="cbAndroidIncludeLdpiTvdpi" styleClass="check-box" maxWidth="Infinity"
+                  text="%main.cb.androidldpi"
                   GridPane.columnIndex="1" alignment="CENTER_LEFT"
-                  GridPane.rowIndex="2" GridPane.hgrow="always"
-                  GridPane.vgrow="always">
+                  GridPane.rowIndex="2" GridPane.hgrow="always">
             <tooltip>
-                <Tooltip text="For Android only: creates mipmap sub-folders instead of drawable."/>
+                <Tooltip text="%arg.descr.androidldpi"/>
             </tooltip>
         </CheckBox>
 
         <CheckBox fx:id="cbAntiAliasing" styleClass="check-box" maxWidth="Infinity"
-                  text="anti aliasing"
+                  text="%main.cb.antialiasing"
                   GridPane.columnIndex="0" alignment="CENTER_LEFT"
                   GridPane.rowIndex="3" GridPane.hgrow="always"
                   GridPane.vgrow="always">
             <tooltip>
-                <Tooltip
-                        text="Anti-aliases images creating a little more blurred result; useful for very small images"/>
+                <Tooltip text="%arg.descr.antialiasing"/>
+            </tooltip>
+        </CheckBox>
+
+        <CheckBox fx:id="cbMipmapInsteadDrawable" styleClass="check-box" maxWidth="Infinity"
+                  text="%main.cb.androidmipmap"
+                  GridPane.columnIndex="1" alignment="CENTER_LEFT"
+                  GridPane.rowIndex="3" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip text="%arg.descr.androidmipmap"/>
             </tooltip>
         </CheckBox>
     </GridPane>
 
     <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.columnSpan="4"/>
 
-    <Label text="Post Processors" styleClass="label,label_main" maxWidth="Infinity" GridPane.columnIndex="0"
+    <Label text="%main.header.postprocessors" styleClass="label,label_main" maxWidth="Infinity" GridPane.columnIndex="0"
            GridPane.rowIndex="10"
            GridPane.columnSpan="4"/>
 
     <GridPane fx:id="gridPanePostProcessors" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
               GridPane.rowIndex="11"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
-        <CheckBox fx:id="chEnablePngCrush" styleClass="check-box" maxWidth="Infinity" text="pngcrush (slow)"
+        <CheckBox fx:id="chEnablePngCrush" styleClass="check-box" maxWidth="Infinity" text="%main.cb.pngcrush"
                   GridPane.columnIndex="0" alignment="CENTER_LEFT"
                   GridPane.rowIndex="0" GridPane.hgrow="always"
                   GridPane.vgrow="always">
             <tooltip>
-                <Tooltip
-                        text="Will post-process all pngs with pngcrush. The executable must be set in the system environment as 'pngcrush' i.e executable from every path. Pngcrush is a tool to compress pngs. Requires v1.7.22+"/>
+                <Tooltip text="%arg.descr.pngcrush"/>
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="cbPostConvertWebp" styleClass="check-box" maxWidth="Infinity" text="convert webp"
+        <CheckBox fx:id="cbPostConvertWebp" styleClass="check-box" maxWidth="Infinity" text="%main.cb.webp"
                   GridPane.columnIndex="1" alignment="CENTER_LEFT"
                   GridPane.rowIndex="0" GridPane.hgrow="always"
                   GridPane.vgrow="always">
             <tooltip>
-                <Tooltip
-                        text="Will additionally convert all png/gif to lossless wepb and all jpg to lossy webp with cwebp. Does not delete source files. The executable must be set in the system path as 'cwebp' i.e executable from every path. cwebp is the official converter from Google."/>
+                <Tooltip text="%arg.descr.webp"/>
             </tooltip>
         </CheckBox>
     </GridPane>
@@ -260,7 +266,7 @@
               GridPane.rowIndex="14" visible="true" prefRowCount="250" prefColumnCount="80"/>
 
     <Button fx:id="btnConvert" styleClass="button, button-convert"
-            maxWidth="Infinity" text="Convert" GridPane.columnIndex="0"
+            maxWidth="Infinity" text="%main.btn.convert" GridPane.columnIndex="0"
             GridPane.rowIndex="15"
             GridPane.columnSpan="4"
     />

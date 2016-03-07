@@ -6,6 +6,8 @@ It has a **graphical** and **command line** interface and supports a wide array 
 including PNG, JPEG, SVG and PSD. Using advanced scaling algorithms, it is designed to make conversion of images easy and
 fast while keeping the image quality high. To further optimize the output post processors like **pngcrush** can be used (see section below).
 
+**[Requires Java 8 to run.](http://www.oracle.com/technetwork/java/javase/downloads/index.html)**
+
 Usage:
 
 ```
@@ -189,7 +191,7 @@ The converter tool requires `pngcrush` to be in PATH. Minimal required version i
 ### webp
 
 WebP is an image format employing both lossy and lossless compression developed by Google. It is natively supported in Android
-and claims to be 25-35% smaller in file size than png and jpeg (in their respected categories).
+and claims to be 25-35% smaller in file size than png and jpeg (in their respective categories).
 
 If the flag is set the converter tool will compress jpegs to lossy webp and png/gif to lossless version of it. The program
  `cwebp`, which can be downloaded from [Google's page](https://developers.google.com/speed/webp/docs/cwebp), must be set in PATH variable.

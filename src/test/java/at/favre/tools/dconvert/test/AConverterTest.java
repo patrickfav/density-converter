@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -64,7 +65,7 @@ public abstract class AConverterTest {
 	public void setUp() throws IOException {
 		defaultDst = temporaryFolder.newFolder("android-converter-test", "out");
 		defaultSrc = temporaryFolder.newFolder("android-converter-test", "src");
-		converter = getType() == EPlatform.ANROID ? new AndroidConverter() : getType() == EPlatform.IOS ? new IOSConverter() : getType() == EPlatform.WINDOWS ? new WindowsConverter() : null;
+		converter = getType() == EPlatform.ANDROID ? new AndroidConverter() : getType() == EPlatform.IOS ? new IOSConverter() : getType() == EPlatform.WINDOWS ? new WindowsConverter() : null;
 		countDownLatch = new CountDownLatch(1);
 		defaultCallback = new ConverterCallback() {
 			@Override
@@ -203,6 +204,13 @@ public abstract class AConverterTest {
 				.dstFolder(defaultDst).platform(getType()).build(), files);
 	}
 
+	@Test
+	public void testDryRun() throws Exception {
+		List<File> files = copyToTestPath(defaultSrc, "png_example2_alpha_144.png", "gif_example_640.gif", "jpg_example_1920.jpg");
+		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG_AND_PNG, 0.0f)
+				.dstFolder(defaultDst).platform(getType()).dryRun(true).build(), files);
+	}
+
 	protected void defaultTest(List<File> files) throws Exception {
 		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, 0.5f)
 				.dstFolder(defaultDst).platform(getType()).build(), files);
@@ -213,8 +221,14 @@ public abstract class AConverterTest {
 			converter.convert(fileToProcess, arg, defaultCallback);
 		}
 		countDownLatch.await(TIMEOUT_DELAY_SEC, TimeUnit.SECONDS);
-		checkOutDir(arg.dst, arg, files, getType());
+
+		if (arg.dryRun) {
+			assertEquals("destination folder should be empty", 0, arg.dst.list().length);
+		} else {
+			checkOutDir(arg.dst, arg, files, getType());
+		}
 	}
+
 
 	protected static List<File> copyToTestPath(File defaultSrc, String... resourceNames) throws Exception {
 		List<File> copiedFiles = new ArrayList<>();

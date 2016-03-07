@@ -47,8 +47,12 @@ public class MiscUtil {
 		return result;
 	}
 
-	public static File createAndCheckFolder(String path) {
+	public static File createAndCheckFolder(String path, boolean dryRun) {
 		File f = new File(path);
+
+		if (dryRun) {
+			return f;
+		}
 
 		if (!f.exists()) {
 			f.mkdir();

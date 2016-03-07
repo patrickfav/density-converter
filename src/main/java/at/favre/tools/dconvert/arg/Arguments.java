@@ -29,7 +29,7 @@ import java.util.*;
  * Handles all the arguments that can be set in the dconvert
  */
 public class Arguments implements Serializable {
-	private static final long serialVersionUID = 2;
+	private static final long serialVersionUID = 3;
 
 	public static final float DEFAULT_SCALE = 3f;
 	public static final float DEFAULT_COMPRESSION_QUALITY = 0.9f;
@@ -40,7 +40,7 @@ public class Arguments implements Serializable {
 	public static final EScaleType DEFAULT_SCALE_TYPE = EScaleType.FACTOR;
 
 
-	public final static Arguments START_GUI = new Arguments(null, null, 0.27346f, null, null, null, 0.9362f, 996254, false, false, false, false, false, false, false, false, false, null);
+	public final static Arguments START_GUI = new Arguments(null, null, 0.27346f, null, null, null, 0.9362f, 996254, false, false, false, false, false, false, false, false, false, false, null);
 
 	public final File src;
 	public final File dst;
@@ -59,6 +59,7 @@ public class Arguments implements Serializable {
 	public final boolean enablePngCrush;
 	public final boolean postConvertWebp;
 	public final boolean enableAntiAliasing;
+	public final boolean dryRun;
 	public final RoundingHandler.Strategy roundingHandler;
 	public transient final List<File> filesToProcess;
 
@@ -66,7 +67,7 @@ public class Arguments implements Serializable {
 	public Arguments(File src, File dst, float scale, EPlatform platform, EOutputCompressionMode outputCompressionMode,
 	                 EScaleType scaleType, float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
 	                 boolean verboseLog, boolean includeAndroidLdpiTvdpi, boolean haltOnError, boolean createMipMapInsteadOfDrawableDir,
-	                 boolean enablePngCrush, boolean postConvertWebp, boolean enableAntiAliasing, RoundingHandler.Strategy roundingHandler) {
+	                 boolean enablePngCrush, boolean postConvertWebp, boolean enableAntiAliasing, boolean dryRun, RoundingHandler.Strategy roundingHandler) {
 		this.dst = dst;
 		this.src = src;
 		this.scale = scale;
@@ -84,6 +85,7 @@ public class Arguments implements Serializable {
 		this.enablePngCrush = enablePngCrush;
 		this.postConvertWebp = postConvertWebp;
 		this.enableAntiAliasing = enableAntiAliasing;
+		this.dryRun = dryRun;
 		this.roundingHandler = roundingHandler;
 
 		this.filesToProcess = new ArrayList<>();
@@ -105,11 +107,38 @@ public class Arguments implements Serializable {
 	}
 
 	public Arguments() {
-		this(null, null, DEFAULT_SCALE, DEFAULT_PLATFORM, DEFAULT_OUT_COMPRESSION, DEFAULT_SCALE_TYPE, DEFAULT_COMPRESSION_QUALITY, DEFAULT_THREAD_COUNT, false, false, true, false, false, false, false, false, false, DEFAULT_ROUNDING_STRATEGY);
+		this(null, null, DEFAULT_SCALE, DEFAULT_PLATFORM, DEFAULT_OUT_COMPRESSION, DEFAULT_SCALE_TYPE, DEFAULT_COMPRESSION_QUALITY, DEFAULT_THREAD_COUNT,
+				false, false, true, false, false, false, false, false, false, false, DEFAULT_ROUNDING_STRATEGY);
 	}
 
 	public double round(double raw) {
 		return new RoundingHandler(roundingHandler).round(raw);
+	}
+
+	@Override
+	public String toString() {
+		return "Arguments{" +
+				"src=" + src +
+				", dst=" + dst +
+				", scale=" + scale +
+				", platform=" + platform +
+				", outputCompressionMode=" + outputCompressionMode +
+				", scaleType=" + scaleType +
+				", compressionQuality=" + compressionQuality +
+				", threadCount=" + threadCount +
+				", skipExistingFiles=" + skipExistingFiles +
+				", skipUpscaling=" + skipUpscaling +
+				", verboseLog=" + verboseLog +
+				", includeAndroidLdpiTvdpi=" + includeAndroidLdpiTvdpi +
+				", haltOnError=" + haltOnError +
+				", createMipMapInsteadOfDrawableDir=" + createMipMapInsteadOfDrawableDir +
+				", enablePngCrush=" + enablePngCrush +
+				", postConvertWebp=" + postConvertWebp +
+				", enableAntiAliasing=" + enableAntiAliasing +
+				", dryRun=" + dryRun +
+				", roundingHandler=" + roundingHandler +
+				", filesToProcess=" + filesToProcess +
+				'}';
 	}
 
 	@Override
@@ -131,6 +160,7 @@ public class Arguments implements Serializable {
 		if (enablePngCrush != arguments.enablePngCrush) return false;
 		if (postConvertWebp != arguments.postConvertWebp) return false;
 		if (enableAntiAliasing != arguments.enableAntiAliasing) return false;
+		if (dryRun != arguments.dryRun) return false;
 		if (src != null ? !src.equals(arguments.src) : arguments.src != null) return false;
 		if (dst != null ? !dst.equals(arguments.dst) : arguments.dst != null) return false;
 		if (platform != arguments.platform) return false;
@@ -160,34 +190,10 @@ public class Arguments implements Serializable {
 		result = 31 * result + (enablePngCrush ? 1 : 0);
 		result = 31 * result + (postConvertWebp ? 1 : 0);
 		result = 31 * result + (enableAntiAliasing ? 1 : 0);
+		result = 31 * result + (dryRun ? 1 : 0);
 		result = 31 * result + (roundingHandler != null ? roundingHandler.hashCode() : 0);
 		result = 31 * result + (filesToProcess != null ? filesToProcess.hashCode() : 0);
 		return result;
-	}
-
-	@Override
-	public String toString() {
-		return "Arguments{" +
-				"src=" + src +
-				", dst=" + dst +
-				", scrScale=" + scale +
-				", platform=" + platform +
-				", outputCompressionMode=" + outputCompressionMode +
-				", scaleType=" + scaleType +
-				", compressionQuality=" + compressionQuality +
-				", threadCount=" + threadCount +
-				", skipExistingFiles=" + skipExistingFiles +
-				", skipUpscaling=" + skipUpscaling +
-				", verboseLog=" + verboseLog +
-				", includeAndroidLdpiTvdpi=" + includeAndroidLdpiTvdpi +
-				", haltOnError=" + haltOnError +
-				", createMipMapInsteadOfDrawableDir=" + createMipMapInsteadOfDrawableDir +
-				", enablePngCrush=" + enablePngCrush +
-				", postConvertWebp=" + postConvertWebp +
-				", enableAntiAliasing=" + enableAntiAliasing +
-				", roundingHandler=" + roundingHandler +
-				", filesToProcess=" + filesToProcess +
-				'}';
 	}
 
 	public static Set<String> getSupportedFileTypes() {
@@ -220,6 +226,7 @@ public class Arguments implements Serializable {
 		private boolean enableAntiAliasing = false;
 		private boolean enablePngCrush = false;
 		private boolean postConvertWebp = false;
+		private boolean dryRun;
 
 		public Builder(File src, float srcScale) {
 			this.src = src;
@@ -302,6 +309,11 @@ public class Arguments implements Serializable {
 			return this;
 		}
 
+		public Builder dryRun(boolean b) {
+			this.dryRun = b;
+			return this;
+		}
+
 		public Builder scaleRoundingStragy(RoundingHandler.Strategy strategy) {
 			this.roundingStrategy = strategy;
 			return this;
@@ -343,7 +355,7 @@ public class Arguments implements Serializable {
 			}
 
 			return new Arguments(src, dst, srcScale, platform, outputCompressionMode, scaleType, compressionQuality, threadCount, skipExistingFiles, skipUpscaling,
-					verboseLog, includeAndroidLdpiTvdpi, haltOnError, createMipMapInsteadOfDrawableDir, enablePngCrush, postConvertWebp, enableAntiAliasing, roundingStrategy);
+					verboseLog, includeAndroidLdpiTvdpi, haltOnError, createMipMapInsteadOfDrawableDir, enablePngCrush, postConvertWebp, enableAntiAliasing, dryRun, roundingStrategy);
 		}
 	}
 

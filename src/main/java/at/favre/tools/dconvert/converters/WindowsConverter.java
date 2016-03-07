@@ -55,9 +55,9 @@ public class WindowsConverter extends APlatformConverter<WindowsDensityDescripto
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
 		if (arguments.platform != EPlatform.WINDOWS) {
-			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, "windows").getAbsolutePath());
+			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, "windows").getAbsolutePath(), arguments.dryRun);
 		}
-		return MiscUtil.createAndCheckFolder(new File(destinationFolder, "Assets").getAbsolutePath());
+		return MiscUtil.createAndCheckFolder(new File(destinationFolder, "Assets").getAbsolutePath(), arguments.dryRun);
 	}
 
 	@Override

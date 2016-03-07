@@ -27,6 +27,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Main GUI Class
@@ -52,6 +54,7 @@ public class GUI extends Application {
 		primaryStage.setTitle("Density Converter");
 
 		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("main.fxml"));
+		loader.setResources(ResourceBundle.getBundle("bundles.strings", Locale.getDefault()));
 		Parent root = loader.load();
 		GUIController controller = loader.<GUIController>getController();
 		controller.onCreate();

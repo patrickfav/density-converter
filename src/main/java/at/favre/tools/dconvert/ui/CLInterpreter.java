@@ -119,7 +119,7 @@ public class CLInterpreter {
 						builder.platform(EPlatform.ALL);
 						break;
 					case "android":
-						builder.platform(EPlatform.ANROID);
+						builder.platform(EPlatform.ANDROID);
 						break;
 					case "ios":
 						builder.platform(EPlatform.IOS);
@@ -161,6 +161,8 @@ public class CLInterpreter {
 			builder.antiAliasing(commandLine.hasOption("antiAliasing"));
 			builder.enablePngCrush(commandLine.hasOption("enablePngCrush"));
 			builder.postConvertWebp(commandLine.hasOption("postWebpConvert"));
+			builder.dryRun(commandLine.hasOption("dryRun"));
+
 
 			return builder.build();
 		} catch (Exception e) {
@@ -200,6 +202,7 @@ public class CLInterpreter {
 		Option enablePngCrush = Option.builder("enablePngCrush").desc("Will post-process all pngs with pngcrush. The executable must be set in the system path as 'pngcrush' i.e executable from every path. Pngcrush is a tool to compress pngs. Requires v1.7.22+").build();
 		Option postWebpConvert = Option.builder("postWebpConvert").desc("Will additionally convert all png/gif to lossless wepb and all jpg to lossy webp with cwebp. Does not delete source files. The executable must be set in the system path as 'cwebp' i.e executable from every path. cwebp is the official converter from Google.").build();
 		Option dpScaleIsHeight = Option.builder(SCALE_IS_HEIGHT_DP_ARG).desc("If set and scale is in dp it will be interpreted as fixed height not width").build();
+		Option dryRun = Option.builder("dryRun").desc("Will not create any images or folder. Useful as fast preview in log what images in what resolutions would be created.").build();
 
 		Option help = Option.builder("h").longOpt("help").desc("This help page").build();
 		Option version = Option.builder("v").longOpt("version").desc("Gets current version").build();
@@ -211,8 +214,9 @@ public class CLInterpreter {
 
 		options.addOption(srcScaleOpt).addOption(dstOpt);
 		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler);
-		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(includeObsoleteFormats).addOption(verboseLog).addOption(antiAliasing)
-				.addOption(haltOnError).addOption(mipmapInsteadOfDrawable).addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight);
+		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(includeObsoleteFormats).addOption(verboseLog)
+				.addOption(antiAliasing).addOption(dryRun).addOption(haltOnError).addOption(mipmapInsteadOfDrawable)
+				.addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight);
 
 		options.addOptionGroup(mainArgs);
 

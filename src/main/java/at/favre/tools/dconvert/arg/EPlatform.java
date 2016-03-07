@@ -21,5 +21,5 @@ package at.favre.tools.dconvert.arg;
  * Defines platforms to convert to
  */
 public enum EPlatform {
-	ALL, ANROID, IOS, WINDOWS
+	ALL, ANDROID, IOS, WINDOWS
 }
