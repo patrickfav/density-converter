@@ -53,11 +53,13 @@ public class GUI extends Application {
 	private void setup() throws IOException {
 		primaryStage.setTitle("Density Converter");
 
+		ResourceBundle bundle = ResourceBundle.getBundle("bundles.strings", Locale.getDefault());
+
 		FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("main.fxml"));
-		loader.setResources(ResourceBundle.getBundle("bundles.strings", Locale.getDefault()));
+		loader.setResources(bundle);
 		Parent root = loader.load();
 		GUIController controller = loader.<GUIController>getController();
-		controller.onCreate();
+		controller.onCreate(bundle);
 
 		ColumnConstraints column1 = new ColumnConstraints();
 		column1.setPercentWidth(20);

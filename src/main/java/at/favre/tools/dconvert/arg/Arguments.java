@@ -23,6 +23,7 @@ import at.favre.tools.dconvert.util.MiscUtil;
 
 import java.io.File;
 import java.io.Serializable;
+import java.text.MessageFormat;
 import java.util.*;
 
 /**
@@ -320,8 +321,10 @@ public class Arguments implements Serializable {
 		}
 
 		public Arguments build() throws InvalidArgumentException {
+			ResourceBundle bundle = ResourceBundle.getBundle("bundles.strings", Locale.getDefault());
+
 			if (src == null || !src.exists()) {
-				throw new InvalidArgumentException("src file/directory must be passed and should exist: " + src);
+				throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.missing.src"), src));
 			}
 
 			if (dst == null) {
@@ -333,23 +336,23 @@ public class Arguments implements Serializable {
 			}
 
 			if (compressionQuality < 0 || compressionQuality > 1.0) {
-				throw new InvalidArgumentException("invalid compression quality argument '" + compressionQuality + "' - must be between (including) 0 and 1.0");
+				throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.compressionQ"), compressionQuality));
 			}
 
 			if (threadCount < 1 || threadCount > 8) {
-				throw new InvalidArgumentException("invalid thread count given '" + threadCount + "' - must be between (including) 1 and 8");
+				throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.thread"), threadCount));
 			}
 
 			switch (scaleType) {
 				case FACTOR:
 					if (srcScale <= 0 || srcScale >= 100) {
-						throw new InvalidArgumentException("invalid src scale factor given '" + srcScale + "' - must be between (excluding) 0.0 and 100");
+						throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.factorscale"), srcScale));
 					}
 					break;
 				case DP_WIDTH:
 				case DP_HEIGHT:
 					if (srcScale <= 0 || srcScale >= 9999) {
-						throw new InvalidArgumentException("invalid src scale dp given '" + srcScale + "' - must be between 1dp and 9999dp");
+						throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.dp"), srcScale));
 					}
 					break;
 			}

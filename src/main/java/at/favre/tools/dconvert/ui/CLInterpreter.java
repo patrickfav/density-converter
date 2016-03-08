@@ -21,6 +21,9 @@ import at.favre.tools.dconvert.arg.*;
 import org.apache.commons.cli.*;
 
 import java.io.File;
+import java.text.MessageFormat;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * Handles parsing of command line arguments
@@ -39,7 +42,8 @@ public class CLInterpreter {
 	public static final String SCALE_IS_HEIGHT_DP_ARG = "scaleIsHeightDp";
 
 	public static Arguments parse(String[] args) {
-		Options options = setupOptions();
+		ResourceBundle strings = ResourceBundle.getBundle("bundles.strings", Locale.getDefault());
+		Options options = setupOptions(strings);
 		CommandLineParser parser = new DefaultParser();
 
 		Arguments.Builder builder;
@@ -178,35 +182,34 @@ public class CLInterpreter {
 		help.printHelp("converter", "version: " + CLInterpreter.class.getPackage().getImplementationVersion(), options, "", true);
 	}
 
-	private static Options setupOptions() {
+	private static Options setupOptions(ResourceBundle bundle) {
 		Options options = new Options();
 
-		Option srcOpt = Option.builder(SOURCE_ARG).required().argName("path to file or folder").hasArg(true).desc("The source. Can be an image file or a folder containing image files to be converted. This argument is mandatory.").build();
-		Option srcScaleOpt = Option.builder(SCALE_ARG).argName("<float>|<int>dp").hasArg(true).desc("The source scale. This can either be a factor (1,1.5,2,3,4,etc.) used if the images already have the correct resolution for one scale factor and up- and downscaling for all other densities are needed. Ie. if you have the src" +
-				" file in density xxxhdpi you pass '4'. You could also pass a value in dp (density independent pixels) which denotes the output pixel width (or height if the flag is set) in mdpi/x1. In this mode all output images will have the same width (height). This argument is mandatory.").build();
-		Option dstOpt = Option.builder(DST_ARG).hasArg(true).argName("path").desc("The directory in which the converted files will be written. Will use the source folder if this argument is omitted.").build();
+		Option srcOpt = Option.builder(SOURCE_ARG).required().argName("path to file or folder").hasArg(true).desc(bundle.getString("arg.descr.cmd.src")).build();
+		Option srcScaleOpt = Option.builder(SCALE_ARG).argName("<float>|<int>dp").hasArg(true).desc(bundle.getString("arg.descr.cmd.scale")).build();
+		Option dstOpt = Option.builder(DST_ARG).hasArg(true).argName("path").desc(bundle.getString("arg.descr.cmd.dst")).build();
 
-		Option platform = Option.builder(PLATFORM_ARG).hasArg(true).argName("all|android|ios|win").desc("Can be 'all', 'android' or 'ios'. Sets what formats the converted images will be generated for. E.g. set 'android' if you only want to convert to android format. Default is " + Arguments.DEFAULT_PLATFORM).build();
-		Option threadCount = Option.builder(THREADS_ARG).argName("1-8").hasArg(true).desc("Sets the count of max parallel threads (more is faster but uses more memory). Possible values are 1-8. Default is " + Arguments.DEFAULT_THREAD_COUNT).build();
-		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc("Defines the rounding mode when scaling the dimensions. Possible options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and 'ceil' (rounds up). Default is " + Arguments.DEFAULT_ROUNDING_STRATEGY).build();
-		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg|gif|bmp").desc("Sets the compression of the converted images. Can be 'png', 'jpg', 'gif', 'bmp', 'png+jpg' or 'strict' which tries to use same compression as source. By default will convert to png except if source compression is jpeg.").build();
-		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).hasArg(true).argName("0.0-1.0").desc("Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is the highest quality. Default is " + Arguments.DEFAULT_COMPRESSION_QUALITY).build();
+		Option platform = Option.builder(PLATFORM_ARG).hasArg(true).argName("all|android|ios|win").desc(MessageFormat.format(bundle.getString("arg.descr.cmd.platform"), Arguments.DEFAULT_PLATFORM)).build();
+		Option threadCount = Option.builder(THREADS_ARG).argName("1-8").hasArg(true).desc(MessageFormat.format(bundle.getString("arg.descr.cmd.threads"), String.valueOf(Arguments.DEFAULT_THREAD_COUNT))).build();
+		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc(MessageFormat.format(bundle.getString("arg.descr.cmd.rounding"), Arguments.DEFAULT_ROUNDING_STRATEGY)).build();
+		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg|gif|bmp").desc(bundle.getString("arg.descr.cmd.outcompression")).build();
+		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).hasArg(true).argName("0.0-1.0").desc(MessageFormat.format(bundle.getString("arg.descr.cmd.compression"), String.valueOf(Arguments.DEFAULT_COMPRESSION_QUALITY))).build();
 
-		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc("If set will not overwrite a already existing file").build();
-		Option includeObsoleteFormats = Option.builder("androidIncludeLdpiTvdpi").desc("Android only: If set will include additional densities (ldpi and tvdpi).").build();
-		Option mipmapInsteadOfDrawable = Option.builder("androidMipmapInsteadOfDrawable").desc("Android only: creates mipmap sub-folders instead of drawable.").build();
-		Option skipUpscaling = Option.builder("skipUpscaling").desc("If set will only scale down, but not up to prevent image quality loss").build();
-		Option verboseLog = Option.builder(VERBOSE_ARG).desc("If set will log to console more verbose").build();
-		Option haltOnError = Option.builder("haltOnError").desc("If set will stop the process if an error occurred during conversion").build();
-		Option antiAliasing = Option.builder("antiAliasing").desc("Anti-aliases images creating a little more blurred result; useful for very small images").build();
-		Option enablePngCrush = Option.builder("enablePngCrush").desc("Will post-process all pngs with pngcrush. The executable must be set in the system path as 'pngcrush' i.e executable from every path. Pngcrush is a tool to compress pngs. Requires v1.7.22+").build();
-		Option postWebpConvert = Option.builder("postWebpConvert").desc("Will additionally convert all png/gif to lossless wepb and all jpg to lossy webp with cwebp. Does not delete source files. The executable must be set in the system path as 'cwebp' i.e executable from every path. cwebp is the official converter from Google.").build();
-		Option dpScaleIsHeight = Option.builder(SCALE_IS_HEIGHT_DP_ARG).desc("If set and scale is in dp it will be interpreted as fixed height not width").build();
-		Option dryRun = Option.builder("dryRun").desc("Will not create any images or folder. Useful as fast preview in log what images in what resolutions would be created.").build();
+		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc(bundle.getString("arg.descr.skipexisting")).build();
+		Option androidIncludeLdpiTvdpi = Option.builder("androidIncludeLdpiTvdpi").desc(bundle.getString("arg.descr.androidmipmap")).build();
+		Option mipmapInsteadOfDrawable = Option.builder("androidMipmapInsteadOfDrawable").desc(bundle.getString("arg.descr.androidldpi")).build();
+		Option skipUpscaling = Option.builder("skipUpscaling").desc(bundle.getString("arg.descr.skipupscaling")).build();
+		Option verboseLog = Option.builder(VERBOSE_ARG).desc(bundle.getString("arg.descr.cmd.verbose")).build();
+		Option haltOnError = Option.builder("haltOnError").desc(bundle.getString("arg.descr.halterror")).build();
+		Option antiAliasing = Option.builder("antiAliasing").desc(bundle.getString("arg.descr.antialiasing")).build();
+		Option enablePngCrush = Option.builder("enablePngCrush").desc(bundle.getString("arg.descr.pngcrush")).build();
+		Option postWebpConvert = Option.builder("postWebpConvert").desc(bundle.getString("arg.descr.webp")).build();
+		Option dpScaleIsHeight = Option.builder(SCALE_IS_HEIGHT_DP_ARG).desc(bundle.getString("arg.descr.cmd.dpIsHeight")).build();
+		Option dryRun = Option.builder("dryRun").desc(bundle.getString("arg.descr.dryrun")).build();
 
-		Option help = Option.builder("h").longOpt("help").desc("This help page").build();
-		Option version = Option.builder("v").longOpt("version").desc("Gets current version").build();
-		Option gui = Option.builder("gui").desc("Starts graphical user interface").build();
+		Option help = Option.builder("h").longOpt("help").desc(bundle.getString("arg.descr.cmd.help")).build();
+		Option version = Option.builder("v").longOpt("version").desc(bundle.getString("arg.descr.cmd.version")).build();
+		Option gui = Option.builder("gui").desc(bundle.getString("arg.descr.cmd.gui")).build();
 
 		OptionGroup mainArgs = new OptionGroup();
 		mainArgs.addOption(srcOpt).addOption(help).addOption(version).addOption(gui);
@@ -214,7 +217,7 @@ public class CLInterpreter {
 
 		options.addOption(srcScaleOpt).addOption(dstOpt);
 		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler);
-		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(includeObsoleteFormats).addOption(verboseLog)
+		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(androidIncludeLdpiTvdpi).addOption(verboseLog)
 				.addOption(antiAliasing).addOption(dryRun).addOption(haltOnError).addOption(mipmapInsteadOfDrawable)
 				.addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight);
 
