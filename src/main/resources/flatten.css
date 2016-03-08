@@ -6,7 +6,7 @@
     -fx-background-color: -dark;
 
     /*default font */
-    -fx-font-family: 'Helvetica Neue';
+    -fx-font-family: Helvetica, Arial, sans-serif;
     -fx-font-size: 13.0px;
     -fx-font-weight: 600;
     -fx-disabled-opacity: 0.6;
