@@ -130,8 +130,6 @@ The tool will generated the following images in the following resolutions:
 * xxxhdpi 144x144 (x4)
 ```
 
-9-Patches are specifically supported - must have `.9.png` extension and only size correctly if out-compression is PNG.
-
 ### Fixed Width/Height in DP Mode
 
 This mode is suitable if the source image is in an arbitrary resolution (but usually greater resolution than needed) and
@@ -157,11 +155,13 @@ This tool can converts to formats used in Android, iOS and Windows:
  * The iOS converter will create a folder for each image with the `.imageset` postfix and creates 3 images in them with no, `_2x` and `_3x` postfix; also including is the `Content.json`
  * The Windows converter will create an `Assets` folder containing all the images with `.scale-100`, `.scale-140` etc. postfixes
 
+9-Patches are specifically supported for Android - must have `.9.png` extension and only size correctly if out-compression is PNG.
+
 ## Supported File Types
 
 This tool can read & write the following file types:
 
-* PNG - read and write support
+* PNG - read and write support (including 9-patches format)
 * JPEG - read and write support with quality parameter
 * GIF - read and write support
 * SVG - can read svg, will compress with png per default
