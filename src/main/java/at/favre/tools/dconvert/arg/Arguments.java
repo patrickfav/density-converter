@@ -18,7 +18,7 @@
 
 package at.favre.tools.dconvert.arg;
 
-import at.favre.tools.dconvert.ui.InvalidArgumentException;
+import at.favre.tools.dconvert.exceptions.InvalidArgumentException;
 import at.favre.tools.dconvert.util.MiscUtil;
 
 import java.io.File;

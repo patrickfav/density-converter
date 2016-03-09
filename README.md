@@ -3,7 +3,7 @@
 This is a simple tool that helps **converting single or batches of images** to **Android**, **iOS** and **Windows** specific formats and density
 versions given the source scale factor or target width/height in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
 It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
-including PNG, JPEG, SVG and PSD. Using advanced scaling algorithms, it is designed to make conversion of images easy and
+including PNG, JPEG, SVG, PSD and Android 9-patches. Using advanced scaling algorithms, it is designed to make conversion of images easy and
 fast while keeping the image quality high. To further optimize the output post processors like **pngcrush** can be used (see section below).
 
 **[Requires Java 8 to run.](http://www.oracle.com/technetwork/java/javase/downloads/index.html)**
@@ -44,17 +44,19 @@ Will generate `mdpi`, `hdpi`, etc. folders in "C:/master-image/" containing the 
 
 Full list of arguments:
 
-    -androidIncludeLdpiTvdpi            Android only: If set will include additional densities (ldpi and
-                                        tvdpi).
-    -androidMipmapInsteadOfDrawable     Android only: creates mipmap sub-folders instead of drawable.
+    -androidIncludeLdpiTvdpi            Android only: creates mipmap sub-folders instead of drawable.
+    -androidMipmapInsteadOfDrawable     Android only: If set will include additional densities (ldpi and
+                                        tvdpi)
     -antiAliasing                       Anti-aliases images creating a little more blurred result; useful for
                                         very small images
     -compressionQuality <0.0-1.0>       Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is
                                         the highest quality. Default is 0.9
+    -dryRun                             Will not create any images or folder. Useful as fast preview in log
+                                        what images in what resolutions would be created.
     -dst <path>                         The directory in which the converted files will be written. Will use
                                         the source folder if this argument is omitted.
     -enablePngCrush                     Will post-process all pngs with pngcrush. The executable must be set
-                                        in the system path as 'pngcrush' i.e executable from every path.
+                                        in the system PATH as 'pngcrush' i.e executable from every path.
                                         Pngcrush is a tool to compress pngs. Requires v1.7.22+
     -gui                                Starts graphical user interface
     -h,--help                           This help page
@@ -63,9 +65,9 @@ Full list of arguments:
                                         'gif', 'bmp', 'png+jpg' or 'strict' which tries to use same
                                         compression as source. By default will convert to png except if source
                                         compression is jpeg.
-    -platform <all|android|ios>         Can be 'all', 'android' or 'ios'. Sets what formats the converted
-                                        images will be generated for. E.g. set 'android' if you only want to
-                                        convert to android format. Default is ALL
+    -platform <all|android|ios|win>     Can be 'all', 'android', 'ios' or 'win'. Sets what formats the
+                                        converted images will be generated for. E.g. set 'android' if you only
+                                        want to convert to android format. Default is ALL
     -postWebpConvert                    Will additionally convert all png/gif to lossless wepb and all jpg to
                                         lossy webp with cwebp. Does not delete source files. The executable
                                         must be set in the system path as 'cwebp' i.e executable from every
@@ -73,7 +75,13 @@ Full list of arguments:
     -roundingMode <round|ceil|floor>    Defines the rounding mode when scaling the dimensions. Possible
                                         options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and
                                         'ceil' (rounds up). Default is ROUND_HALF_UP
-    -scale <<float>|<int>dp>            The source scale. This can either be a factor (1,1.5,2,3,4,etc.) used
+    -scale <<float>|<int>dp>            The source. Can be an image file or a folder containing image files to
+                                        be converted. This argument is mandatory.
+    -scaleIsHeightDp                    If set and scale is in dp it will be interpreted as fixed height not
+                                        width
+    -skipExisting                       If set will not overwrite a already existing file
+    -skipUpscaling                      If set will only scale down, but not up to prevent image quality loss
+    -src <path to file or folder>       The source scale. This can either be a factor (1,1.5,2,3,4,etc.) used
                                         if the images already have the correct resolution for one scale factor
                                         and up- and downscaling for all other densities are needed. Ie. if you
                                         have the src file in density xxxhdpi you pass '4'. You could also pass
@@ -81,12 +89,6 @@ Full list of arguments:
                                         pixel width (or height if the flag is set) in mdpi/x1. In this mode
                                         all output images will have the same width (height). This argument is
                                         mandatory.
-    -scaleIsHeightDp                    If set and scale is in dp it will be interpreted as fixed height not
-                                        width
-    -skipExisting                       If set will not overwrite a already existing file
-    -skipUpscaling                      If set will only scale down, but not up to prevent image quality loss
-    -src <path to file or folder>       The source. Can be an image file or a folder containing image files to
-                                        be converted. This argument is mandatory.
     -threads <1-8>                      Sets the count of max parallel threads (more is faster but uses more
                                         memory). Possible values are 1-8. Default is 4
     -v,--version                        Gets current version
@@ -127,6 +129,8 @@ The tool will generated the following images in the following resolutions:
 * xxhdpi 108x108 (x3)
 * xxxhdpi 144x144 (x4)
 ```
+
+9-Patches are specifically supported - must have `.9.png` extension and only size correctly if out-compression is PNG.
 
 ### Fixed Width/Height in DP Mode
 
@@ -214,12 +218,11 @@ Both user interfaces use the same underlying logic.
 
 ## Limitations & Known Issues
 
-* There is no specific support for Android 9-patches ([see this project](https://github.com/redwarp/9-Patch-Resizer))
+* You tell me
 
 ## Possible Future Features
 
 * change SVG source resolution to max needed resolution so no upscaling is needed
-* 9-patch support
 
 ## How to build
 
@@ -239,6 +242,7 @@ The .jar file will be in the generated `/target` folder
 * HQ image resizing with [imgscalr](https://github.com/thebuzzmedia/imgscalr)
 * JavaFx theme based on Flatter by [hendrikebbers](https://github.com/guigarage/javafx-collection/tree/master/flatter)
 * Image file icon: Icon made by [Freepik](http://www.freepik.com/)
+* 9-patch resizing routine from [Redwarp](https://github.com/redwarp/9-Patch-Resizer)
 
 ## License
 

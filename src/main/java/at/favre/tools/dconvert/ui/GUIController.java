@@ -19,6 +19,7 @@ package at.favre.tools.dconvert.ui;
 
 import at.favre.tools.dconvert.ConverterHandler;
 import at.favre.tools.dconvert.arg.*;
+import at.favre.tools.dconvert.exceptions.InvalidArgumentException;
 import at.favre.tools.dconvert.util.MiscUtil;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;

@@ -18,8 +18,8 @@
 package at.favre.tools.dconvert.test;
 
 import at.favre.tools.dconvert.arg.*;
+import at.favre.tools.dconvert.exceptions.InvalidArgumentException;
 import at.favre.tools.dconvert.ui.CLInterpreter;
-import at.favre.tools.dconvert.ui.InvalidArgumentException;
 import org.apache.tools.ant.types.Commandline;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;

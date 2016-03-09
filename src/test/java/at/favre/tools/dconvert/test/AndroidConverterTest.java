@@ -23,6 +23,7 @@ import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.converters.AndroidConverter;
 import at.favre.tools.dconvert.util.ImageUtil;
 import at.favre.tools.dconvert.util.MiscUtil;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.*;
@@ -50,6 +51,13 @@ public class AndroidConverterTest extends AConverterTest {
 	public void testLdpiAndTvdpi() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
 		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dstFolder(defaultDst).includeAndroidLdpiTvdpi(true).platform(getType()).build(), files);
+	}
+
+	@Ignore
+	@Test
+	public void testSingleNinePatch() throws Exception {
+		List<File> files = copyToTestPath(defaultSrc, "ninepatch_bubble.9.png");
+		defaultTest(files);
 	}
 
 	@Override

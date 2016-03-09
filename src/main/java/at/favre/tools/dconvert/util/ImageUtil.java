@@ -83,7 +83,7 @@ public class ImageUtil {
 	}
 
 	public static List<File> compressToFile(File targetFile, List<ImageType.ECompression> compressionList, BufferedImage bufferedImage, Dimension targetDimension,
-	                                        float compressionQuality, boolean skipIfExists, boolean antiAlias) throws Exception {
+	                                        float compressionQuality, boolean skipIfExists, boolean antiAlias, boolean isNinePatch) throws Exception {
 		List<File> files = new ArrayList<>(2);
 		for (ImageType.ECompression compression : compressionList) {
 			File imageFile = new File(targetFile.getAbsolutePath() + "." + compression.extension);
@@ -92,7 +92,12 @@ public class ImageUtil {
 				break;
 			}
 
-			BufferedImage scaledImage = scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.white, antiAlias);
+			BufferedImage scaledImage;
+			if (isNinePatch && compression == ImageType.ECompression.PNG) {
+				scaledImage = new NinePatchScaler().scale(bufferedImage, targetDimension);
+			} else {
+				scaledImage = scale(bufferedImage, targetDimension.width, targetDimension.height, compression, Color.white, antiAlias);
+			}
 
 			if (compression == ImageType.ECompression.JPG) {
 				compressJpeg(imageFile, scaledImage, compressionQuality);

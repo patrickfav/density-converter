@@ -38,7 +38,6 @@ import java.util.Map;
  */
 public abstract class APlatformConverter<T extends DensityDescriptor> implements IPlatformConverter {
 
-
 	@Override
 	public void convert(File srcImage, Arguments args, ConverterCallback callback) {
 		try {
@@ -46,6 +45,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 			BufferedImage rawImage = ImageUtil.loadImage(srcImage);
 			String targetImageFileName = MiscUtil.getFileNameWithoutExtension(srcImage);
 			ImageType imageType = Arguments.getImageType(srcImage);
+			boolean isNinePatch = srcImage.getName().endsWith(".9.png") && getClass() == AndroidConverter.class;
 
 			StringBuilder log = new StringBuilder();
 			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ")
@@ -66,11 +66,12 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 				if ((dstFolder.isDirectory() && dstFolder.exists()) || args.dryRun) {
 					File imageFile = new File(dstFolder, createDestinationFileNameWithoutExtension(entry.getKey(), entry.getValue(), targetImageFileName, args));
 
-					log.append("process ").append(imageFile).append(" with ").append(entry.getValue().width).append("x").append(entry.getValue().height).append(" (x").append(entry.getKey().scale).append(")\n");
+					log.append("process ").append(imageFile).append(" with ").append(entry.getValue().width).append("x").append(entry.getValue().height).append(" (x")
+							.append(entry.getKey().scale).append(") ").append(isNinePatch ? "(9-patch)" : "").append("\n");
 
 					if (!args.dryRun) {
 						List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), rawImage,
-								entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing);
+								entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing, isNinePatch);
 
 						allResultingFiles.addAll(files);
 
@@ -103,7 +104,6 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 			}
 		}
 	}
-
 
 
 	public abstract List<T> usedOutputDensities(Arguments arguments);
