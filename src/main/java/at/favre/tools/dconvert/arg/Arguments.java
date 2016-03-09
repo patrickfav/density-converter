@@ -35,6 +35,7 @@ public class Arguments implements Serializable {
 	public static final float DEFAULT_SCALE = 3f;
 	public static final float DEFAULT_COMPRESSION_QUALITY = 0.9f;
 	public static final int DEFAULT_THREAD_COUNT = 4;
+	public static final int MAX_THREAD_COUNT = 8;
 	public static final RoundingHandler.Strategy DEFAULT_ROUNDING_STRATEGY = RoundingHandler.Strategy.ROUND_HALF_UP;
 	public static final EPlatform DEFAULT_PLATFORM = EPlatform.ALL;
 	public static final EOutputCompressionMode DEFAULT_OUT_COMPRESSION = EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG;
@@ -228,6 +229,7 @@ public class Arguments implements Serializable {
 		private boolean enablePngCrush = false;
 		private boolean postConvertWebp = false;
 		private boolean dryRun;
+		private boolean internalSkipParamValidation = false;
 
 		public Builder(File src, float srcScale) {
 			this.src = src;
@@ -320,43 +322,49 @@ public class Arguments implements Serializable {
 			return this;
 		}
 
+		public Builder skipParamValidation(boolean b) {
+			this.internalSkipParamValidation = b;
+			return this;
+		}
+
 		public Arguments build() throws InvalidArgumentException {
-			ResourceBundle bundle = ResourceBundle.getBundle("bundles.strings", Locale.getDefault());
+			if (!internalSkipParamValidation) {
+				ResourceBundle bundle = ResourceBundle.getBundle("bundles.strings", Locale.getDefault());
 
-			if (src == null || !src.exists()) {
-				throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.missing.src"), src));
-			}
+				if (src == null || !src.exists()) {
+					throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.missing.src"), src));
+				}
 
-			if (dst == null) {
-				if (src.isDirectory()) {
-					dst = src;
-				} else {
-					dst = src.getParentFile();
+				if (dst == null) {
+					if (src.isDirectory()) {
+						dst = src;
+					} else {
+						dst = src.getParentFile();
+					}
+				}
+
+				if (compressionQuality < 0 || compressionQuality > 1.0) {
+					throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.compressionQ"), compressionQuality));
+				}
+
+				if (threadCount < 1 || threadCount > MAX_THREAD_COUNT) {
+					throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.thread"), threadCount, MAX_THREAD_COUNT));
+				}
+
+				switch (scaleType) {
+					case FACTOR:
+						if (srcScale <= 0 || srcScale >= 100) {
+							throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.factorscale"), srcScale));
+						}
+						break;
+					case DP_WIDTH:
+					case DP_HEIGHT:
+						if (srcScale <= 0 || srcScale >= 9999) {
+							throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.dp"), srcScale));
+						}
+						break;
 				}
 			}
-
-			if (compressionQuality < 0 || compressionQuality > 1.0) {
-				throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.compressionQ"), compressionQuality));
-			}
-
-			if (threadCount < 1 || threadCount > 8) {
-				throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.thread"), threadCount));
-			}
-
-			switch (scaleType) {
-				case FACTOR:
-					if (srcScale <= 0 || srcScale >= 100) {
-						throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.factorscale"), srcScale));
-					}
-					break;
-				case DP_WIDTH:
-				case DP_HEIGHT:
-					if (srcScale <= 0 || srcScale >= 9999) {
-						throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.invalid.dp"), srcScale));
-					}
-					break;
-			}
-
 			return new Arguments(src, dst, srcScale, platform, outputCompressionMode, scaleType, compressionQuality, threadCount, skipExistingFiles, skipUpscaling,
 					verboseLog, includeAndroidLdpiTvdpi, haltOnError, createMipMapInsteadOfDrawableDir, enablePngCrush, postConvertWebp, enableAntiAliasing, dryRun, roundingStrategy);
 		}

@@ -126,7 +126,7 @@ public class GUIController {
         btnConvert.setOnAction(event -> {
 
             try {
-                Arguments arg = getFromUI();
+                Arguments arg = getFromUI(false);
                 saveToPrefs(arg);
                 btnConvert.setDisable(true);
 				progressBar.setDisable(true);
@@ -309,13 +309,16 @@ public class GUIController {
         }
     }
 
-    public Arguments getFromUI() throws InvalidArgumentException {
-        float scale;
+    public Arguments getFromUI(boolean skipValidation) throws InvalidArgumentException {
+        float scale = Arguments.DEFAULT_SCALE;
+
         try {
             scale = rbFactor.isSelected() ? (float) scaleSlider.getValue() : Float.valueOf(textFieldDp.getText());
         } catch (NumberFormatException e) {
-            throw new InvalidArgumentException(
-                    MessageFormat.format(bundle.getString("error.parse.dp"), textFieldDp.getText()));
+            if (!skipValidation) {
+                throw new InvalidArgumentException(
+                        MessageFormat.format(bundle.getString("error.parse.dp"), textFieldDp.getText()));
+            }
         }
 
         Arguments.Builder builder = new Arguments.Builder(new File(textFieldSrcPath.getText()), scale);
@@ -337,7 +340,7 @@ public class GUIController {
         builder.enablePngCrush(chEnablePngCrush.isSelected());
         builder.postConvertWebp(cbPostConvertWebp.isSelected());
 
-        return builder.build();
+        return builder.skipParamValidation(skipValidation).build();
     }
 
     private void resetUIAfterExecution() {

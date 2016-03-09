@@ -17,7 +17,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <imageiodep.version>3.2.1</imageiodep.version>
     </properties>
-
     <repositories>
         <repository>
             <id>maven-central-repo</id>
@@ -66,7 +65,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 
@@ -168,5 +166,12 @@
             <version>4.0.2-alpha</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+            <version>1.8.0_20</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 </project>
