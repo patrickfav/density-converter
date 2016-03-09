@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="at.favre.tools.dconvert.ui.GUIController"
-          stylesheets="flatten.css, style.css" styleClass="body" maxHeight="Infinity"
+          fx:id="rootGridPane" stylesheets="flatten.css, style.css" maxHeight="Infinity"
           maxWidth="Infinity" alignment="CENTER" hgap="8" vgap="8">
     <padding>
         <Insets top="20" right="15" bottom="5" left="15"/>

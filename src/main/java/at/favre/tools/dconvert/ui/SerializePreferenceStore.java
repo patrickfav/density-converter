@@ -9,23 +9,25 @@ import java.util.prefs.Preferences;
 /**
  * Simple persistence store for UI
  */
-public class PreferenceStore {
+public class SerializePreferenceStore implements IPreferenceStore {
 	public static final String ARGS_KEY = "args";
 	private Preferences prefs;
 
-	public PreferenceStore() {
+	public SerializePreferenceStore() {
 		this.prefs = Preferences.userNodeForPackage(GUI.class);
 	}
 
-	public void save(Serializable obj) {
+	@Override
+	public void save(Arguments arg) {
 		try {
-			prefs.put(ARGS_KEY, serialize(obj));
+			prefs.put(ARGS_KEY, serialize(arg));
 		} catch (Exception e) {
 			prefs.remove(ARGS_KEY);
 			e.printStackTrace();
 		}
 	}
 
+	@Override
 	public Arguments get() {
 		try {
 			String saved = prefs.get(ARGS_KEY, null);

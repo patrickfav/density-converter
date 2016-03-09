@@ -42,8 +42,9 @@ import java.util.ResourceBundle;
  * JavaFx main controller for GUI
  */
 public class GUIController {
+    public GridPane rootGridPane;
 
-    private final PreferenceStore preferenceStore = new PreferenceStore();
+    private IPreferenceStore preferenceStore;
     private final FileChooser srcFileChooser = new FileChooser();
     private final DirectoryChooser srcDirectoryChooser = new DirectoryChooser();
 
@@ -93,8 +94,11 @@ public class GUIController {
 
     private ResourceBundle bundle;
 
-    public void onCreate(ResourceBundle bundle) {
+    public void onCreate(IPreferenceStore store, ResourceBundle bundle) {
         this.bundle = bundle;
+        this.preferenceStore = store;
+
+        setupLayout();
 
         btnSrcFile.setOnAction(event -> {
             srcFileChooser.setTitle(bundle.getString("main.filechooser.titel"));
@@ -221,6 +225,30 @@ public class GUIController {
         });
         labelVersion.setText("v" + GUIController.class.getPackage().getImplementationVersion());
 
+        textFieldDp.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textFieldDp.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+            if (textFieldDp.getText().length() > 10) {
+                String s = textFieldDp.getText().substring(0, 10);
+                textFieldDp.setText(s);
+            }
+        });
+
+        loadPrefs();
+    }
+
+    private void setupLayout() {
+        ColumnConstraints column1M = new ColumnConstraints();
+        column1M.setPercentWidth(20);
+        ColumnConstraints column2M = new ColumnConstraints();
+        column2M.setPercentWidth(56);
+        ColumnConstraints column3M = new ColumnConstraints();
+        column3M.setPercentWidth(12);
+        ColumnConstraints column4M = new ColumnConstraints();
+        column4M.setPercentWidth(12);
+        rootGridPane.getColumnConstraints().addAll(column1M, column2M, column3M, column4M);
+
         ColumnConstraints column1 = new ColumnConstraints();
         column1.setPercentWidth(20);
         ColumnConstraints column2 = new ColumnConstraints();
@@ -237,19 +265,6 @@ public class GUIController {
         column2C.setPercentWidth(50);
         gridPaneOptionsCheckboxes.getColumnConstraints().addAll(column1C, column2C);
         gridPanePostProcessors.getColumnConstraints().addAll(column1C, column2C);
-
-        textFieldDp.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                textFieldDp.setText(newValue.replaceAll("[^\\d]", ""));
-            }
-            if (textFieldDp.getText().length() > 10) {
-                String s = textFieldDp.getText().substring(0, 10);
-                textFieldDp.setText(s);
-            }
-        });
-
-
-        loadPrefs();
     }
 
     private void saveToPrefs(Arguments arg) {
@@ -294,7 +309,7 @@ public class GUIController {
         }
     }
 
-    private Arguments getFromUI() throws InvalidArgumentException {
+    public Arguments getFromUI() throws InvalidArgumentException {
         float scale;
         try {
             scale = rbFactor.isSelected() ? (float) scaleSlider.getValue() : Float.valueOf(textFieldDp.getText());
@@ -329,6 +344,15 @@ public class GUIController {
         progressBar.setProgress(1);
         btnConvert.setDisable(false);
         textFieldConsole.setDisable(false);
+    }
+
+    public void setSrcForTest(File srcFile) {
+        if (srcFile != null) {
+            textFieldSrcPath.setText(srcFile.getAbsolutePath());
+            if (textFieldDstPath != null && (textFieldDstPath.getText() == null || textFieldDstPath.getText().trim().isEmpty())) {
+                textFieldDstPath.setText(srcFile.getAbsolutePath());
+            }
+        }
     }
 
     private static String getNameForScale(float scale) {
