@@ -17,7 +17,6 @@
 
 package at.favre.tools.dconvert.util;
 
-import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.ImageType;
 import org.imgscalr.Scalr;
 
@@ -47,20 +46,8 @@ public class ImageUtil {
 		return ImageIO.read(file);
 	}
 
-	public static String runWebP(File target, String[] additionalArgs, File outFile) {
-		String[] cmdArray = MiscUtil.concat(MiscUtil.concat(new String[]{"cwebp"}, additionalArgs), new String[]{"\"" + target.getAbsoluteFile() + "\"", "-o", "\"" + outFile.getAbsoluteFile() + "\""});
-		return runCmd(cmdArray);
-	}
 
-	public static String runPngCrush(File target, String[] additionalArgs) {
-		if (Arguments.getImageType(target) == ImageType.PNG && target.exists() && target.isFile()) {
-			String[] cmdArray = MiscUtil.concat(MiscUtil.concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"-ow", "\"" + target.getAbsoluteFile() + "\""});
-			return runCmd(cmdArray);
-		}
-		return "";
-	}
-
-	private static String runCmd(String[] cmdArray) {
+	public static String runCmd(String[] cmdArray) {
 		StringBuilder logStringBuilder = new StringBuilder();
 		try {
 			logStringBuilder.append("execute: ").append(Arrays.toString(cmdArray)).append("\n");
@@ -71,7 +58,7 @@ public class ImageUtil {
 					new InputStreamReader(process.getInputStream()))) {
 				String s;
 				while ((s = inStreamReader.readLine()) != null) {
-					logStringBuilder.append("\t").append(s).append("\n");
+					if (!s.isEmpty()) logStringBuilder.append("\t").append(s).append("\n");
 				}
 			}
 			process.waitFor();

@@ -236,7 +236,7 @@
     <GridPane fx:id="gridPanePostProcessors" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
               GridPane.rowIndex="11"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
-        <CheckBox fx:id="chEnablePngCrush" styleClass="check-box" maxWidth="Infinity" text="%main.cb.pngcrush"
+        <CheckBox fx:id="cbEnablePngCrush" styleClass="check-box" maxWidth="Infinity" text="%main.cb.pngcrush"
                   GridPane.columnIndex="0" alignment="CENTER_LEFT"
                   GridPane.rowIndex="0" GridPane.hgrow="always"
                   GridPane.vgrow="always">
@@ -251,6 +251,15 @@
                   GridPane.vgrow="always">
             <tooltip>
                 <Tooltip text="%arg.descr.webp"/>
+            </tooltip>
+        </CheckBox>
+
+        <CheckBox fx:id="cbEnableMozJpeg" styleClass="check-box" maxWidth="Infinity" text="%main.cb.mozjpeg"
+                  GridPane.columnIndex="0" alignment="CENTER_LEFT"
+                  GridPane.rowIndex="1" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip text="%arg.descr.mozjpeg"/>
             </tooltip>
         </CheckBox>
     </GridPane>

@@ -200,6 +200,7 @@ public class CLIParserTest {
 		check(defaultCmd + " -antiAliasing", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).build());
 		check(defaultCmd + " -enablePngCrush", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).enablePngCrush(true).build());
 		check(defaultCmd + " -postWebpConvert", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).postConvertWebp(true).build());
+		check(defaultCmd + " -enableMozJpeg", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).enableMozJpeg(true).build());
 	}
 
 	@Test

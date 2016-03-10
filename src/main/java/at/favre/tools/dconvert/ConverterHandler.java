@@ -20,6 +20,7 @@ package at.favre.tools.dconvert;
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EPlatform;
 import at.favre.tools.dconvert.converters.*;
+import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PostProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
@@ -88,6 +89,10 @@ public class ConverterHandler {
 			if (args.postConvertWebp) {
 				logStringBuilder.append("add webp postprocessor\n");
 				postProcessors.add(new WebpProcessor());
+			}
+			if (args.enableMozJpeg) {
+				logStringBuilder.append("add mozJpeg postprocessor\n");
+				postProcessors.add(new MozJpegProcessor());
 			}
 
 			int convertJobs = args.filesToProcess.size() * converters.size();
@@ -205,7 +210,8 @@ public class ConverterHandler {
 					for (File file : filesPerConvert) {
 						for (PostProcessor postProcessor : postProcessors) {
 							String currentLog = postProcessor.process(file);
-							log.append(currentLog).append("\n");
+
+							if (!currentLog.isEmpty()) log.append(currentLog).append("\n");
 						}
 					}
 					mainLatch.countDown();

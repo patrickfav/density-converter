@@ -68,7 +68,8 @@ public class GUIController {
     public CheckBox cbVerboseLog;
     public CheckBox cbAndroidIncludeLdpiTvdpi;
     public CheckBox cbHaltOnError;
-    public CheckBox chEnablePngCrush;
+    public CheckBox cbEnablePngCrush;
+    public CheckBox cbEnableMozJpeg;
     public Slider scaleSlider;
     public Label labelScale;
     public Label labelResult;
@@ -305,8 +306,9 @@ public class GUIController {
             cbMipmapInsteadDrawable.setSelected(args.createMipMapInsteadOfDrawableDir);
             cbHaltOnError.setSelected(args.haltOnError);
             cbDryRun.setSelected(args.dryRun);
-            chEnablePngCrush.setSelected(args.enablePngCrush);
+            cbEnablePngCrush.setSelected(args.enablePngCrush);
             cbPostConvertWebp.setSelected(args.postConvertWebp);
+            cbEnableMozJpeg.setSelected(args.enableMozJpeg);
         }
     }
 
@@ -338,8 +340,9 @@ public class GUIController {
         builder.createMipMapInsteadOfDrawableDir(cbMipmapInsteadDrawable.isSelected());
         builder.antiAliasing(cbAntiAliasing.isSelected());
         builder.dryRun(cbDryRun.isSelected());
-        builder.enablePngCrush(chEnablePngCrush.isSelected());
+        builder.enablePngCrush(cbEnablePngCrush.isSelected());
         builder.postConvertWebp(cbPostConvertWebp.isSelected());
+        builder.enableMozJpeg(cbEnableMozJpeg.isSelected());
 
         return builder.skipParamValidation(skipValidation).build();
     }

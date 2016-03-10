@@ -166,7 +166,7 @@ public class CLInterpreter {
 			builder.enablePngCrush(commandLine.hasOption("enablePngCrush"));
 			builder.postConvertWebp(commandLine.hasOption("postWebpConvert"));
 			builder.dryRun(commandLine.hasOption("dryRun"));
-
+			builder.enableMozJpeg(commandLine.hasOption("enableMozJpeg"));
 
 			return builder.build();
 		} catch (Exception e) {
@@ -206,6 +206,7 @@ public class CLInterpreter {
 		Option postWebpConvert = Option.builder("postWebpConvert").desc(bundle.getString("arg.descr.webp")).build();
 		Option dpScaleIsHeight = Option.builder(SCALE_IS_HEIGHT_DP_ARG).desc(bundle.getString("arg.descr.cmd.dpIsHeight")).build();
 		Option dryRun = Option.builder("dryRun").desc(bundle.getString("arg.descr.dryrun")).build();
+		Option enableMozJpeg = Option.builder("enableMozJpeg").desc(bundle.getString("arg.descr.mozjpeg")).build();
 
 		Option help = Option.builder("h").longOpt("help").desc(bundle.getString("arg.descr.cmd.help")).build();
 		Option version = Option.builder("v").longOpt("version").desc(bundle.getString("arg.descr.cmd.version")).build();
@@ -219,7 +220,7 @@ public class CLInterpreter {
 		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler);
 		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(androidIncludeLdpiTvdpi).addOption(verboseLog)
 				.addOption(antiAliasing).addOption(dryRun).addOption(haltOnError).addOption(mipmapInsteadOfDrawable)
-				.addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight);
+				.addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight).addOption(enableMozJpeg);
 
 		options.addOptionGroup(mainArgs);
 

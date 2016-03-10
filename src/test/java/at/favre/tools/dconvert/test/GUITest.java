@@ -76,10 +76,15 @@ public class GUITest extends ApplicationTest {
 		assertEquals("arguments should match", defaultBuilder.postConvertWebp(true).build(), controller.getFromUI(false));
 		clickOn("#cbPostConvertWebp");
 		assertEquals("arguments should match", defaultBuilder.postConvertWebp(false).build(), controller.getFromUI(false));
-		clickOn("#chEnablePngCrush");
+		clickOn("#cbEnablePngCrush");
 		assertEquals("arguments should match", defaultBuilder.enablePngCrush(true).build(), controller.getFromUI(false));
-		clickOn("#chEnablePngCrush");
+		clickOn("#cbEnablePngCrush");
 		assertEquals("arguments should match", defaultBuilder.enablePngCrush(false).build(), controller.getFromUI(false));
+
+		clickOn("#cbEnableMozJpeg");
+		assertEquals("arguments should match", defaultBuilder.enableMozJpeg(true).build(), controller.getFromUI(false));
+		clickOn("#cbEnableMozJpeg");
+		assertEquals("arguments should match", defaultBuilder.enableMozJpeg(false).build(), controller.getFromUI(false));
 	}
 
 	@Test
@@ -188,7 +193,7 @@ public class GUITest extends ApplicationTest {
 		clickOn("#rbDpHeight").clickOn("#textFieldDp").write("64");
 		clickOn("#choicePlatform").clickOn(EPlatform.ANDROID.toString());
 		clickOn("#cbSkipUpscaling");
-		clickOn("#chEnablePngCrush");
+		clickOn("#cbEnablePngCrush");
 		clickOn("#choiceThreads").clickOn(String.valueOf(2));
 		assertEquals("arguments should match", new Arguments.Builder(defaultSrcFolder, 64).verboseLog(true)
 				.scaleType(EScaleType.DP_HEIGHT).platform(EPlatform.ANDROID).skipUpscaling(true).threadCount(2).enablePngCrush(true)

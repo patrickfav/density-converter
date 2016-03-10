@@ -39,6 +39,11 @@ public class WebpProcessor implements PostProcessor {
 		} else if (compression == ImageType.JPG) {
 			args = new String[]{"-m", "6", "-q", "90"};
 		}
-		return ImageUtil.runWebP(rawFile, args, out);
+		return runWebP(rawFile, args, out);
+	}
+
+	private String runWebP(File target, String[] additionalArgs, File outFile) {
+		String[] cmdArray = MiscUtil.concat(MiscUtil.concat(new String[]{"cwebp"}, additionalArgs), new String[]{"\"" + target.getAbsoluteFile() + "\"", "-o", "\"" + outFile.getAbsoluteFile() + "\""});
+		return ImageUtil.runCmd(cmdArray);
 	}
 }

@@ -17,7 +17,10 @@
 
 package at.favre.tools.dconvert.converters.postprocessing;
 
+import at.favre.tools.dconvert.arg.Arguments;
+import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.util.ImageUtil;
+import at.favre.tools.dconvert.util.MiscUtil;
 
 import java.io.File;
 
@@ -38,6 +41,14 @@ public class PngCrushProcessor implements PostProcessor {
 
 	@Override
 	public String process(File rawFile) {
-		return ImageUtil.runPngCrush(rawFile, additionalArgs);
+		return runPngCrush(rawFile, additionalArgs);
+	}
+
+	public String runPngCrush(File target, String[] additionalArgs) {
+		if (Arguments.getImageType(target) == ImageType.PNG && target.exists() && target.isFile()) {
+			String[] cmdArray = MiscUtil.concat(MiscUtil.concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"-ow", "\"" + target.getAbsoluteFile() + "\""});
+			return ImageUtil.runCmd(cmdArray);
+		}
+		return "";
 	}
 }
