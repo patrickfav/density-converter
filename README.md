@@ -163,7 +163,7 @@ This tool can read & write the following file types:
 
 * PNG - read and write support (including 9-patches format)
 * JPEG - read and write support with quality parameter
-* GIF - read and write support
+* GIF - read and write support (no animation support)
 * SVG - can read svg, will compress with png per default
 * PSD - can read some Photoshop files, will compress with png per default
 * TIFF - read and write support
@@ -200,7 +200,14 @@ and claims to be 25-35% smaller in file size than png and jpeg (in their respect
 If the flag is set the converter tool will compress jpegs to lossy webp and png/gif to lossless version of it. The program
  `cwebp`, which can be downloaded from [Google's page](https://developers.google.com/speed/webp/docs/cwebp), must be set in PATH variable.
 
-[More info on the webp](https://developers.google.com/speed/webp/)
+[More info on webp](https://developers.google.com/speed/webp/)
+
+### mozJpeg
+MozJpeg is a Jpeg encoder that also features some lossless compression techniques developed by the Mozilla foundation. It can be
+ used to further shrink jpegs in size. Unfortunately they do not provide binaries on github,
+ [but they can be found e.g. here](http://mozjpeg.codelove.de/binaries.html). The tool requires `jpegtran` to be set in PATH. Tested with mozJpeg 3.1
+
+[More info on mozJpeg](https://github.com/mozilla/mozjpeg)
 
 ## Implementation Details
 
