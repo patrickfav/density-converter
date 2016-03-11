@@ -45,14 +45,14 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 			BufferedImage rawImage = ImageUtil.loadImage(srcImage);
 			String targetImageFileName = MiscUtil.getFileNameWithoutExtension(srcImage);
 			ImageType imageType = Arguments.getImageType(srcImage);
-			boolean isNinePatch = srcImage.getName().endsWith(".9.png") && getClass() == AndroidConverter.class;
+			boolean isNinePatch = AndroidConverter.isNinePatch(srcImage) && getClass() == AndroidConverter.class;
 
 			StringBuilder log = new StringBuilder();
 			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ")
 					.append(rawImage.getWidth()).append("x").append(rawImage.getHeight()).append(" (").append(args.scale).append(args.scaleType == EScaleType.FACTOR ? "x" : "dp").append(")\n");
 
 //			Map<T, Dimension> densityMap = DensitBucketUtil.getDensityBuckets(srcImage, usedOutputDensities(args), new Dimension(rawImage.getWidth(), rawImage.getHeight()), args, imageType == ImageType.SVG && args.scaleType == EScaleType.FACTOR ? SVG_UPSCALE_FACTOR : args.scale);
-			Map<T, Dimension> densityMap = DensityBucketUtil.getDensityBuckets(srcImage, usedOutputDensities(args), new Dimension(rawImage.getWidth(), rawImage.getHeight()), args, args.scale);
+			Map<T, Dimension> densityMap = DensityBucketUtil.getDensityBuckets(usedOutputDensities(args), new Dimension(rawImage.getWidth(), rawImage.getHeight()), args, args.scale, isNinePatch);
 
 			File mainSubFolder = createMainSubFolder(destinationFolder, targetImageFileName, args);
 

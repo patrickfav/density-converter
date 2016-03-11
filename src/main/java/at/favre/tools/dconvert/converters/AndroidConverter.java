@@ -86,4 +86,8 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 	public void onPostExecute(Arguments arguments) {
 		//nothing
 	}
+
+	public static boolean isNinePatch(File file) {
+		return file.getName().endsWith(".9.png");
+	}
 }
