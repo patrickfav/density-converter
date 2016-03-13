@@ -3,7 +3,7 @@ package at.favre.tools.dconvert.util;
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.converters.Result;
-import at.favre.tools.dconvert.converters.postprocessing.PostProcessor;
+import at.favre.tools.dconvert.converters.postprocessing.IPostProcessor;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -14,11 +14,13 @@ import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Util for post processors
  */
 public class PostProcessorUtil {
+	private static ReentrantLock lock = new ReentrantLock();
 
 	public static Result runImageOptimizer(File rawFile, ImageType processedType, String[] args, boolean keepOriginal) throws IOException {
 		return runImageOptimizer(rawFile, processedType, args, keepOriginal, MiscUtil.getFileExtension(rawFile));
@@ -50,7 +52,7 @@ public class PostProcessorUtil {
 			boolean r1 = true, r2 = true, r3 = true;
 			if (outFile.exists() && outFile.isFile()) {
 				if (keepOriginal) {
-					File origFile = getFileWithPostFix(rawFile, PostProcessor.ORIG_POSTFIX, MiscUtil.getFileExtension(rawFile));
+					File origFile = getFileWithPostFix(rawFile, IPostProcessor.ORIG_POSTFIX, MiscUtil.getFileExtension(rawFile));
 
 					if (origFile.exists()) {
 						origFile.delete();
@@ -77,7 +79,6 @@ public class PostProcessorUtil {
 					}
 				}
 			}
-
 			String log = result.log;
 			if (!r1 || !r2 || !r3) {
 				log += "Could not rename all files correctly\n";

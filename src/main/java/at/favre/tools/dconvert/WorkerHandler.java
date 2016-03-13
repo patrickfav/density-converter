@@ -3,7 +3,7 @@ package at.favre.tools.dconvert;
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.converters.IPlatformConverter;
 import at.favre.tools.dconvert.converters.Result;
-import at.favre.tools.dconvert.converters.postprocessing.PostProcessor;
+import at.favre.tools.dconvert.converters.postprocessing.IPostProcessor;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ public class WorkerHandler<T> {
 
 	public WorkerHandler(List<T> processors, List<File> allFiles, Callback callback, Arguments arguments) {
 		this.processors = processors;
-		this.threadPool = new ThreadPoolExecutor(arguments.threadCount, arguments.threadCount, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<>(8096));
+		this.threadPool = new ThreadPoolExecutor(arguments.threadCount, arguments.threadCount, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1024 * 10));
 		this.jobCount = allFiles.size() * processors.size();
 		this.callback = callback;
 		this.arguments = arguments;
@@ -37,8 +37,8 @@ public class WorkerHandler<T> {
 	private void start(List<File> allFiles) {
 		InternalCallback internalCallback = new InternalCallback(callback);
 
-		for (File fileToProcess : allFiles) {
-			for (T processor : processors) {
+		for (T processor : processors) {
+			for (File fileToProcess : allFiles) {
 				threadPool.execute(new Worker(fileToProcess, processor, arguments, internalCallback));
 			}
 		}
@@ -66,8 +66,8 @@ public class WorkerHandler<T> {
 		@Override
 		public void run() {
 			Result result = null;
-			if (PostProcessor.class.isInstance(processor)) {
-				result = ((PostProcessor) processor).process(unprocessedFile, arguments.keepUnoptimizedFilesPostProcessor);
+			if (IPostProcessor.class.isInstance(processor)) {
+				result = ((IPostProcessor) processor).process(unprocessedFile, arguments.keepUnoptimizedFilesPostProcessor);
 			} else if (IPlatformConverter.class.isInstance(processor)) {
 				result = ((IPlatformConverter) processor).convert(unprocessedFile, arguments);
 			}

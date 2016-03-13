@@ -29,10 +29,10 @@ import java.util.Collections;
 /**
  * Converts pngs/jpegs to lossless/lossy webp
  */
-public class WebpProcessor implements PostProcessor {
+public class WebpProcessor extends APostProcessor {
 
 	@Override
-	public Result process(File rawFile, boolean keepOriginal) {
+	public Result synchronizedProcess(File rawFile, boolean keepOriginal) {
 		try {
 			ImageType compression = Arguments.getImageType(rawFile);
 			String[] additionalArgs;

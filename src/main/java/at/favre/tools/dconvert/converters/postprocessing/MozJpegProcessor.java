@@ -11,9 +11,9 @@ import java.util.Collections;
  * Optimzes jpeg with mozjpeg
  * https://github.com/mozilla/mozjpeg
  */
-public class MozJpegProcessor implements PostProcessor {
+public class MozJpegProcessor extends APostProcessor {
 	@Override
-	public Result process(File rawFile, boolean keepOriginal) {
+	public Result synchronizedProcess(File rawFile, boolean keepOriginal) {
 		try {
 			String[] args = new String[]{"jpegtran", "-outfile", "%%outFilePath%%", "-optimise", "-progressive", "-copy", "none", "%%sourceFilePath%%"};
 			return PostProcessorUtil.runImageOptimizer(rawFile, ImageType.JPG, args, keepOriginal);

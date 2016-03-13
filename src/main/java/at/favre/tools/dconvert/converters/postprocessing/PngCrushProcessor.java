@@ -28,7 +28,7 @@ import java.util.Collections;
 /**
  * Calls pngcrush on a file
  */
-public class PngCrushProcessor implements PostProcessor {
+public class PngCrushProcessor extends APostProcessor {
 	public static final String[] DEFAULT_ARGS = new String[]{"-rem", "alla", "-rem", "text", "-rem", "gAMA", "-rem", "cHRM", "-rem", "iCCP", "-rem", "sRGB"};
 	public String[] additionalArgs;
 
@@ -41,7 +41,7 @@ public class PngCrushProcessor implements PostProcessor {
 	}
 
 	@Override
-	public Result process(File rawFile, boolean keepOriginal) {
+	public Result synchronizedProcess(File rawFile, boolean keepOriginal) {
 		try {
 			String[] args = MiscUtil.concat(MiscUtil.concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"%%sourceFilePath%%", "%%outFilePath%%"});
 			return PostProcessorUtil.runImageOptimizer(rawFile, ImageType.PNG, args, keepOriginal);

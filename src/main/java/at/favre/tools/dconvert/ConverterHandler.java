@@ -23,9 +23,9 @@ import at.favre.tools.dconvert.converters.AndroidConverter;
 import at.favre.tools.dconvert.converters.IOSConverter;
 import at.favre.tools.dconvert.converters.IPlatformConverter;
 import at.favre.tools.dconvert.converters.WindowsConverter;
+import at.favre.tools.dconvert.converters.postprocessing.IPostProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
-import at.favre.tools.dconvert.converters.postprocessing.PostProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
 
 import javax.imageio.ImageIO;
@@ -66,7 +66,7 @@ public class ConverterHandler {
 
 		if (!args.filesToProcess.isEmpty()) {
 			List<IPlatformConverter> converters = new ArrayList<>();
-			List<PostProcessor> postProcessors = new ArrayList<>();
+			List<IPostProcessor> postProcessors = new ArrayList<>();
 
 			if (args.platform == EPlatform.ANDROID || args.platform == EPlatform.ALL) {
 				logStringBuilder.append("add android converter\n");
@@ -141,7 +141,7 @@ public class ConverterHandler {
 
 			if (blockingWaitForFinish) {
 				try {
-					mainLatch.await(240, TimeUnit.MINUTES);
+					mainLatch.await(60, TimeUnit.MINUTES);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

@@ -24,7 +24,7 @@ import java.io.File;
 /**
  * PostProcessor run after the main conversation on all files
  */
-public interface PostProcessor {
+public interface IPostProcessor {
 	String ORIG_POSTFIX = "_orig";
 
 	/**
