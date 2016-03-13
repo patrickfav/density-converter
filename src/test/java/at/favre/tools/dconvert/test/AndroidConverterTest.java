@@ -70,7 +70,7 @@ public class AndroidConverterTest extends AConverterTest {
 		checkOutDirAndroid(dstDir, arguments, files);
 	}
 
-	private static void checkOutDirAndroid(File dstDir, Arguments arguments, List<File> files) throws IOException {
+	public static void checkOutDirAndroid(File dstDir, Arguments arguments, List<File> files) throws IOException {
 		Map<File, Dimension> dimensionMap = createDimensionMap(files);
 
 		List<DensityFolder> expectedDirs = new ArrayList<>();

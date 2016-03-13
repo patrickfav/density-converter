@@ -49,8 +49,7 @@ public class IOSConverterTest extends AConverterTest {
 		checkOutDirIos(dstDir, arguments, files);
 	}
 
-	private static void checkOutDirIos(File dstDir, Arguments arguments, List<File> files) throws IOException {
-
+	public static void checkOutDirIos(File dstDir, Arguments arguments, List<File> files) throws IOException {
 		Map<File, Dimension> dimensionMap = createDimensionMap(files);
 
 		List<IOSDensityDescriptor> densityDescriptors = IOSConverter.getIosDescriptors();

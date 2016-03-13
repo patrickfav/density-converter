@@ -59,8 +59,8 @@ public abstract class AConverterTest {
 
 	@Before
 	public void setUp() throws IOException {
-		defaultDst = temporaryFolder.newFolder("android-converter-test", "out");
 		defaultSrc = temporaryFolder.newFolder("android-converter-test", "src");
+		defaultDst = temporaryFolder.newFolder("android-converter-test", "out");
 		converter = getType() == EPlatform.ANDROID ? new AndroidConverter() : getType() == EPlatform.IOS ? new IOSConverter() : getType() == EPlatform.WINDOWS ? new WindowsConverter() : null;
 	}
 
@@ -211,8 +211,7 @@ public abstract class AConverterTest {
 		}
 	}
 
-
-	protected static List<File> copyToTestPath(File defaultSrc, String... resourceNames) throws Exception {
+	public static List<File> copyToTestPath(File defaultSrc, String... resourceNames) throws Exception {
 		List<File> copiedFiles = new ArrayList<>();
 		for (String resourceName : resourceNames) {
 			File dstFile = new File(defaultSrc, resourceName);

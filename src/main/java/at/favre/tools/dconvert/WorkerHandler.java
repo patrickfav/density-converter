@@ -22,19 +22,19 @@ public class WorkerHandler<T> {
 	private final List<T> processors;
 	private final ExecutorService threadPool;
 	private final Arguments arguments;
-	private final int jobCount;
 	private final Callback callback;
+	private int jobCount;
 
-	public WorkerHandler(List<T> processors, List<File> allFiles, Callback callback, Arguments arguments) {
+	public WorkerHandler(List<T> processors, Arguments arguments, Callback callback) {
 		this.processors = processors;
 		this.threadPool = new ThreadPoolExecutor(arguments.threadCount, arguments.threadCount, 5, TimeUnit.SECONDS, new ArrayBlockingQueue<>(1024 * 10));
-		this.jobCount = allFiles.size() * processors.size();
 		this.callback = callback;
 		this.arguments = arguments;
-		start(allFiles);
 	}
 
-	private void start(List<File> allFiles) {
+	public void start(List<File> allFiles) {
+		this.jobCount = allFiles.size() * processors.size();
+
 		InternalCallback internalCallback = new InternalCallback(callback);
 
 		for (T processor : processors) {

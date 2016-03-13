@@ -49,7 +49,7 @@ public class WindowsConverterTest extends AConverterTest {
 		checkOutDirWindows(dstDir, arguments, files);
 	}
 
-	private static void checkOutDirWindows(File dstDir, Arguments arguments, List<File> files) throws IOException {
+	public static void checkOutDirWindows(File dstDir, Arguments arguments, List<File> files) throws IOException {
 		dstDir = new File(dstDir, "Assets");
 
 		Map<File, Dimension> dimensionMap = createDimensionMap(files);

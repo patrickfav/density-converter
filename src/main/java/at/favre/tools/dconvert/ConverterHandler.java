@@ -110,7 +110,7 @@ public class ConverterHandler {
 				}
 			}
 
-			new WorkerHandler<>(converters, args.filesToProcess, new WorkerHandler.Callback() {
+			new WorkerHandler<>(converters, args, new WorkerHandler.Callback() {
 				@Override
 				public void onProgress(float percent) {
 					handlerCallback.onProgress(convertPercentage * percent);
@@ -122,7 +122,7 @@ public class ConverterHandler {
 					if (haltedDuringProcessConverters) {
 						informFinished(finishedJobsConverters, exceptionsConverters, true);
 					} else {
-						new WorkerHandler<>(postProcessors, outFiles, new WorkerHandler.Callback() {
+						new WorkerHandler<>(postProcessors, args, new WorkerHandler.Callback() {
 							@Override
 							public void onProgress(float percent) {
 								handlerCallback.onProgress(convertPercentage + (postProcessPercentage * percent));
@@ -134,10 +134,10 @@ public class ConverterHandler {
 								logStringBuilder.append(log);
 								informFinished(finishedJobsPostProcessors + finishedJobsConverters, exceptionsConverters, haltedDuringProcess);
 							}
-						}, args);
+						}).start(outFiles);
 					}
 				}
-			}, args);
+			}).start(args.filesToProcess);
 
 			if (blockingWaitForFinish) {
 				try {
