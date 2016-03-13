@@ -6,7 +6,7 @@
 
     <groupId>at.favre.tools</groupId>
     <artifactId>dconvert</artifactId>
-    <version>0.7.0</version>
+    <version>0.8.0</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
