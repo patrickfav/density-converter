@@ -28,10 +28,8 @@ import at.favre.tools.dconvert.util.MiscUtil;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
 /**
  * The main logic of all platform converters
@@ -39,7 +37,7 @@ import java.util.Map;
 public abstract class APlatformConverter<T extends DensityDescriptor> implements IPlatformConverter {
 
 	@Override
-	public void convert(File srcImage, Arguments args, ConverterCallback callback) {
+	public Result convert(File srcImage, Arguments args) {
 		try {
 			File destinationFolder = args.dst;
 			BufferedImage rawImage = ImageUtil.loadImage(srcImage);
@@ -51,7 +49,6 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ")
 					.append(rawImage.getWidth()).append("x").append(rawImage.getHeight()).append(" (").append(args.scale).append(args.scaleType == EScaleType.FACTOR ? "x" : "dp").append(")\n");
 
-//			Map<T, Dimension> densityMap = DensitBucketUtil.getDensityBuckets(srcImage, usedOutputDensities(args), new Dimension(rawImage.getWidth(), rawImage.getHeight()), args, imageType == ImageType.SVG && args.scaleType == EScaleType.FACTOR ? SVG_UPSCALE_FACTOR : args.scale);
 			Map<T, Dimension> densityMap = DensityBucketUtil.getDensityBuckets(usedOutputDensities(args), new Dimension(rawImage.getWidth(), rawImage.getHeight()), args, args.scale, isNinePatch);
 
 			File mainSubFolder = createMainSubFolder(destinationFolder, targetImageFileName, args);
@@ -91,17 +88,10 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 			onPostExecute(args);
 
 			rawImage.flush();
-			rawImage = null;
 
-			if (callback != null) {
-				callback.success(log.toString(), allResultingFiles);
-			}
+			return new Result(log.toString(), allResultingFiles);
 		} catch (Exception e) {
-			if (callback != null) {
-				callback.failure(e);
-			} else {
-				e.printStackTrace();
-			}
+			return new Result(null, e, Collections.emptyList());
 		}
 	}
 

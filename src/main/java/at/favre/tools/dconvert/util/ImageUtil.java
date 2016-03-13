@@ -28,12 +28,9 @@ import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -46,28 +43,6 @@ public class ImageUtil {
 		return ImageIO.read(file);
 	}
 
-
-	public static String runCmd(String[] cmdArray) {
-		StringBuilder logStringBuilder = new StringBuilder();
-		try {
-			logStringBuilder.append("execute: ").append(Arrays.toString(cmdArray)).append("\n");
-			ProcessBuilder pb = new ProcessBuilder(cmdArray);
-			pb.redirectErrorStream(true);
-			Process process = pb.start();
-			try (BufferedReader inStreamReader = new BufferedReader(
-					new InputStreamReader(process.getInputStream()))) {
-				String s;
-				while ((s = inStreamReader.readLine()) != null) {
-					if (!s.isEmpty()) logStringBuilder.append("\t").append(s).append("\n");
-				}
-			}
-			process.waitFor();
-		} catch (Exception e) {
-			logStringBuilder.append("error: could not run command - ").append(Arrays.toString(cmdArray)).append(" - ").append(e.getMessage()).append(" - is it set in PATH?\n");
-		}
-		return logStringBuilder.toString();
-
-	}
 
 	public static List<File> compressToFile(File targetFile, List<ImageType.ECompression> compressionList, BufferedImage bufferedImage, Dimension targetDimension,
 	                                        float compressionQuality, boolean skipIfExists, boolean antiAlias, boolean isNinePatch) throws Exception {

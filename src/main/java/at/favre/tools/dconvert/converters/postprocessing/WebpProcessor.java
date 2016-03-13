@@ -19,10 +19,12 @@ package at.favre.tools.dconvert.converters.postprocessing;
 
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.ImageType;
-import at.favre.tools.dconvert.util.ImageUtil;
+import at.favre.tools.dconvert.converters.Result;
 import at.favre.tools.dconvert.util.MiscUtil;
+import at.favre.tools.dconvert.util.PostProcessorUtil;
 
 import java.io.File;
+import java.util.Collections;
 
 /**
  * Converts pngs/jpegs to lossless/lossy webp
@@ -30,20 +32,23 @@ import java.io.File;
 public class WebpProcessor implements PostProcessor {
 
 	@Override
-	public String process(File rawFile) {
-		ImageType compression = Arguments.getImageType(rawFile);
-		File out = new File(rawFile.getParentFile(), MiscUtil.getFileNameWithoutExtension(rawFile) + ".webp");
-		String[] args = new String[]{};
-		if (compression == ImageType.PNG || compression == ImageType.GIF) {
-			args = new String[]{"-lossless", "-alpha_filter", "best", "-m", "6"};
-		} else if (compression == ImageType.JPG) {
-			args = new String[]{"-m", "6", "-q", "90"};
-		}
-		return runWebP(rawFile, args, out);
-	}
+	public Result process(File rawFile, boolean keepOriginal) {
+		try {
+			ImageType compression = Arguments.getImageType(rawFile);
+			String[] additionalArgs;
+			if (compression == ImageType.PNG || compression == ImageType.GIF) {
+				additionalArgs = new String[]{"-lossless", "-alpha_filter", "best", "-m", "6"};
+			} else if (compression == ImageType.JPG) {
+				additionalArgs = new String[]{"-m", "6", "-q", "90"};
+			} else {
+				return null;
+			}
 
-	private String runWebP(File target, String[] additionalArgs, File outFile) {
-		String[] cmdArray = MiscUtil.concat(MiscUtil.concat(new String[]{"cwebp"}, additionalArgs), new String[]{"\"" + target.getAbsoluteFile() + "\"", "-o", "\"" + outFile.getAbsoluteFile() + "\""});
-		return ImageUtil.runCmd(cmdArray);
+			String[] finalArg = MiscUtil.concat(MiscUtil.concat(new String[]{"cwebp"}, additionalArgs), new String[]{"%%sourceFilePath%%", "-o", "%%outFilePath%%"});
+
+			return PostProcessorUtil.runImageOptimizer(rawFile, compression, finalArg, keepOriginal, "webp");
+		} catch (Exception e) {
+			return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
+		}
 	}
 }

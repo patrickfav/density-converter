@@ -198,16 +198,17 @@ public class CLIParserTest {
 		check(defaultCmd + " -haltOnError", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).haltOnError(true).build());
 		check(defaultCmd + " -androidMipmapInsteadOfDrawable", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).createMipMapInsteadOfDrawableDir(true).build());
 		check(defaultCmd + " -antiAliasing", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).build());
-		check(defaultCmd + " -enablePngCrush", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).enablePngCrush(true).build());
-		check(defaultCmd + " -postWebpConvert", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).postConvertWebp(true).build());
-		check(defaultCmd + " -enableMozJpeg", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).enableMozJpeg(true).build());
+		check(defaultCmd + " -postProcessorPngCrush", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).enablePngCrush(true).build());
+		check(defaultCmd + " -postProcessorWebp", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).postConvertWebp(true).build());
+		check(defaultCmd + " -postProcessorMozJpeg", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).enableMozJpeg(true).build());
+		check(defaultCmd + " -keepOriginalPostProcessedFiles", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).keepUnoptimizedFilesPostProcessor(true).build());
 	}
 
 	@Test
 	public void testFlagsCombinations() throws Exception {
-		check(defaultCmd + " -skipUpscaling -haltOnError -enablePngCrush", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).haltOnError(true).enablePngCrush(true).skipUpscaling(true).build());
+		check(defaultCmd + " -skipUpscaling -haltOnError -postProcessorPngCrush", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).haltOnError(true).enablePngCrush(true).skipUpscaling(true).build());
 		check(defaultCmd + " -antiAliasing -androidIncludeLdpiTvdpi", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).includeAndroidLdpiTvdpi(true).build());
-		check(defaultCmd + " -postWebpConvert -" + CLInterpreter.VERBOSE_ARG + " -skipUpscaling -antiAliasing", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).postConvertWebp(true).verboseLog(true).skipUpscaling(true).build());
+		check(defaultCmd + " -postProcessorWebp -" + CLInterpreter.VERBOSE_ARG + " -skipUpscaling -antiAliasing", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).postConvertWebp(true).verboseLog(true).skipUpscaling(true).build());
 	}
 
 	@Test

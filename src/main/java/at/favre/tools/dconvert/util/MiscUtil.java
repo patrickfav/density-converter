@@ -55,7 +55,7 @@ public class MiscUtil {
 		}
 
 		if (!f.exists()) {
-			f.mkdir();
+			f.mkdirs();
 		}
 
 		if (!f.exists() || !f.isDirectory()) {
@@ -65,10 +65,14 @@ public class MiscUtil {
 	}
 
 	public static String getFileExtensionLowerCase(File file) {
+		return getFileExtension(file).toLowerCase();
+	}
+
+	public static String getFileExtension(File file) {
 		if (file == null) {
 			return "";
 		}
-		return file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
+		return file.getName().substring(file.getName().lastIndexOf(".") + 1);
 	}
 
 	public static String getFileNameWithoutExtension(File file) {

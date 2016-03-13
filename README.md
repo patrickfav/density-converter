@@ -55,12 +55,12 @@ Full list of arguments:
                                         what images in what resolutions would be created.
     -dst <path>                         The directory in which the converted files will be written. Will use
                                         the source folder if this argument is omitted.
-    -enablePngCrush                     Will post-process all pngs with pngcrush. The executable must be set
-                                        in the system PATH as 'pngcrush' i.e executable from every path.
-                                        Pngcrush is a tool to compress pngs. Requires v1.7.22+
     -gui                                Starts graphical user interface
     -h,--help                           This help page
     -haltOnError                        If set will stop the process if an error occurred during conversion
+    -keepOriginalPostProcessedFiles     If a post processor is run on a file, this flag will ensure that the
+                                        original will be kept (renamed _orig), otherwise only the optimized
+                                        image will be kept
     -outCompression <png|jpg|gif|bmp>   Sets the compression of the converted images. Can be 'png', 'jpg',
                                         'gif', 'bmp', 'png+jpg' or 'strict' which tries to use same
                                         compression as source. By default will convert to png except if source
@@ -68,7 +68,15 @@ Full list of arguments:
     -platform <all|android|ios|win>     Can be 'all', 'android', 'ios' or 'win'. Sets what formats the
                                         converted images will be generated for. E.g. set 'android' if you only
                                         want to convert to android format. Default is ALL
-    -postWebpConvert                    Will additionally convert all png/gif to lossless wepb and all jpg to
+    -postProcessorMozJpeg               Will post-process all jpegs with mozJpegs lossless compressor
+                                        'jpegtran'. Mozjpeg (specifically 'jpegtran') must be set in PATH,
+                                        tested with mozJpeg 3. Binaries for mozJpeg can be found on the
+                                        internet.
+    -postProcessorPngCrush              Will post-process all pngs with pngcrush, a lossless compressor. The
+                                        executable must be set in the system PATH as 'pngcrush' i.e executable
+                                        from every path. Pngcrush is a tool to compress pngs. Requires
+                                        v1.7.22+
+    -postProcessorWebp                  Will additionally convert all png/gif to lossless wepb and all jpg to
                                         lossy webp with cwebp. Does not delete source files. The executable
                                         must be set in the system path as 'cwebp' i.e executable from every
                                         path. cwebp is the official converter from Google.
@@ -186,7 +194,7 @@ Post processors can be easily implemented by implementing the `PostProcessor` in
 
 ### pngcrush
 
-Pngcrush is a brute force png compression tool. This may be already in your build chain (Android does this automatically),
+Pngcrush is a brute force png lossless compression tool. This may be already in your build chain (Android does this automatically),
 but may be useful if not. Will run pngcrush over the all converted *.png files. See code or output for specific used options.
 
 The converter tool requires `pngcrush` to be in PATH. Minimal required version is 1.7.22; currently tested with v1.7.87 & 1.8.0.

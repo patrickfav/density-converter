@@ -31,7 +31,7 @@ public interface IPlatformConverter {
 	 *
 	 * @param srcImageFile        source image file to be used as base to scale
 	 * @param arguments           all tool args
-	 * @param callback            if not null need to be called if finished or failed
+	 * @return result
 	 */
-	void convert(File srcImageFile, Arguments arguments, ConverterCallback callback);
+	Result convert(File srcImageFile, Arguments arguments);
 }

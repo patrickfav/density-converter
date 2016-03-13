@@ -17,18 +17,22 @@
 
 package at.favre.tools.dconvert.converters.postprocessing;
 
+import at.favre.tools.dconvert.converters.Result;
+
 import java.io.File;
 
 /**
  * PostProcessor run after the main conversation on all files
  */
 public interface PostProcessor {
+	String ORIG_POSTFIX = "_orig";
 
 	/**
 	 * Will process the given file. It is not necessary to spawn another thread for exectution
 	 *
 	 * @param rawFile to process
+	 * @param keepOriginal if true will not delete unprocessed file, but renames it to (filename)_orig.(extension)
 	 * @return optional log or output
 	 */
-	String process(File rawFile);
+	Result process(File rawFile, boolean keepOriginal);
 }

@@ -1,11 +1,11 @@
 package at.favre.tools.dconvert.converters.postprocessing;
 
-import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.ImageType;
-import at.favre.tools.dconvert.util.ImageUtil;
-import at.favre.tools.dconvert.util.MiscUtil;
+import at.favre.tools.dconvert.converters.Result;
+import at.favre.tools.dconvert.util.PostProcessorUtil;
 
 import java.io.File;
+import java.util.Collections;
 
 /**
  * Optimzes jpeg with mozjpeg
@@ -13,20 +13,12 @@ import java.io.File;
  */
 public class MozJpegProcessor implements PostProcessor {
 	@Override
-	public String process(File rawFile) {
-		if (Arguments.getImageType(rawFile) == ImageType.JPG && rawFile.exists() && rawFile.isFile()) {
-			File outFile = new File(rawFile.getParentFile(), MiscUtil.getFileNameWithoutExtension(rawFile) + "_optimized.jpg");
-
-			String[] args = new String[]{"jpegtran", "-outfile", "\"" + outFile.getAbsolutePath() + "\"", "-optimise", "-progressive", "-copy", "none", "\"" + rawFile.getAbsolutePath() + "\""};
-			String out = ImageUtil.runCmd(args);
-
-			if (outFile.exists() && outFile.isFile()) {
-				if (rawFile.delete()) {
-					outFile.renameTo(rawFile);
-				}
-			}
-			return out;
+	public Result process(File rawFile, boolean keepOriginal) {
+		try {
+			String[] args = new String[]{"jpegtran", "-outfile", "%%outFilePath%%", "-optimise", "-progressive", "-copy", "none", "%%sourceFilePath%%"};
+			return PostProcessorUtil.runImageOptimizer(rawFile, ImageType.JPG, args, keepOriginal);
+		} catch (Exception e) {
+			return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
 		}
-		return "";
 	}
 }

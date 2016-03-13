@@ -53,7 +53,7 @@ public class GUI extends Application {
 		GUIController controller = loader.<GUIController>getController();
 		controller.onCreate(store, bundle);
 
-		Scene scene = new Scene(root, 570, 800);
+		Scene scene = new Scene(root, 570, 820);
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_36.png"));
 		return controller;

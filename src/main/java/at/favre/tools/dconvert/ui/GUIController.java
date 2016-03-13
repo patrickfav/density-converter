@@ -70,6 +70,7 @@ public class GUIController {
     public CheckBox cbHaltOnError;
     public CheckBox cbEnablePngCrush;
     public CheckBox cbEnableMozJpeg;
+    public CheckBox cbKeepUnoptimized;
     public Slider scaleSlider;
     public Label labelScale;
     public Label labelResult;
@@ -140,8 +141,8 @@ public class GUIController {
 
 				new ConverterHandler().execute(arg, new ConverterHandler.HandlerCallback() {
 					@Override
-					public void onProgress(float progress, String log) {
-						Platform.runLater(() -> progressBar.setProgress(progress));
+                    public void onProgress(float progress) {
+                        Platform.runLater(() -> progressBar.setProgress(progress));
 					}
 
 					@Override
@@ -309,6 +310,7 @@ public class GUIController {
             cbEnablePngCrush.setSelected(args.enablePngCrush);
             cbPostConvertWebp.setSelected(args.postConvertWebp);
             cbEnableMozJpeg.setSelected(args.enableMozJpeg);
+            cbKeepUnoptimized.setSelected(args.keepUnoptimizedFilesPostProcessor);
         }
     }
 
@@ -343,6 +345,7 @@ public class GUIController {
         builder.enablePngCrush(cbEnablePngCrush.isSelected());
         builder.postConvertWebp(cbPostConvertWebp.isSelected());
         builder.enableMozJpeg(cbEnableMozJpeg.isSelected());
+        builder.keepUnoptimizedFilesPostProcessor(cbKeepUnoptimized.isSelected());
 
         return builder.skipParamValidation(skipValidation).build();
     }

@@ -31,24 +31,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.assertNull;
 
 /**
  * Unit tests for {@link at.favre.tools.dconvert.converters.IPlatformConverter}
  */
 public abstract class AConverterTest {
 	protected static final float DEFAULT_SCALE = 3;
-	protected static final int TIMEOUT_DELAY_SEC = 5;
 
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
 	protected File defaultDst;
 	protected File defaultSrc;
-	protected CountDownLatch countDownLatch;
 	protected IPlatformConverter converter;
 	protected ConverterCallback defaultCallback;
 
@@ -66,26 +62,12 @@ public abstract class AConverterTest {
 		defaultDst = temporaryFolder.newFolder("android-converter-test", "out");
 		defaultSrc = temporaryFolder.newFolder("android-converter-test", "src");
 		converter = getType() == EPlatform.ANDROID ? new AndroidConverter() : getType() == EPlatform.IOS ? new IOSConverter() : getType() == EPlatform.WINDOWS ? new WindowsConverter() : null;
-		countDownLatch = new CountDownLatch(1);
-		defaultCallback = new ConverterCallback() {
-			@Override
-			public void success(String log, List<File> compressedImages) {
-				countDownLatch.countDown();
-			}
-
-			@Override
-			public void failure(Exception e) {
-				e.printStackTrace();
-				fail("got error callback: " + e.getMessage());
-			}
-		};
 	}
 
 	@After
 	public void tearDown() {
 		defaultDst = defaultSrc = null;
 		converter = null;
-		countDownLatch = null;
 		defaultCallback = null;
 	}
 
@@ -218,9 +200,9 @@ public abstract class AConverterTest {
 
 	protected void test(Arguments arg, List<File> files) throws Exception {
 		for (File fileToProcess : arg.filesToProcess) {
-			converter.convert(fileToProcess, arg, defaultCallback);
+			Result result = converter.convert(fileToProcess, arg);
+			assertNull("should be no exception", result.exception);
 		}
-		countDownLatch.await(TIMEOUT_DELAY_SEC, TimeUnit.SECONDS);
 
 		if (arg.dryRun) {
 			assertEquals("destination folder should be empty", 0, arg.dst.list().length);

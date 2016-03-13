@@ -48,7 +48,7 @@ public class Main {
 		new ConverterHandler().execute(args, new ConverterHandler.HandlerCallback() {
 			int i = 0;
 			@Override
-			public void onProgress(float progress, String log) {
+			public void onProgress(float progress) {
 				i++;
 				System.out.print(String.format(Locale.US, "%.2f", progress * 100f) + "%\t");
 				if (i % 10 == 0) {

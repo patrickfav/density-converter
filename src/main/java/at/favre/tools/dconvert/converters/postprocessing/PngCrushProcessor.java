@@ -17,12 +17,13 @@
 
 package at.favre.tools.dconvert.converters.postprocessing;
 
-import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.ImageType;
-import at.favre.tools.dconvert.util.ImageUtil;
+import at.favre.tools.dconvert.converters.Result;
 import at.favre.tools.dconvert.util.MiscUtil;
+import at.favre.tools.dconvert.util.PostProcessorUtil;
 
 import java.io.File;
+import java.util.Collections;
 
 /**
  * Calls pngcrush on a file
@@ -40,15 +41,12 @@ public class PngCrushProcessor implements PostProcessor {
 	}
 
 	@Override
-	public String process(File rawFile) {
-		return runPngCrush(rawFile, additionalArgs);
-	}
-
-	public String runPngCrush(File target, String[] additionalArgs) {
-		if (Arguments.getImageType(target) == ImageType.PNG && target.exists() && target.isFile()) {
-			String[] cmdArray = MiscUtil.concat(MiscUtil.concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"-ow", "\"" + target.getAbsoluteFile() + "\""});
-			return ImageUtil.runCmd(cmdArray);
+	public Result process(File rawFile, boolean keepOriginal) {
+		try {
+			String[] args = MiscUtil.concat(MiscUtil.concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"%%sourceFilePath%%", "%%outFilePath%%"});
+			return PostProcessorUtil.runImageOptimizer(rawFile, ImageType.PNG, args, keepOriginal);
+		} catch (Exception e) {
+			return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
 		}
-		return "";
 	}
 }

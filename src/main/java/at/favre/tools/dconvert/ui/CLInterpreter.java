@@ -163,10 +163,11 @@ public class CLInterpreter {
 			builder.haltOnError(commandLine.hasOption("haltOnError"));
 			builder.createMipMapInsteadOfDrawableDir(commandLine.hasOption("androidMipmapInsteadOfDrawable"));
 			builder.antiAliasing(commandLine.hasOption("antiAliasing"));
-			builder.enablePngCrush(commandLine.hasOption("enablePngCrush"));
-			builder.postConvertWebp(commandLine.hasOption("postWebpConvert"));
+			builder.enablePngCrush(commandLine.hasOption("postProcessorPngCrush"));
+			builder.postConvertWebp(commandLine.hasOption("postProcessorWebp"));
 			builder.dryRun(commandLine.hasOption("dryRun"));
-			builder.enableMozJpeg(commandLine.hasOption("enableMozJpeg"));
+			builder.enableMozJpeg(commandLine.hasOption("postProcessorMozJpeg"));
+			builder.keepUnoptimizedFilesPostProcessor(commandLine.hasOption("keepOriginalPostProcessedFiles"));
 
 			return builder.build();
 		} catch (Exception e) {
@@ -202,11 +203,12 @@ public class CLInterpreter {
 		Option verboseLog = Option.builder(VERBOSE_ARG).desc(bundle.getString("arg.descr.cmd.verbose")).build();
 		Option haltOnError = Option.builder("haltOnError").desc(bundle.getString("arg.descr.halterror")).build();
 		Option antiAliasing = Option.builder("antiAliasing").desc(bundle.getString("arg.descr.antialiasing")).build();
-		Option enablePngCrush = Option.builder("enablePngCrush").desc(bundle.getString("arg.descr.pngcrush")).build();
-		Option postWebpConvert = Option.builder("postWebpConvert").desc(bundle.getString("arg.descr.webp")).build();
+		Option enablePngCrush = Option.builder("postProcessorPngCrush").desc(bundle.getString("arg.descr.pngcrush")).build();
+		Option postWebpConvert = Option.builder("postProcessorWebp").desc(bundle.getString("arg.descr.webp")).build();
+		Option keepUnPostProcessed = Option.builder("keepOriginalPostProcessedFiles").desc(bundle.getString("arg.descr.keeporiginal")).build();
 		Option dpScaleIsHeight = Option.builder(SCALE_IS_HEIGHT_DP_ARG).desc(bundle.getString("arg.descr.cmd.dpIsHeight")).build();
 		Option dryRun = Option.builder("dryRun").desc(bundle.getString("arg.descr.dryrun")).build();
-		Option enableMozJpeg = Option.builder("enableMozJpeg").desc(bundle.getString("arg.descr.mozjpeg")).build();
+		Option enableMozJpeg = Option.builder("postProcessorMozJpeg").desc(bundle.getString("arg.descr.mozjpeg")).build();
 
 		Option help = Option.builder("h").longOpt("help").desc(bundle.getString("arg.descr.cmd.help")).build();
 		Option version = Option.builder("v").longOpt("version").desc(bundle.getString("arg.descr.cmd.version")).build();
@@ -220,7 +222,8 @@ public class CLInterpreter {
 		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler);
 		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(androidIncludeLdpiTvdpi).addOption(verboseLog)
 				.addOption(antiAliasing).addOption(dryRun).addOption(haltOnError).addOption(mipmapInsteadOfDrawable)
-				.addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight).addOption(enableMozJpeg);
+				.addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight).addOption(enableMozJpeg)
+				.addOption(keepUnPostProcessed);
 
 		options.addOptionGroup(mainArgs);
 

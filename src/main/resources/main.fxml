@@ -225,6 +225,16 @@
                 <Tooltip text="%arg.descr.androidmipmap"/>
             </tooltip>
         </CheckBox>
+
+        <CheckBox fx:id="cbKeepUnoptimized" styleClass="check-box" maxWidth="Infinity"
+                  text="%main.cb.keepUnoptimized"
+                  GridPane.columnIndex="0" alignment="CENTER_LEFT"
+                  GridPane.rowIndex="4" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip text="%arg.descr.keeporiginal"/>
+            </tooltip>
+        </CheckBox>
     </GridPane>
 
     <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.columnSpan="4"/>
