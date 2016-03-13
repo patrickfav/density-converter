@@ -36,4 +36,9 @@ public class MockProcessor implements IPostProcessor {
 
 		return new Result("test done", exception, Collections.singletonList(rawFile));
 	}
+
+	@Override
+	public boolean isSupported() {
+		return true;
+	}
 }

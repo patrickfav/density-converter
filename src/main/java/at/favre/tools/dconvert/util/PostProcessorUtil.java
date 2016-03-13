@@ -116,4 +116,20 @@ public class PostProcessorUtil {
 		return new Result(logStringBuilder.toString(), exception, Collections.emptyList());
 	}
 
+	public static boolean canRunCmd(String[] cmdArray) {
+		try {
+			ProcessBuilder pb = new ProcessBuilder(cmdArray);
+			pb.redirectErrorStream(true);
+			Process process = pb.start();
+			try (BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+				while ((inStreamReader.readLine()) != null) {
+				}
+			}
+			process.waitFor();
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
+	}
+
 }

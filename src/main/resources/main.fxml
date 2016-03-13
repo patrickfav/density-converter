@@ -240,8 +240,11 @@
     <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.columnSpan="4"/>
 
     <Label text="%main.header.postprocessors" styleClass="label,label_main" maxWidth="Infinity" GridPane.columnIndex="0"
-           GridPane.rowIndex="10"
-           GridPane.columnSpan="4"/>
+           GridPane.rowIndex="10" GridPane.columnSpan="2"/>
+
+    <Label text="%main.label.whypostproc" fx:id="labelWhyPP" styleClass="label,label_main,why-info" maxWidth="Infinity"
+           GridPane.columnIndex="2" GridPane.rowIndex="10" alignment="CENTER_RIGHT" GridPane.columnSpan="2"
+           visible="true"/>
 
     <GridPane fx:id="gridPanePostProcessors" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
               GridPane.rowIndex="11"

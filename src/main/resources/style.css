@@ -28,3 +28,14 @@
     -fx-font-size: 0.8em;
     -fx-padding: 0.3em;
 }
+
+.why-info {
+    -fx-font-size: 0.8em;
+    -fx-font-weight: normal;
+    -fx-underline: true;
+}
+
+.why-info:hover {
+    -fx-underline: false;
+    -fx-cursor: hand;
+}

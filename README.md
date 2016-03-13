@@ -4,7 +4,7 @@ This is a simple tool that helps **converting single or batches of images** to *
 versions given the source scale factor or target width/height in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
 It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
 including PNG, JPEG, SVG, PSD and Android 9-patches. Using advanced scaling algorithms, it is designed to make conversion of images easy and
-fast while keeping the image quality high. To further optimize the output post processors like **pngcrush** can be used (see section below).
+fast while keeping the image quality high. To further optimize the output post processors like **pngcrush** and **mozJpeg** can be used (see section below).
 
 **[Requires Java 8 to run.](http://www.oracle.com/technetwork/java/javase/downloads/index.html)**
 
@@ -29,6 +29,8 @@ java -jar ./dconvert.jar
 will start the UI (_or double click the jar file_).
 
 **[Download here](https://github.com/patrickfav/density-converter/releases/)**
+
+_To use the post processor ([pngcrush](http://pmt.sourceforge.net/pngcrush/), [mozJpeg](http://mozjpeg.codelove.de/binaries.html) and [webp](https://developers.google.com/speed/webp/download)) the respective cmd tool must be set in PATH._
 
 # Usage
 
@@ -102,7 +104,6 @@ Full list of arguments:
     -v,--version                        Gets current version
     -verbose                            If set will log to console more verbose
 
-
 ## GUI
 
 Start with
@@ -114,7 +115,7 @@ java -jar ./dconvert.jar
 provides the same features as the command line tool so see help page of command line or tooltips. Additionally the UI
 will save its settings persistently making it easier for power users.
 
-![gui-screenshot](misc/screenshot1.jpg)
+![gui-screenshot](src/main/resources/img/screenshot1.jpg)
 
 # Details
 

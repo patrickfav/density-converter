@@ -19,6 +19,9 @@ package at.favre.tools.dconvert.ui;
 
 import at.favre.tools.dconvert.ConverterHandler;
 import at.favre.tools.dconvert.arg.*;
+import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
+import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
+import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
 import at.favre.tools.dconvert.exceptions.InvalidArgumentException;
 import at.favre.tools.dconvert.util.MiscUtil;
 import javafx.application.Platform;
@@ -44,6 +47,7 @@ import java.util.ResourceBundle;
  */
 public class GUIController {
     public GridPane rootGridPane;
+    public Label labelWhyPP;
 
     private IPreferenceStore preferenceStore;
     private final FileChooser srcFileChooser = new FileChooser();
@@ -238,7 +242,16 @@ public class GUIController {
             }
         });
 
+        labelWhyPP.setOnMouseClicked(event -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setHeaderText(bundle.getString("alert.whypp.title"));
+            alert.setContentText(bundle.getString("alert.whypp.text"));
+            alert.showAndWait();
+        });
+
         loadPrefs();
+        new Thread(new PostProcessorChecker()).start();
     }
 
     private void setupLayout() {
@@ -421,5 +434,20 @@ public class GUIController {
         }
     }
 
+    private class PostProcessorChecker implements Runnable {
+        @Override
+        public void run() {
+            boolean pngcrushSupported = new PngCrushProcessor().isSupported();
+            boolean mozJpegSupported = new MozJpegProcessor().isSupported();
+            boolean webpSupported = new WebpProcessor().isSupported();
+
+            Platform.runLater(() -> {
+                cbEnablePngCrush.setDisable(!pngcrushSupported);
+                cbEnableMozJpeg.setDisable(!mozJpegSupported);
+                cbPostConvertWebp.setDisable(!webpSupported);
+                labelWhyPP.setVisible(!pngcrushSupported || !mozJpegSupported || !webpSupported);
+            });
+        }
+    }
 
 }

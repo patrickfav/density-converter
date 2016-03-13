@@ -35,4 +35,9 @@ public interface IPostProcessor {
 	 * @return optional log or output
 	 */
 	Result process(File rawFile, boolean keepOriginal);
+
+	/**
+	 * @return true if this processor is supported with the current setup (e.g. tool is set in PATH)
+	 */
+	boolean isSupported();
 }

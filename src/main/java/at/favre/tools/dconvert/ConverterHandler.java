@@ -82,16 +82,31 @@ public class ConverterHandler {
 			}
 
 			if (args.enablePngCrush) {
-				logStringBuilder.append("add pngcrush postprocessor\n");
-				postProcessors.add(new PngCrushProcessor());
+				IPostProcessor postProcessor = new PngCrushProcessor();
+				if (postProcessor.isSupported()) {
+					logStringBuilder.append("add pngcrush postprocessor\n");
+					postProcessors.add(postProcessor);
+				} else {
+					logStringBuilder.append("WARNING: Tool 'pngcrush' cannot be accessed. Is it set in PATH?\n");
+				}
 			}
 			if (args.postConvertWebp) {
-				logStringBuilder.append("add webp postprocessor\n");
-				postProcessors.add(new WebpProcessor());
+				IPostProcessor postProcessor = new WebpProcessor();
+				if (postProcessor.isSupported()) {
+					logStringBuilder.append("add cwebp postprocessor\n");
+					postProcessors.add(postProcessor);
+				} else {
+					logStringBuilder.append("WARNING: Tool 'cwebp' cannot be accessed. Is it set in PATH?\n");
+				}
 			}
 			if (args.enableMozJpeg) {
-				logStringBuilder.append("add mozJpeg postprocessor\n");
-				postProcessors.add(new MozJpegProcessor());
+				IPostProcessor postProcessor = new MozJpegProcessor();
+				if (postProcessor.isSupported()) {
+					logStringBuilder.append("add mozJpeg postprocessor\n");
+					postProcessors.add(postProcessor);
+				} else {
+					logStringBuilder.append("WARNING: Tool 'jpegtran' cannot be accessed. Is it set in PATH?\n");
+				}
 			}
 
 			int convertJobs = args.filesToProcess.size() * converters.size();

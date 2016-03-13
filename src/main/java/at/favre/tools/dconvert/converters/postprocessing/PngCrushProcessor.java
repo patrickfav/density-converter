@@ -49,4 +49,9 @@ public class PngCrushProcessor extends APostProcessor {
 			return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
 		}
 	}
+
+	@Override
+	public boolean isSupported() {
+		return PostProcessorUtil.canRunCmd(new String[]{"pngcrush", "-h"});
+	}
 }

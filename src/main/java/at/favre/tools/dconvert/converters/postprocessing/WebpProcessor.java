@@ -51,4 +51,9 @@ public class WebpProcessor extends APostProcessor {
 			return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
 		}
 	}
+
+	@Override
+	public boolean isSupported() {
+		return PostProcessorUtil.canRunCmd(new String[]{"cwebp", "-h"});
+	}
 }
