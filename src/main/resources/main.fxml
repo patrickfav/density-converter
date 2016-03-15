@@ -12,9 +12,17 @@
     <TextField fx:id="textFieldSrcPath" disable="true" GridPane.columnIndex="1"
                GridPane.rowIndex="0" maxWidth="Infinity" GridPane.hgrow="always"/>
     <Button fx:id="btnSrcFile" GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity"
-            GridPane.hgrow="always"/>
+            GridPane.hgrow="always">
+        <tooltip>
+            <Tooltip text="%arg.descr.btnsrcFile"/>
+        </tooltip>
+    </Button>
     <Button fx:id="btnSrcFolder" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity"
-            GridPane.hgrow="always"/>
+            GridPane.hgrow="always">
+        <tooltip>
+            <Tooltip text="%arg.descr.btnsrcfolder"/>
+        </tooltip>
+    </Button>
 
     <Label text="%main.label.scaletype" styleClass="label, label_main" alignment="CENTER_RIGHT" maxWidth="Infinity"
            GridPane.columnIndex="0"
@@ -84,8 +92,16 @@
            GridPane.rowIndex="3"/>
     <TextField fx:id="textFieldDstPath" disable="true" maxWidth="Infinity" GridPane.columnIndex="1"
                GridPane.rowIndex="3"/>
-    <Button fx:id="btnDstFolder" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.columnSpan="2"
-            GridPane.rowIndex="3"/>
+    <Button fx:id="btnDstFolderOpen" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="3" disable="true">
+        <tooltip>
+            <Tooltip text="%arg.descr.btnopendstfolder"/>
+        </tooltip>
+    </Button>
+    <Button fx:id="btnDstFolder" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="3">
+        <tooltip>
+            <Tooltip text="%arg.descr.btndstfolder"/>
+        </tooltip>
+    </Button>
 
     <VBox minHeight="0" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4"/>
 
@@ -225,16 +241,6 @@
                 <Tooltip text="%arg.descr.androidmipmap"/>
             </tooltip>
         </CheckBox>
-
-        <CheckBox fx:id="cbKeepUnoptimized" styleClass="check-box" maxWidth="Infinity"
-                  text="%main.cb.keepUnoptimized"
-                  GridPane.columnIndex="0" alignment="CENTER_LEFT"
-                  GridPane.rowIndex="4" GridPane.hgrow="always"
-                  GridPane.vgrow="always">
-            <tooltip>
-                <Tooltip text="%arg.descr.keeporiginal"/>
-            </tooltip>
-        </CheckBox>
     </GridPane>
 
     <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.columnSpan="4"/>
@@ -275,6 +281,16 @@
                 <Tooltip text="%arg.descr.mozjpeg"/>
             </tooltip>
         </CheckBox>
+
+        <CheckBox fx:id="cbKeepUnoptimized" styleClass="check-box" maxWidth="Infinity"
+                  text="%main.cb.keepUnoptimized"
+                  GridPane.columnIndex="1" alignment="CENTER_LEFT"
+                  GridPane.rowIndex="1" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip text="%arg.descr.keeporiginal"/>
+            </tooltip>
+        </CheckBox>
     </GridPane>
 
     <VBox minHeight="10" GridPane.columnIndex="0" GridPane.rowIndex="12" GridPane.columnSpan="4"/>
@@ -284,7 +300,7 @@
                  GridPane.rowIndex="13" progress="0"/>
 
     <TextArea fx:id="textFieldConsole" styleClass="text-area, console" maxWidth="Infinity" GridPane.columnIndex="0"
-              GridPane.columnSpan="4"
+              GridPane.columnSpan="4" minHeight="0"
               GridPane.rowIndex="14" visible="true" prefRowCount="250" prefColumnCount="80"/>
 
     <Button fx:id="btnConvert" styleClass="button, button-convert"

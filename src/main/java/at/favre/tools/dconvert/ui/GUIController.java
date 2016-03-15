@@ -29,6 +29,10 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
@@ -36,7 +40,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
@@ -48,6 +54,7 @@ import java.util.ResourceBundle;
 public class GUIController {
     public GridPane rootGridPane;
     public Label labelWhyPP;
+    public Button btnDstFolderOpen;
 
     private IPreferenceStore preferenceStore;
     private final FileChooser srcFileChooser = new FileChooser();
@@ -136,39 +143,39 @@ public class GUIController {
                 Arguments arg = getFromUI(false);
                 saveToPrefs(arg);
                 btnConvert.setDisable(true);
-				progressBar.setDisable(true);
-				labelResult.setText("");
-				textFieldConsole.setText("");
-				textFieldConsole.setDisable(true);
-				progressBar.setProgress(0);
-				progressBar.setDisable(false);
+                progressBar.setDisable(true);
+                labelResult.setText("");
+                textFieldConsole.setText("");
+                textFieldConsole.setDisable(true);
+                progressBar.setProgress(0);
+                progressBar.setDisable(false);
 
-				new ConverterHandler().execute(arg, new ConverterHandler.HandlerCallback() {
-					@Override
+                new ConverterHandler().execute(arg, new ConverterHandler.HandlerCallback() {
+                    @Override
                     public void onProgress(float progress) {
                         Platform.runLater(() -> progressBar.setProgress(progress));
-					}
+                    }
 
-					@Override
-					public void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
-						Platform.runLater(() -> {
-							resetUIAfterExecution();
+                    @Override
+                    public void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
+                        Platform.runLater(() -> {
+                            resetUIAfterExecution();
                             labelResult.setText(
                                     MessageFormat.format(bundle.getString("main.label.finish"), finsihedJobs, exceptions.size(), MiscUtil.duration(time)));
                             textFieldConsole.setText(log);
-							textFieldConsole.appendText("");
+                            textFieldConsole.appendText("");
 
-							if (!exceptions.isEmpty()) {
-								Alert alert = new Alert(Alert.AlertType.WARNING);
+                            if (!exceptions.isEmpty()) {
+                                Alert alert = new Alert(Alert.AlertType.WARNING);
                                 alert.setTitle(bundle.getString("main.alert.title"));
                                 alert.setHeaderText(null);
                                 alert.setContentText(MessageFormat.format(bundle.getString("main.alert.content"), exceptions.size()));
                                 alert.showAndWait();
-							}
-						});
+                            }
+                        });
 
-					}
-				}, false);
+                    }
+                }, false);
             } catch (Exception e) {
                 resetUIAfterExecution();
                 String stacktrace = MiscUtil.getStackTrace(e);
@@ -184,6 +191,7 @@ public class GUIController {
         btnDstFolder.setGraphic(new ImageView(new Image("img/folder-symbol.png")));
         btnSrcFolder.setGraphic(new ImageView(new Image("img/folder-symbol.png")));
         btnSrcFile.setGraphic(new ImageView(new Image("img/file-symbol.png")));
+        btnDstFolderOpen.setGraphic(new ImageView(new Image("img/eye.png")));
 
         btnReset.setOnAction(event -> {
             saveToPrefs(new Arguments());
@@ -216,8 +224,8 @@ public class GUIController {
         choiceCompression.getSelectionModel().select(Arguments.DEFAULT_OUT_COMPRESSION);
 
         choiceCompressionQuality.setItems(FXCollections.observableArrayList(
-                0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1.0f));
-        choiceCompressionQuality.getSelectionModel().select((int) (Arguments.DEFAULT_COMPRESSION_QUALITY * 10f));
+                0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.75f, 0.8f, 0.85f, 0.9f, 0.95f, 1.0f));
+        choiceCompressionQuality.getSelectionModel().select(Float.valueOf(Arguments.DEFAULT_COMPRESSION_QUALITY));
 
         choiceRounding.setItems(FXCollections.observableArrayList(
                 RoundingHandler.Strategy.ROUND_HALF_UP, RoundingHandler.Strategy.CEIL, RoundingHandler.Strategy.FLOOR));
@@ -248,6 +256,25 @@ public class GUIController {
             alert.setHeaderText(bundle.getString("alert.whypp.title"));
             alert.setContentText(bundle.getString("alert.whypp.text"));
             alert.showAndWait();
+        });
+
+        btnDstFolderOpen.setOnAction(event -> {
+            try {
+                Desktop.getDesktop().open(new File(textFieldDstPath.getText()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        textFieldDstPath.textProperty().addListener(observable -> {
+            if (textFieldDstPath != null) {
+                File dstFolder = new File(textFieldDstPath.getText());
+                if (dstFolder.exists() && dstFolder.isDirectory()) {
+                    btnDstFolderOpen.setDisable(false);
+                    return;
+                }
+            }
+            btnDstFolderOpen.setDisable(true);
         });
 
         loadPrefs();

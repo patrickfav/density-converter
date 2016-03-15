@@ -24,6 +24,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -53,9 +54,23 @@ public class GUI extends Application {
 		GUIController controller = loader.<GUIController>getController();
 		controller.onCreate(store, bundle);
 
-		Scene scene = new Scene(root, 570, 820);
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+		int height = 820;
+		if (screenSize.getHeight() <= 768) {
+			height = 730;
+		}
+
+		Scene scene = new Scene(root, 600, height);
 		primaryStage.setScene(scene);
+		primaryStage.getIcons().add(new Image("img/density_converter_icon_16.png"));
+		primaryStage.getIcons().add(new Image("img/density_converter_icon_24.png"));
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_36.png"));
+		primaryStage.getIcons().add(new Image("img/density_converter_icon_48.png"));
+		primaryStage.getIcons().add(new Image("img/density_converter_icon_64.png"));
+		primaryStage.getIcons().add(new Image("img/density_converter_icon_128.png"));
+		primaryStage.getIcons().add(new Image("img/density_converter_icon_256.png"));
+
 		return controller;
 	}
 }
