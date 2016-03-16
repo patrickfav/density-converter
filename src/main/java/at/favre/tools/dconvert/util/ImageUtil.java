@@ -70,10 +70,12 @@ public class ImageUtil {
         if (Arguments.getImageType(input) == ImageType.JPG) {
             try (ImageInputStream stream = ImageIO.createImageInputStream(input)) {
                 List<JPEGSegment> exifSegment = JPEGSegmentUtil.readSegments(stream, JPEG.APP1, "Exif");
-                InputStream exifData = exifSegment.get(0).data();
-                exifData.read(); // Skip 0-pad for Exif in JFIF
-                try (ImageInputStream exifStream = ImageIO.createImageInputStream(exifData)) {
-                    return (CompoundDirectory) new EXIFReader().read(exifStream);
+                if (!exifSegment.isEmpty()) {
+                    InputStream exifData = exifSegment.get(0).data();
+                    exifData.read(); // Skip 0-pad for Exif in JFIF
+                    try (ImageInputStream exifStream = ImageIO.createImageInputStream(exifData)) {
+                        return (CompoundDirectory) new EXIFReader().read(exifStream);
+                    }
                 }
             } catch (Exception e) {
                 System.err.println("could not read exif");
