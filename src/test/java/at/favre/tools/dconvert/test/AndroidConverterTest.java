@@ -138,11 +138,13 @@ public class AndroidConverterTest extends AConverterTest {
 	private static class ImageCheck {
 		public final File srcFile;
 		public final File targetFile;
+		public final boolean isNinepatch;
 		public boolean found;
 
 		public ImageCheck(File srcFile, File targetFile) throws IOException {
 			this.srcFile = srcFile;
 			this.targetFile = targetFile;
+			this.isNinepatch = AndroidConverter.isNinePatch(srcFile);
 		}
 	}
 

@@ -45,7 +45,7 @@ public class Main {
 			return;
 		}
 
-		new ConverterHandler().execute(args, new ConverterHandler.HandlerCallback() {
+		new Converter().execute(args, true, new Converter.HandlerCallback() {
 			int i = 0;
 			@Override
 			public void onProgress(float progress) {
@@ -80,6 +80,6 @@ public class Main {
 				}
 				System.out.println("execution finished (" + time + "ms) with " + finishedJobs + " finsihed jobs and " + exceptions.size() + " errors");
 			}
-		}, true);
+		});
 	}
 }

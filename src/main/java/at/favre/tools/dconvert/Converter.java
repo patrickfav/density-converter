@@ -43,7 +43,7 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * All user interfaces will call this class to execute.
  */
-public class ConverterHandler {
+public class Converter {
 	private CountDownLatch mainLatch;
 
 	private HandlerCallback handlerCallback;
@@ -54,10 +54,10 @@ public class ConverterHandler {
 	 * Starts the execution of the dconvert
 	 *
 	 * @param args                  from user interface
-	 * @param callback              main callback
 	 * @param blockingWaitForFinish if true will block the thread until all threads are finished
+	 * @param callback              main callback
 	 */
-	public void execute(Arguments args, HandlerCallback callback, boolean blockingWaitForFinish) {
+	public void execute(Arguments args, boolean blockingWaitForFinish, HandlerCallback callback) {
 		beginMs = System.currentTimeMillis();
 		handlerCallback = callback;
 
@@ -171,7 +171,9 @@ public class ConverterHandler {
 	private void informFinished(int finishedJobs, List<Exception> exceptions, boolean haltedDuringProcess) {
 		System.gc();
 		if (handlerCallback != null) {
-			mainLatch.countDown();
+			if (mainLatch != null) {
+				mainLatch.countDown();
+			}
 			for (Exception exception : exceptions) {
 				logStringBuilder.append(MiscUtil.getStackTrace(exception)).append("\n");
 			}
@@ -183,7 +185,7 @@ public class ConverterHandler {
 	public interface HandlerCallback {
 		void onProgress(float progress);
 
-		void onFinished(int finsihedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log);
+		void onFinished(int finishedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log);
 	}
 
 	public String getRegisteredImageReadersAndWriters() {

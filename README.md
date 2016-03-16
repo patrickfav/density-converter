@@ -1,9 +1,9 @@
 # ![logo](src/main/resources/img/density_converter_icon_24.png) Density Image Converter Tool for Android, iOS and Windows
 
-This is a simple tool that helps **converting single or batches of images** to **Android**, **iOS** and **Windows** specific formats and density
+This is powerful little tool that helps **converting single or batches of images** to **Android**, **iOS** and **Windows** specific formats and density
 versions given the source scale factor or target width/height in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
 It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
-including PNG, JPEG, SVG, PSD and Android 9-patches. Using advanced scaling algorithms, it is designed to make conversion of images easy and
+including PNG, JPEG, SVG, PSD and Android 9-patches. Using sophisticated scaling algorithms, it is designed to make conversion of images easy and
 fast while keeping the image quality high. To further optimize the output post processors like **pngcrush** and **mozJpeg** can be used (see section below).
 
 Usage:
@@ -186,7 +186,7 @@ If an image will be re-compressed with a file type that does not support alpha, 
 ## Quality Comparison
 One of the main features of this converter is downscaling. Unfortunately without using specific algorithms, down scaled
  images may look jagged. Density converter uses the algorithms of [imgscalr](https://github.com/thebuzzmedia/imgscalr) which
- provide fairly good quality, comparable to Photoshop output (although PS seems to be a bit better this regard). The following
+ provide fairly good quality, comparable to Photoshop output (although PS comes out ahead a bit). The following
  diagram is to compare the expected quality when using this tool in comparison to Java's native Graphics2D and Photoshop.
 
 

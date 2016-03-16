@@ -21,6 +21,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Test for worker handler
@@ -34,19 +35,23 @@ public class WorkerHandlerTest {
 	private Arguments arguments;
 	private CountDownLatch latch;
 	private Random random;
+	private File src;
+	private File dst;
 
 	@Before
 	public void setUp() throws Exception {
 		arguments = new Arguments.Builder(null, Arguments.DEFAULT_SCALE).threadCount(4).skipParamValidation(true).build();
 		latch = new CountDownLatch(1);
 		random = new Random(12363012L);
+		src = temporaryFolder.newFolder("convert-test", "src");
+		dst = temporaryFolder.newFolder("convert-test", "out");
 	}
 
 	@Test
 	public void testZeroFilesInput() throws Exception {
 		TestCallback callback = new TestCallback(0, Collections.emptyList(), false, latch);
 		new WorkerHandler<>(Collections.singletonList(new MockProcessor()), arguments, callback).start(Collections.emptyList());
-		latch.await(WAIT_SEC, TimeUnit.SECONDS);
+		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));
 		checkResult(callback);
 	}
 
@@ -55,7 +60,7 @@ public class WorkerHandlerTest {
 		List<File> files = createFiles(66);
 		TestCallback callback = new TestCallback(files.size(), Collections.emptyList(), false, latch);
 		new WorkerHandler<>(Collections.singletonList(new MockProcessor()), arguments, callback).start(files);
-		latch.await(WAIT_SEC, TimeUnit.SECONDS);
+		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));
 		checkResult(callback);
 	}
 
@@ -65,7 +70,7 @@ public class WorkerHandlerTest {
 		List<IPostProcessor> postProcessors = createProcessors(3);
 		TestCallback callback = new TestCallback(files.size() * postProcessors.size(), Collections.<Exception>emptyList(), false, latch);
 		new WorkerHandler(postProcessors, arguments, callback).start(files);
-		latch.await(WAIT_SEC, TimeUnit.SECONDS);
+		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));
 		checkResult(callback);
 	}
 
@@ -75,7 +80,7 @@ public class WorkerHandlerTest {
 		List<IPostProcessor> postProcessors = createProcessors(33);
 		TestCallback callback = new TestCallback(files.size() * postProcessors.size(), Collections.<Exception>emptyList(), false, latch);
 		new WorkerHandler(postProcessors, arguments, callback).start(files);
-		latch.await(WAIT_SEC, TimeUnit.SECONDS);
+		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));
 		checkResult(callback);
 	}
 
@@ -85,7 +90,7 @@ public class WorkerHandlerTest {
 		Exception exception = new MockException();
 		TestCallback callback = new TestCallback(files.size(), Collections.singletonList(exception), false, latch);
 		new WorkerHandler(Collections.singletonList(new MockProcessor(exception)), arguments, callback).start(files);
-		latch.await(WAIT_SEC, TimeUnit.SECONDS);
+		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));
 		checkResult(callback);
 	}
 
@@ -95,7 +100,7 @@ public class WorkerHandlerTest {
 		List<File> files = createFiles(exception.size());
 		TestCallback callback = new TestCallback(files.size(), exception, false, latch);
 		new WorkerHandler(Collections.singletonList(new MockProcessor(new MockException())), arguments, callback).start(files);
-		latch.await(WAIT_SEC, TimeUnit.SECONDS);
+		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));
 		checkResult(callback);
 	}
 
@@ -106,37 +111,31 @@ public class WorkerHandlerTest {
 		TestCallback callback = new TestCallback(files.size(), exception, true, latch);
 		new WorkerHandler(Collections.singletonList(new MockProcessor(new MockException())),
 				new Arguments.Builder(null, Arguments.DEFAULT_SCALE).threadCount(4).haltOnError(true).skipParamValidation(true).build(), callback).start(files);
-		latch.await(WAIT_SEC, TimeUnit.SECONDS);
+		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));
 		checkResult(callback);
 	}
 
 	@Test
 	public void testAndroidConverterInHandler() throws Exception {
-		File src = temporaryFolder.newFolder("worker-handler-test", "src");
-		File dst = temporaryFolder.newFolder("worker-handler-test", "out");
 		List<File> files = AConverterTest.copyToTestPath(src, "png_example2_alpha_144.png", "gif_example_640.gif", "jpg_example_1920.jpg");
 		Arguments arg = new Arguments.Builder(src, Arguments.DEFAULT_SCALE).dstFolder(dst).platform(EPlatform.ANDROID).threadCount(4).build();
 		TestCallback callback = new TestCallback(files.size(), Collections.emptyList(), false, latch);
 		new WorkerHandler(Collections.singletonList(new AndroidConverter()), arg, callback).start(files);
-		latch.await(WAIT_SEC, TimeUnit.SECONDS);
+		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));
 		checkResult(callback);
 		AndroidConverterTest.checkOutDirAndroid(dst, arg, files);
 	}
 
 	@Test
 	public void testAllPlatformConverterInHandler() throws Exception {
-		File src = temporaryFolder.newFolder("worker-handler-test", "src");
-		File dst = temporaryFolder.newFolder("worker-handler-test", "out");
 		List<File> files = AConverterTest.copyToTestPath(src, "png_example3_alpha_128.png", "png_example1_alpha_144.png", "jpg_example2_512.jpg");
 		List<IPlatformConverter> converters = Arrays.asList(new AndroidConverter(), new IOSConverter(), new WindowsConverter());
 		Arguments arg = new Arguments.Builder(src, Arguments.DEFAULT_SCALE).dstFolder(dst).threadCount(4).build();
 		TestCallback callback = new TestCallback(files.size() * converters.size(), Collections.emptyList(), false, latch);
 		new WorkerHandler(converters, arg, callback).start(files);
-		latch.await(WAIT_SEC, TimeUnit.SECONDS);
+		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));
 		checkResult(callback);
-		AndroidConverterTest.checkOutDirAndroid(new File(dst, "android"), arg, files);
-		IOSConverterTest.checkOutDirIos(new File(dst, "ios"), arg, files);
-		WindowsConverterTest.checkOutDirWindows(new File(dst, "windows"), arg, files);
+		AConverterTest.checkMultiPlatformConvert(dst, arg, files);
 	}
 
 	private void checkResult(TestCallback callback) {

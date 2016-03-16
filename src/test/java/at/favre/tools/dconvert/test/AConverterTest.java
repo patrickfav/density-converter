@@ -221,6 +221,12 @@ public abstract class AConverterTest {
 		return copiedFiles;
 	}
 
+	public static void checkMultiPlatformConvert(File dst, Arguments arg, List<File> files) throws IOException {
+		AndroidConverterTest.checkOutDirAndroid(new File(dst, "android"), arg, files);
+		IOSConverterTest.checkOutDirIos(new File(dst, "ios"), arg, files);
+		WindowsConverterTest.checkOutDirWindows(new File(dst, "windows"), arg, files);
+	}
+
 	protected static Map<File, Dimension> createDimensionMap(List<File> files) throws IOException {
 		Map<File, Dimension> map = new HashMap<>();
 
