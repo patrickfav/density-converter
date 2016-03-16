@@ -20,9 +20,10 @@ package at.favre.tools.dconvert;
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.ui.CLInterpreter;
 import at.favre.tools.dconvert.ui.GUI;
+import at.favre.tools.dconvert.util.MiscUtil;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Entry point of the app
@@ -49,15 +50,16 @@ public class Main {
 			int i = 0;
 			@Override
 			public void onProgress(float progress) {
-				i++;
-				System.out.print(String.format(Locale.US, "%.2f", progress * 100f) + "%\t");
-				if (i % 10 == 0) {
-					System.out.println("");
+				try {
+					System.out.write(MiscUtil.getCmdProgressBar(progress).getBytes());
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 
 			@Override
 			public void onFinished(int finishedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
+				System.out.print(MiscUtil.getCmdProgressBar(1f));
 
 				System.out.println("");
 
