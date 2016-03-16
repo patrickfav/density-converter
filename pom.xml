@@ -64,6 +64,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.DontIncludeResourceTransformer">
                                     <resources>
                                         <resource>.psd</resource>
+                                        <resource>quality_comparison.png</resource>
                                         <resource>screenshot1.jpg</resource>
                                     </resources>
                                 </transformer>

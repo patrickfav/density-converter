@@ -183,6 +183,15 @@ Out-compression has the following modes:
 
 If an image will be re-compressed with a file type that does not support alpha, alpha will be replaced with white (e.g. when converting png -> jpeg)
 
+## Quality Comparison
+One of the main features of this converter is downscaling. Unfortunately without using specific algorithms, down scaled
+ images may look jagged. Density converter uses the algorithms of [imgscalr](https://github.com/thebuzzmedia/imgscalr) which
+ provide fairly good quality, comparable to Photoshop output (although PS seems to be a bit better this regard). The following
+ diagram is to compare the expected quality when using this tool in comparison to Java's native Graphics2D and Photoshop.
+
+
+![comparison](src/main/resources/img/quality_comparison.png)
+
 ## Post Processors
 
 The converter tool supports some post processors which run after the main conversation task to manipulate the resulting files.
