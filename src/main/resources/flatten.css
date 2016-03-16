@@ -12,6 +12,7 @@
     -fx-disabled-opacity: 0.6;
 
     -flatter-red: rgb(197.0, 78.0, 56.0);
+    -flatter-blue2: #435568;
     -flatter-blue: rgb(0.0, 184.0, 222.0);
 }
 
@@ -209,11 +210,15 @@
  *                                                                             *
  ******************************************************************************/
 .combo-box-base,
-.choice-box {
+.choice-box, .choice-box2 {
     -fx-background-color: -flatter-red;
     -fx-background-insets: 0.0;
     -fx-background-radius: 2.0;
     -fx-border-width: 0.0;
+}
+
+.choice-box2 {
+    -fx-background-color: -flatter-blue2;
 }
 
 .combo-box-base > .label,
@@ -230,6 +235,10 @@
 .combo-box-base:focused,
 .choice-box:focused {
     -fx-background-color: derive(-flatter-red, 50.0%);
+}
+
+.choice-box2:focused {
+    -fx-background-color: derive(-flatter-blue2, 50.0%);
 }
 
 .combo-box-base > .arrow-button > .arrow,

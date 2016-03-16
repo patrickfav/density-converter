@@ -76,7 +76,6 @@ public class GUIController {
 
 	public CheckBox cbSkipExisting;
 	public CheckBox cbSkipUpscaling;
-	public CheckBox cbVerboseLog;
 	public CheckBox cbAndroidIncludeLdpiTvdpi;
 	public CheckBox cbHaltOnError;
 	public CheckBox cbEnablePngCrush;
@@ -235,9 +234,6 @@ public class GUIController {
 				1, 2, 3, 4, 5, 6, 7, 8));
 		choiceThreads.getSelectionModel().select(Arguments.DEFAULT_THREAD_COUNT - 1);
 
-		cbVerboseLog.selectedProperty().addListener((observable, oldValue, newValue) -> {
-			textFieldConsole.setVisible(cbVerboseLog.isSelected());
-		});
 		labelVersion.setText("v" + GUIController.class.getPackage().getImplementationVersion());
 
 		textFieldDp.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -341,7 +337,6 @@ public class GUIController {
 
 			cbSkipExisting.setSelected(args.skipExistingFiles);
 			cbSkipUpscaling.setSelected(args.skipUpscaling);
-			cbVerboseLog.setSelected(args.verboseLog);
 			cbAndroidIncludeLdpiTvdpi.setSelected(args.includeAndroidLdpiTvdpi);
 			cbAntiAliasing.setSelected(args.enableAntiAliasing);
 			cbMipmapInsteadDrawable.setSelected(args.createMipMapInsteadOfDrawableDir);
@@ -376,7 +371,7 @@ public class GUIController {
 
 		builder.skipExistingFiles(cbSkipExisting.isSelected());
 		builder.skipUpscaling(cbSkipUpscaling.isSelected());
-		builder.verboseLog(cbVerboseLog.isSelected());
+		builder.verboseLog(true);
 		builder.includeAndroidLdpiTvdpi(cbAndroidIncludeLdpiTvdpi.isSelected());
 		builder.haltOnError(cbHaltOnError.isSelected());
 		builder.createMipMapInsteadOfDrawableDir(cbMipmapInsteadDrawable.isSelected());

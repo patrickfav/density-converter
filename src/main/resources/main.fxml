@@ -113,7 +113,7 @@
                GridPane.columnIndex="0"
                GridPane.rowIndex="0" GridPane.hgrow="always"/>
         <ChoiceBox fx:id="choicePlatform" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                   GridPane.columnSpan="3" GridPane.hgrow="always">
+                   GridPane.columnSpan="3" GridPane.hgrow="always" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.platform"/>
             </tooltip>
@@ -124,7 +124,7 @@
                GridPane.columnIndex="0"
                GridPane.rowIndex="1"/>
         <ChoiceBox fx:id="choiceCompression" GridPane.hgrow="always" maxWidth="Infinity" GridPane.columnIndex="1"
-                   GridPane.rowIndex="1">
+                   GridPane.rowIndex="1" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.compression"/>
             </tooltip>
@@ -134,7 +134,7 @@
                GridPane.columnIndex="2"
                GridPane.rowIndex="1"/>
         <ChoiceBox fx:id="choiceCompressionQuality" maxWidth="Infinity" GridPane.columnIndex="3"
-                   GridPane.rowIndex="1">
+                   GridPane.rowIndex="1" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.jpegquality"/>
             </tooltip>
@@ -144,7 +144,7 @@
                GridPane.columnIndex="0"
                GridPane.rowIndex="2" GridPane.hgrow="always"/>
         <ChoiceBox fx:id="choiceRounding" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"
-                   GridPane.hgrow="always">
+                   GridPane.hgrow="always" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.rounding"/>
             </tooltip>
@@ -154,7 +154,7 @@
                GridPane.columnIndex="2"
                GridPane.rowIndex="2" GridPane.hgrow="always"/>
         <ChoiceBox fx:id="choiceThreads" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="2"
-                   GridPane.hgrow="always">
+                   GridPane.hgrow="always" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.threads"/>
             </tooltip>
@@ -187,23 +187,22 @@
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="cbVerboseLog" styleClass="check-box" selected="true"
-                  maxWidth="Infinity" alignment="CENTER_LEFT"
-                  text="%main.cb.verbose"
-                  GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.hgrow="always">
-            <tooltip>
-                <Tooltip text="%arg.descr.verbose"/>
-            </tooltip>
-        </CheckBox>
         <CheckBox fx:id="cbDryRun" styleClass="check-box" maxWidth="Infinity"
                   text="%main.cb.dryrun"
-                  GridPane.columnIndex="1" alignment="CENTER_LEFT"
+                  GridPane.columnIndex="0" alignment="CENTER_LEFT"
                   GridPane.rowIndex="1" GridPane.hgrow="always">
             <tooltip>
                 <Tooltip text="%arg.descr.dryrun"/>
             </tooltip>
         </CheckBox>
-
+        <CheckBox fx:id="cbAndroidIncludeLdpiTvdpi" styleClass="check-box" maxWidth="Infinity"
+                  text="%main.cb.androidldpi"
+                  GridPane.columnIndex="1" alignment="CENTER_LEFT"
+                  GridPane.rowIndex="1" GridPane.hgrow="always">
+            <tooltip>
+                <Tooltip text="%arg.descr.androidldpi"/>
+            </tooltip>
+        </CheckBox>
         <CheckBox fx:id="cbHaltOnError" styleClass="check-box" maxWidth="Infinity" text="%main.cb.halterror"
                   GridPane.columnIndex="0" alignment="CENTER_LEFT"
                   GridPane.rowIndex="2" GridPane.hgrow="always"
@@ -212,16 +211,15 @@
                 <Tooltip text="%arg.descr.halterror"/>
             </tooltip>
         </CheckBox>
-
-        <CheckBox fx:id="cbAndroidIncludeLdpiTvdpi" styleClass="check-box" maxWidth="Infinity"
-                  text="%main.cb.androidldpi"
+        <CheckBox fx:id="cbMipmapInsteadDrawable" styleClass="check-box" maxWidth="Infinity"
+                  text="%main.cb.androidmipmap"
                   GridPane.columnIndex="1" alignment="CENTER_LEFT"
-                  GridPane.rowIndex="2" GridPane.hgrow="always">
+                  GridPane.rowIndex="2" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
             <tooltip>
-                <Tooltip text="%arg.descr.androidldpi"/>
+                <Tooltip text="%arg.descr.androidmipmap"/>
             </tooltip>
         </CheckBox>
-
         <CheckBox fx:id="cbAntiAliasing" styleClass="check-box" maxWidth="Infinity"
                   text="%main.cb.antialiasing"
                   GridPane.columnIndex="0" alignment="CENTER_LEFT"
@@ -232,15 +230,7 @@
             </tooltip>
         </CheckBox>
 
-        <CheckBox fx:id="cbMipmapInsteadDrawable" styleClass="check-box" maxWidth="Infinity"
-                  text="%main.cb.androidmipmap"
-                  GridPane.columnIndex="1" alignment="CENTER_LEFT"
-                  GridPane.rowIndex="3" GridPane.hgrow="always"
-                  GridPane.vgrow="always">
-            <tooltip>
-                <Tooltip text="%arg.descr.androidmipmap"/>
-            </tooltip>
-        </CheckBox>
+
     </GridPane>
 
     <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.columnSpan="4"/>

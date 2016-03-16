@@ -39,11 +39,11 @@ public class GUI extends Application {
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
-		setup(primaryStage, new SerializePreferenceStore());
+		setup(primaryStage, new SerializePreferenceStore(), Toolkit.getDefaultToolkit().getScreenSize());
 		primaryStage.show();
 	}
 
-	public static GUIController setup(Stage primaryStage, IPreferenceStore store) throws IOException {
+	public static GUIController setup(Stage primaryStage, IPreferenceStore store, Dimension screenSize) throws IOException {
 		primaryStage.setTitle("Density Converter");
 
 		ResourceBundle bundle = ResourceBundle.getBundle("bundles.strings", Locale.getDefault());
@@ -53,8 +53,6 @@ public class GUI extends Application {
 		Parent root = loader.load();
 		GUIController controller = loader.<GUIController>getController();
 		controller.onCreate(store, bundle);
-
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 		int height = 820;
 		if (screenSize.getHeight() <= 768) {

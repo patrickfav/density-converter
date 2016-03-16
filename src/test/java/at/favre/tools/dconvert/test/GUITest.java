@@ -1,6 +1,9 @@
 package at.favre.tools.dconvert.test;
 
 import at.favre.tools.dconvert.arg.*;
+import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
+import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
+import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
 import at.favre.tools.dconvert.test.helper.TestPreferenceStore;
 import at.favre.tools.dconvert.ui.GUI;
 import at.favre.tools.dconvert.ui.GUIController;
@@ -10,6 +13,7 @@ import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.testfx.framework.junit.ApplicationTest;
 
+import java.awt.*;
 import java.io.File;
 import java.util.Locale;
 
@@ -39,7 +43,7 @@ public class GUITest extends ApplicationTest {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		controller = GUI.setup(stage, new TestPreferenceStore());
+		controller = GUI.setup(stage, new TestPreferenceStore(), new Dimension(1920, 1080));
 		stage.show();
 	}
 
@@ -72,19 +76,24 @@ public class GUITest extends ApplicationTest {
 
 	@Test
 	public void testPostProcessors() throws Exception {
-		clickOn("#cbPostConvertWebp");
-		assertEquals("arguments should match", defaultBuilder.postConvertWebp(true).build(), controller.getFromUI(false));
-		clickOn("#cbPostConvertWebp");
-		assertEquals("arguments should match", defaultBuilder.postConvertWebp(false).build(), controller.getFromUI(false));
-		clickOn("#cbEnablePngCrush");
-		assertEquals("arguments should match", defaultBuilder.enablePngCrush(true).build(), controller.getFromUI(false));
-		clickOn("#cbEnablePngCrush");
-		assertEquals("arguments should match", defaultBuilder.enablePngCrush(false).build(), controller.getFromUI(false));
-
-		clickOn("#cbEnableMozJpeg");
-		assertEquals("arguments should match", defaultBuilder.enableMozJpeg(true).build(), controller.getFromUI(false));
-		clickOn("#cbEnableMozJpeg");
-		assertEquals("arguments should match", defaultBuilder.enableMozJpeg(false).build(), controller.getFromUI(false));
+		if (new WebpProcessor().isSupported()) {
+			clickOn("#cbPostConvertWebp");
+			assertEquals("arguments should match", defaultBuilder.postConvertWebp(true).build(), controller.getFromUI(false));
+			clickOn("#cbPostConvertWebp");
+			assertEquals("arguments should match", defaultBuilder.postConvertWebp(false).build(), controller.getFromUI(false));
+		}
+		if (new PngCrushProcessor().isSupported()) {
+			clickOn("#cbEnablePngCrush");
+			assertEquals("arguments should match", defaultBuilder.enablePngCrush(true).build(), controller.getFromUI(false));
+			clickOn("#cbEnablePngCrush");
+			assertEquals("arguments should match", defaultBuilder.enablePngCrush(false).build(), controller.getFromUI(false));
+		}
+		if (new MozJpegProcessor().isSupported()) {
+			clickOn("#cbEnableMozJpeg");
+			assertEquals("arguments should match", defaultBuilder.enableMozJpeg(true).build(), controller.getFromUI(false));
+			clickOn("#cbEnableMozJpeg");
+			assertEquals("arguments should match", defaultBuilder.enableMozJpeg(false).build(), controller.getFromUI(false));
+		}
 	}
 
 	@Test
@@ -177,15 +186,6 @@ public class GUITest extends ApplicationTest {
 	@Test
 	public void testClickSelectDstFolder() throws Exception {
 		clickOn("#btnDstFolder").sleep(400).press(KeyCode.ESCAPE);
-	}
-
-	@Test
-	public void testVerbose() throws Exception {
-		clickOn("#cbVerboseLog");
-		assertEquals("arguments should match", defaultBuilder.verboseLog(false).build(), controller.getFromUI(false));
-		clickOn("#cbVerboseLog");
-		assertEquals("arguments should match", defaultBuilder.verboseLog(true).build(), controller.getFromUI(false));
-		clickOn("#textFieldConsole").write("a console output");
 	}
 
 	@Test
