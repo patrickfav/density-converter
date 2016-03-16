@@ -27,6 +27,7 @@ import at.favre.tools.dconvert.converters.postprocessing.IPostProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
+import at.favre.tools.dconvert.util.MiscUtil;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
@@ -171,6 +172,9 @@ public class ConverterHandler {
 		System.gc();
 		if (handlerCallback != null) {
 			mainLatch.countDown();
+			for (Exception exception : exceptions) {
+				logStringBuilder.append(MiscUtil.getStackTrace(exception)).append("\n");
+			}
 			handlerCallback.onFinished(finishedJobs, exceptions, (System.currentTimeMillis() - beginMs), haltedDuringProcess, logStringBuilder.toString());
 		}
 	}

@@ -1,4 +1,4 @@
-# ![logo](src/main/resources/img/density_converter_icon_36.png) Density Image Converter Tool for Android, iOS and Windows
+# ![logo](src/main/resources/img/density_converter_icon_24.png) Density Image Converter Tool for Android, iOS and Windows
 
 This is a simple tool that helps **converting single or batches of images** to **Android**, **iOS** and **Windows** specific formats and density
 versions given the source scale factor or target width/height in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
@@ -33,6 +33,20 @@ will start the UI (_or double click the jar file_).
 _To use the post processor ([pngcrush](http://pmt.sourceforge.net/pngcrush/), [mozJpeg](http://mozjpeg.codelove.de/binaries.html) and [webp](https://developers.google.com/speed/webp/download)) the respective cmd tool must be set in PATH._
 
 # Usage
+
+## GUI
+
+Start with
+
+```
+java -jar ./dconvert.jar
+```
+
+provides the same features as the command line tool so see help page of command line or tooltips. Additionally the UI
+will save its settings persistently making it easier for power users.
+
+![gui-screenshot](src/main/resources/img/screenshot1.jpg)
+
 
 ## Command Line
 
@@ -103,19 +117,6 @@ Full list of arguments:
                                         memory). Possible values are 1-8. Default is 4
     -v,--version                        Gets current version
     -verbose                            If set will log to console more verbose
-
-## GUI
-
-Start with
-
-```
-java -jar ./dconvert.jar
-```
-
-provides the same features as the command line tool so see help page of command line or tooltips. Additionally the UI
-will save its settings persistently making it easier for power users.
-
-![gui-screenshot](src/main/resources/img/screenshot1.jpg)
 
 # Details
 

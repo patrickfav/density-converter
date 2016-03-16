@@ -65,7 +65,6 @@ public class GUI extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_16.png"));
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_24.png"));
-		primaryStage.getIcons().add(new Image("img/density_converter_icon_36.png"));
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_48.png"));
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_64.png"));
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_128.png"));
