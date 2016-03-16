@@ -6,18 +6,10 @@ It has a **graphical** and **command line** interface and supports a wide array 
 including PNG, JPEG, SVG, PSD and Android 9-patches. Using advanced scaling algorithms, it is designed to make conversion of images easy and
 fast while keeping the image quality high. To further optimize the output post processors like **pngcrush** and **mozJpeg** can be used (see section below).
 
-**[Requires Java 8 to run.](http://www.oracle.com/technetwork/java/javase/downloads/index.html)**
-
 Usage:
 
 ```
 java -jar ./dconvert.jar -src "C:/your-folder/image-folder" -scale 4
-```
-
-or
-
-```
-java -jar ./dconvert.jar -src "C:/your-folder/image-folder" -scale 48dp
 ```
 
 while
@@ -29,6 +21,8 @@ java -jar ./dconvert.jar
 will start the UI (_or double click the jar file_).
 
 **[Download here](https://github.com/patrickfav/density-converter/releases/)**
+
+<sup><sub>Requires Java 8 to run</sub></sup>
 
 _To use the post processor ([pngcrush](http://pmt.sourceforge.net/pngcrush/), [mozJpeg](http://mozjpeg.codelove.de/binaries.html) and [webp](https://developers.google.com/speed/webp/download)) the respective cmd tool must be set in PATH._
 
