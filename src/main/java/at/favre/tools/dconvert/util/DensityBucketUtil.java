@@ -20,11 +20,9 @@ package at.favre.tools.dconvert.util;
 
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EScaleType;
-import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.converters.descriptors.DensityDescriptor;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
@@ -91,14 +89,6 @@ public class DensityBucketUtil {
                     (int) args.round(baseHeight * density.scale)));
         });
         return bucketMap;
-    }
-
-    public static BufferedImage getAsBufferedImage(File image, Arguments args) throws Exception {
-        if (Arguments.getImageType(image) == ImageType.SVG) {
-            return ImageUtil.readSvg(image, getHqDimension(image, args));
-        } else {
-            return ImageUtil.loadImage(image);
-        }
     }
 
     private static Dimension getHqDimension(File image, Arguments args) throws IOException {

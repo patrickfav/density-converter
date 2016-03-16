@@ -23,10 +23,10 @@ import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.converters.descriptors.DensityDescriptor;
 import at.favre.tools.dconvert.util.DensityBucketUtil;
 import at.favre.tools.dconvert.util.ImageUtil;
+import at.favre.tools.dconvert.util.LoadedImage;
 import at.favre.tools.dconvert.util.MiscUtil;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
 import java.util.List;
@@ -40,16 +40,16 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 	public Result convert(File srcImage, Arguments args) {
 		try {
 			File destinationFolder = args.dst;
-			BufferedImage rawImage = ImageUtil.loadImage(srcImage);
+			LoadedImage imageData = ImageUtil.loadImage(srcImage);
 			String targetImageFileName = MiscUtil.getFileNameWithoutExtension(srcImage);
 			ImageType imageType = Arguments.getImageType(srcImage);
 			boolean isNinePatch = AndroidConverter.isNinePatch(srcImage) && getClass() == AndroidConverter.class;
 
 			StringBuilder log = new StringBuilder();
 			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ")
-					.append(rawImage.getWidth()).append("x").append(rawImage.getHeight()).append(" (").append(args.scale).append(args.scaleType == EScaleType.FACTOR ? "x" : "dp").append(")\n");
+					.append(imageData.getImage().getWidth()).append("x").append(imageData.getImage().getHeight()).append(" (").append(args.scale).append(args.scaleType == EScaleType.FACTOR ? "x" : "dp").append(")\n");
 
-			Map<T, Dimension> densityMap = DensityBucketUtil.getDensityBuckets(usedOutputDensities(args), new Dimension(rawImage.getWidth(), rawImage.getHeight()), args, args.scale, isNinePatch);
+			Map<T, Dimension> densityMap = DensityBucketUtil.getDensityBuckets(usedOutputDensities(args), new Dimension(imageData.getImage().getWidth(), imageData.getImage().getHeight()), args, args.scale, isNinePatch);
 
 			File mainSubFolder = createMainSubFolder(destinationFolder, targetImageFileName, args);
 
@@ -67,8 +67,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 							.append(entry.getKey().scale).append(") ").append(isNinePatch ? "(9-patch)" : "").append("\n");
 
 					if (!args.dryRun) {
-						List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), rawImage,
-								entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing, isNinePatch);
+						List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), imageData, entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing, isNinePatch);
 
 						allResultingFiles.addAll(files);
 
@@ -87,7 +86,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 			onPostExecute(args);
 
-			rawImage.flush();
+			imageData.getImage().flush();
 
 			return new Result(log.toString(), allResultingFiles);
 		} catch (Exception e) {
