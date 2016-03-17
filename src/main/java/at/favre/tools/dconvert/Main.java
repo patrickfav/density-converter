@@ -46,6 +46,8 @@ public class Main {
 			return;
 		}
 
+		System.out.println("start converting " + args.filesToProcess.size() + " files");
+
 		new Converter().execute(args, true, new Converter.HandlerCallback() {
 			int i = 0;
 			@Override

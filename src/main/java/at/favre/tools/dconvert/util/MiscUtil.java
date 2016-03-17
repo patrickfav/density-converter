@@ -87,16 +87,16 @@ public class MiscUtil {
 	public static String getCmdProgressBar(float progress) {
 		int loadingBarCount = 40;
 		int bars = Math.round((float) loadingBarCount * progress);
-		StringBuilder sb = new StringBuilder("\r|");
+		StringBuilder sb = new StringBuilder("\r[");
 
 		for (int i = 0; i < loadingBarCount; i++) {
 			if (i < bars) {
-				sb.append("=");
+				sb.append("-");
 			} else {
 				sb.append(" ");
 			}
 		}
-		sb.append("| ");
+		sb.append("] ");
 
 		if (progress < 1f) {
 			sb.append(String.format("%6s", String.format(Locale.US, "%.2f", progress * 100f))).append("%");
