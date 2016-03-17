@@ -230,6 +230,15 @@
             </tooltip>
         </CheckBox>
 
+        <CheckBox fx:id="cbIosCreateImageset" styleClass="check-box" maxWidth="Infinity"
+                  text="%main.cb.ioimageset"
+                  GridPane.columnIndex="1" alignment="CENTER_LEFT"
+                  GridPane.rowIndex="3" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip text="%arg.descr.iosimageset"/>
+            </tooltip>
+        </CheckBox>
 
     </GridPane>
 

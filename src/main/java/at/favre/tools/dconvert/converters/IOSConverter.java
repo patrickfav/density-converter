@@ -58,7 +58,11 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 		if (arguments.platform != EPlatform.IOS) {
 			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, "ios").getAbsolutePath(), arguments.dryRun);
 		}
-		return MiscUtil.createAndCheckFolder(new File(destinationFolder, targetImageFileName + ".imageset").getAbsolutePath(), arguments.dryRun);
+		if (arguments.iosCreateImagesetFolders) {
+			return MiscUtil.createAndCheckFolder(new File(destinationFolder, targetImageFileName + ".imageset").getAbsolutePath(), arguments.dryRun);
+		} else {
+			return MiscUtil.createAndCheckFolder(new File(destinationFolder, "AssetCatalog").getAbsolutePath(), arguments.dryRun);
+		}
 	}
 
 	@Override
@@ -73,7 +77,7 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 
 	@Override
 	public void onPreExecute(File dstFolder, String targetFileName, List<IOSDensityDescriptor> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception {
-		if (!arguments.dryRun) {
+		if (!arguments.dryRun && arguments.iosCreateImagesetFolders) {
 			writeContentJson(dstFolder, targetFileName, densityDescriptions, Arguments.getOutCompressionForType(arguments.outputCompressionMode, imageType));
 		}
 	}

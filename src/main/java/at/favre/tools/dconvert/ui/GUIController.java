@@ -55,6 +55,7 @@ public class GUIController {
 	public GridPane rootGridPane;
 	public Label labelWhyPP;
 	public Button btnDstFolderOpen;
+	public CheckBox cbIosCreateImageset;
 
 	private IPreferenceStore preferenceStore;
 	private final FileChooser srcFileChooser = new FileChooser();
@@ -346,6 +347,7 @@ public class GUIController {
 			cbPostConvertWebp.setSelected(args.postConvertWebp);
 			cbEnableMozJpeg.setSelected(args.enableMozJpeg);
 			cbKeepUnoptimized.setSelected(args.keepUnoptimizedFilesPostProcessor);
+			cbIosCreateImageset.setSelected(args.iosCreateImagesetFolders);
 		}
 	}
 
@@ -381,6 +383,7 @@ public class GUIController {
 		builder.postConvertWebp(cbPostConvertWebp.isSelected());
 		builder.enableMozJpeg(cbEnableMozJpeg.isSelected());
 		builder.keepUnoptimizedFilesPostProcessor(cbKeepUnoptimized.isSelected());
+		builder.iosCreateImagesetFolders(cbIosCreateImageset.isSelected());
 
 		return builder.skipParamValidation(skipValidation).build();
 	}

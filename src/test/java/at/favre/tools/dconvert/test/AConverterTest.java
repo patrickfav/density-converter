@@ -59,8 +59,8 @@ public abstract class AConverterTest {
 
 	@Before
 	public void setUp() throws IOException {
-		defaultSrc = temporaryFolder.newFolder("android-converter-test", "src");
-		defaultDst = temporaryFolder.newFolder("android-converter-test", "out");
+		defaultSrc = temporaryFolder.newFolder("converter-test", "src");
+		defaultDst = temporaryFolder.newFolder("converter-test", "out");
 		converter = getType() == EPlatform.ANDROID ? new AndroidConverter() : getType() == EPlatform.IOS ? new IOSConverter() : getType() == EPlatform.WINDOWS ? new WindowsConverter() : null;
 	}
 

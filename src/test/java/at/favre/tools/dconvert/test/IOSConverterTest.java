@@ -18,11 +18,13 @@
 package at.favre.tools.dconvert.test;
 
 import at.favre.tools.dconvert.arg.Arguments;
+import at.favre.tools.dconvert.arg.EOutputCompressionMode;
 import at.favre.tools.dconvert.arg.EPlatform;
 import at.favre.tools.dconvert.converters.IOSConverter;
 import at.favre.tools.dconvert.converters.descriptors.IOSDensityDescriptor;
 import at.favre.tools.dconvert.util.ImageUtil;
 import at.favre.tools.dconvert.util.MiscUtil;
+import org.junit.Test;
 
 import java.awt.*;
 import java.io.File;
@@ -49,15 +51,63 @@ public class IOSConverterTest extends AConverterTest {
 		checkOutDirIos(dstDir, arguments, files);
 	}
 
+	@Test
+	public void testMultiplePngImagesetFolders() throws Exception {
+		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example2_alpha_144.png", "jpg_example2_512.jpg");
+		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, 0.5f)
+				.dstFolder(defaultDst).platform(getType()).iosCreateImagesetFolders(true).build(), files);
+	}
+
+	@Test
+	public void testSinglePngImagesetFolder() throws Exception {
+		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
+		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, 0.5f)
+				.dstFolder(defaultDst).platform(getType()).iosCreateImagesetFolders(true).build(), files);
+	}
+
 	public static void checkOutDirIos(File dstDir, Arguments arguments, List<File> files) throws IOException {
 		Map<File, Dimension> dimensionMap = createDimensionMap(files);
 
 		List<IOSDensityDescriptor> densityDescriptors = IOSConverter.getIosDescriptors();
 
-		assertTrue("src files and dst folder count should match", files.size() == dstDir.listFiles().length);
-
 		System.out.println("ios-convert " + files);
 
+		if (arguments.iosCreateImagesetFolders) {
+			checkWithImagesetFolders(dstDir, arguments, files, dimensionMap, densityDescriptors);
+		} else {
+			checkWithSingleRootFolder(dstDir, arguments, files, dimensionMap, densityDescriptors);
+		}
+	}
+
+	private static void checkWithSingleRootFolder(File dstDir, Arguments arguments, List<File> files, Map<File, Dimension> dimensionMap, List<IOSDensityDescriptor> densityDescriptors) throws IOException {
+		dstDir = new File(dstDir, "AssetCatalog");
+		List<ImageInfo> expectedFiles = new ArrayList<>();
+		for (File srcImageFile : files) {
+			for (IOSDensityDescriptor descriptor : densityDescriptors) {
+				expectedFiles.addAll(Arguments.getOutCompressionForType(arguments.outputCompressionMode, Arguments.getImageType(srcImageFile)).stream().map(compression -> new ImageInfo(srcImageFile, MiscUtil.getFileNameWithoutExtension(srcImageFile) + descriptor.postFix + "." + compression.extension, descriptor.scale)).collect(Collectors.toList()));
+			}
+		}
+
+		for (File imageFile : dstDir.listFiles()) {
+			for (ImageInfo expectedFile : expectedFiles) {
+				if (expectedFile.targetFileName.equals(imageFile.getName())) {
+					expectedFile.found = true;
+
+					Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedFile.scale);
+					assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(imageFile));
+				}
+			}
+		}
+
+		for (ImageInfo expectedFile : expectedFiles) {
+			assertTrue(expectedFile.targetFileName + " expected in folder " + dstDir, expectedFile.found);
+		}
+
+		System.out.println("found " + expectedFiles.size() + " files in " + dstDir);
+	}
+
+	private static void checkWithImagesetFolders(File dstDir, Arguments arguments, List<File> files, Map<File, Dimension> dimensionMap, List<IOSDensityDescriptor> densityDescriptors) throws IOException {
+		assertTrue("src files and dst folder count should match", files.size() == dstDir.listFiles().length);
 		for (File iosImgFolder : dstDir.listFiles()) {
 			boolean found = false;
 			File srcFile = null;

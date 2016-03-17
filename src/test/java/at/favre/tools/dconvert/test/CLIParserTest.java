@@ -202,6 +202,7 @@ public class CLIParserTest {
 		check(defaultCmd + " -postProcessorWebp", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).postConvertWebp(true).build());
 		check(defaultCmd + " -postProcessorMozJpeg", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).enableMozJpeg(true).build());
 		check(defaultCmd + " -keepOriginalPostProcessedFiles", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).keepUnoptimizedFilesPostProcessor(true).build());
+		check(defaultCmd + " -iosCreateImagesetFolders", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).iosCreateImagesetFolders(true).build());
 	}
 
 	@Test

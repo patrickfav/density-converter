@@ -168,6 +168,7 @@ public class CLInterpreter {
 			builder.dryRun(commandLine.hasOption("dryRun"));
 			builder.enableMozJpeg(commandLine.hasOption("postProcessorMozJpeg"));
 			builder.keepUnoptimizedFilesPostProcessor(commandLine.hasOption("keepOriginalPostProcessedFiles"));
+			builder.iosCreateImagesetFolders(commandLine.hasOption("iosCreateImagesetFolders"));
 
 			return builder.build();
 		} catch (Exception e) {
@@ -199,6 +200,7 @@ public class CLInterpreter {
 		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc(bundle.getString("arg.descr.skipexisting")).build();
 		Option androidIncludeLdpiTvdpi = Option.builder("androidIncludeLdpiTvdpi").desc(bundle.getString("arg.descr.androidmipmap")).build();
 		Option mipmapInsteadOfDrawable = Option.builder("androidMipmapInsteadOfDrawable").desc(bundle.getString("arg.descr.androidldpi")).build();
+		Option iosCreateImagesetFolders = Option.builder("iosCreateImagesetFolders").desc(bundle.getString("arg.descr.iosimageset")).build();
 		Option skipUpscaling = Option.builder("skipUpscaling").desc(bundle.getString("arg.descr.skipupscaling")).build();
 		Option verboseLog = Option.builder(VERBOSE_ARG).desc(bundle.getString("arg.descr.cmd.verbose")).build();
 		Option haltOnError = Option.builder("haltOnError").desc(bundle.getString("arg.descr.halterror")).build();
@@ -223,7 +225,7 @@ public class CLInterpreter {
 		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(androidIncludeLdpiTvdpi).addOption(verboseLog)
 				.addOption(antiAliasing).addOption(dryRun).addOption(haltOnError).addOption(mipmapInsteadOfDrawable)
 				.addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight).addOption(enableMozJpeg)
-				.addOption(keepUnPostProcessed);
+				.addOption(keepUnPostProcessed).addOption(iosCreateImagesetFolders);
 
 		options.addOptionGroup(mainArgs);
 
