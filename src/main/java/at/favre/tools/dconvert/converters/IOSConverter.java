@@ -43,8 +43,8 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 	public static List<IOSDensityDescriptor> getIosDescriptors() {
 		List<IOSDensityDescriptor> list = new ArrayList<>();
 		list.add(new IOSDensityDescriptor(1, "1x", ""));
-		list.add(new IOSDensityDescriptor(2, "2x", "_2x"));
-		list.add(new IOSDensityDescriptor(3, "3x", "_3x"));
+		list.add(new IOSDensityDescriptor(2, "2x", "@2x"));
+		list.add(new IOSDensityDescriptor(3, "3x", "@3x"));
 		return list;
 	}
 
