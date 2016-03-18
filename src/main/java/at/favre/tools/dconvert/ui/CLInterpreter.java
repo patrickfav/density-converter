@@ -22,8 +22,10 @@ import org.apache.commons.cli.*;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 /**
  * Handles parsing of command line arguments
@@ -117,23 +119,28 @@ public class CLInterpreter {
 				}
 			}
 
+			Set<EPlatform> platformSet = new HashSet<>(EPlatform.values().length);
 			if (commandLine.hasOption(PLATFORM_ARG)) {
 				switch (commandLine.getOptionValue(PLATFORM_ARG)) {
 					case "all":
-						builder.platform(EPlatform.ALL);
+						platformSet = EPlatform.getAll();
 						break;
 					case "android":
-						builder.platform(EPlatform.ANDROID);
+						platformSet.add(EPlatform.ANDROID);
 						break;
 					case "ios":
-						builder.platform(EPlatform.IOS);
+						platformSet.add(EPlatform.IOS);
 						break;
 					case "win":
-						builder.platform(EPlatform.WINDOWS);
+						platformSet.add(EPlatform.WINDOWS);
+						break;
+					case "web":
+						platformSet.add(EPlatform.WEB);
 						break;
 					default:
 						System.err.println("unknown mode: " + commandLine.getOptionValue(PLATFORM_ARG));
 				}
+				builder.platform(platformSet);
 			}
 
 			if (commandLine.hasOption(ROUNDING_MODE_ARG)) {
@@ -188,10 +195,10 @@ public class CLInterpreter {
 		Options options = new Options();
 
 		Option srcOpt = Option.builder(SOURCE_ARG).required().argName("path to file or folder").hasArg(true).desc(bundle.getString("arg.descr.cmd.src")).build();
-		Option srcScaleOpt = Option.builder(SCALE_ARG).argName("<float>|<int>dp").hasArg(true).desc(bundle.getString("arg.descr.cmd.scale")).build();
+		Option srcScaleOpt = Option.builder(SCALE_ARG).argName("[float]|[int]dp").hasArg(true).desc(bundle.getString("arg.descr.cmd.scale")).build();
 		Option dstOpt = Option.builder(DST_ARG).hasArg(true).argName("path").desc(bundle.getString("arg.descr.cmd.dst")).build();
 
-		Option platform = Option.builder(PLATFORM_ARG).hasArg(true).argName("all|android|ios|win").desc(MessageFormat.format(bundle.getString("arg.descr.cmd.platform"), Arguments.DEFAULT_PLATFORM)).build();
+		Option platform = Option.builder(PLATFORM_ARG).hasArg(true).argName("all|android|ios|win|web").desc(MessageFormat.format(bundle.getString("arg.descr.cmd.platform"), Arguments.DEFAULT_PLATFORM)).build();
 		Option threadCount = Option.builder(THREADS_ARG).argName("1-8").hasArg(true).desc(MessageFormat.format(bundle.getString("arg.descr.cmd.threads"), String.valueOf(Arguments.DEFAULT_THREAD_COUNT))).build();
 		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc(MessageFormat.format(bundle.getString("arg.descr.cmd.rounding"), Arguments.DEFAULT_ROUNDING_STRATEGY)).build();
 		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg|gif|bmp").desc(bundle.getString("arg.descr.cmd.outcompression")).build();

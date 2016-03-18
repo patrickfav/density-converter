@@ -27,10 +27,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -120,31 +118,31 @@ public abstract class AConverterTest {
 	@Test
 	public void testRoundMode() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
-		test(new Arguments.Builder(defaultSrc, 2.33f).dstFolder(defaultDst).scaleRoundingStragy(RoundingHandler.Strategy.FLOOR).platform(getType()).build(), files);
+		test(new Arguments.Builder(defaultSrc, 2.33f).dstFolder(defaultDst).scaleRoundingStragy(RoundingHandler.Strategy.FLOOR).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testScaleWidthInDp() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "jpg_example_1920.jpg");
-		test(new Arguments.Builder(defaultSrc, 24).dstFolder(defaultDst).scaleType(EScaleType.DP_WIDTH).platform(getType()).build(), files);
+		test(new Arguments.Builder(defaultSrc, 24).dstFolder(defaultDst).scaleType(EScaleType.DP_WIDTH).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testMultipleScaleWidthInDp() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example4_500.png", "jpg_example_1920.jpg");
-		test(new Arguments.Builder(defaultSrc, 48).dstFolder(defaultDst).scaleType(EScaleType.DP_WIDTH).platform(getType()).build(), files);
+		test(new Arguments.Builder(defaultSrc, 48).dstFolder(defaultDst).scaleType(EScaleType.DP_WIDTH).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testScaleHeightInDp() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "jpg_example_1920.jpg");
-		test(new Arguments.Builder(defaultSrc, 128).dstFolder(defaultDst).scaleType(EScaleType.DP_HEIGHT).platform(getType()).build(), files);
+		test(new Arguments.Builder(defaultSrc, 128).dstFolder(defaultDst).scaleType(EScaleType.DP_HEIGHT).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testMultipleScaleHeightInDp() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example4_500.png", "jpg_example_1920.jpg");
-		test(new Arguments.Builder(defaultSrc, 48).dstFolder(defaultDst).scaleType(EScaleType.DP_HEIGHT).platform(getType()).build(), files);
+		test(new Arguments.Builder(defaultSrc, 48).dstFolder(defaultDst).scaleType(EScaleType.DP_HEIGHT).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
@@ -169,33 +167,33 @@ public abstract class AConverterTest {
 	public void testMixedCompressionsShouldKeepCompressions() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example2_alpha_144.png", "gif_example_640.gif", "tiff_example_256.tif", "bmp_example_256.bmp", "jpg_example_1920.jpg");
 		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_STRICT, 0.5f)
-				.dstFolder(defaultDst).platform(getType()).build(), files);
+				.dstFolder(defaultDst).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testMixedCompressionsShouldCreateJpg() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example2_alpha_144.png", "gif_example_640.gif", "psd_example_827.psd", "bmp_example_256.bmp", "jpg_example_1920.jpg");
 		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG, 0.0f)
-				.dstFolder(defaultDst).platform(getType()).build(), files);
+				.dstFolder(defaultDst).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testMixedCompressionsShouldCreateJpgAndPng() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example2_alpha_144.png", "gif_example_640.gif", "jpg_example_1920.jpg");
 		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG_AND_PNG, 0.0f)
-				.dstFolder(defaultDst).platform(getType()).build(), files);
+				.dstFolder(defaultDst).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testDryRun() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example2_alpha_144.png", "gif_example_640.gif", "jpg_example_1920.jpg");
 		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG_AND_PNG, 0.0f)
-				.dstFolder(defaultDst).platform(getType()).dryRun(true).build(), files);
+				.dstFolder(defaultDst).platform(Collections.singleton(getType())).dryRun(true).build(), files);
 	}
 
 	protected void defaultTest(List<File> files) throws Exception {
 		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, 0.5f)
-				.dstFolder(defaultDst).platform(getType()).build(), files);
+				.dstFolder(defaultDst).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	protected void test(Arguments arg, List<File> files) throws Exception {
@@ -274,5 +272,4 @@ public abstract class AConverterTest {
 			this.scale = scale;
 		}
 	}
-
 }

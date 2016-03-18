@@ -37,7 +37,7 @@ public class Arguments implements Serializable {
 	public static final int DEFAULT_THREAD_COUNT = 4;
 	public static final int MAX_THREAD_COUNT = 8;
 	public static final RoundingHandler.Strategy DEFAULT_ROUNDING_STRATEGY = RoundingHandler.Strategy.ROUND_HALF_UP;
-	public static final EPlatform DEFAULT_PLATFORM = EPlatform.ALL;
+	public static final Set<EPlatform> DEFAULT_PLATFORM = new HashSet<>(Arrays.asList(EPlatform.ANDROID, EPlatform.IOS));
 	public static final EOutputCompressionMode DEFAULT_OUT_COMPRESSION = EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG;
 	public static final EScaleType DEFAULT_SCALE_TYPE = EScaleType.FACTOR;
 
@@ -48,7 +48,7 @@ public class Arguments implements Serializable {
 	public final File src;
 	public final File dst;
 	public final float scale;
-	public final EPlatform platform;
+	public final Set<EPlatform> platform;
 	public final EOutputCompressionMode outputCompressionMode;
 	public final EScaleType scaleType;
 	public final float compressionQuality;
@@ -70,10 +70,10 @@ public class Arguments implements Serializable {
 	public transient final List<File> filesToProcess;
 
 
-	public Arguments(File src, File dst, float scale, EPlatform platform, EOutputCompressionMode outputCompressionMode,
-	                 EScaleType scaleType, float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
-	                 boolean verboseLog, boolean includeAndroidLdpiTvdpi, boolean haltOnError, boolean createMipMapInsteadOfDrawableDir,
-	                 boolean iosCreateImagesetFolders, boolean enablePngCrush, boolean enableMozJpeg, boolean postConvertWebp, boolean enableAntiAliasing, boolean dryRun, boolean keepUnoptimizedFilesPostProcessor, RoundingHandler.Strategy roundingHandler) {
+	public Arguments(File src, File dst, float scale, Set<EPlatform> platform, EOutputCompressionMode outputCompressionMode,
+					 EScaleType scaleType, float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
+					 boolean verboseLog, boolean includeAndroidLdpiTvdpi, boolean haltOnError, boolean createMipMapInsteadOfDrawableDir,
+					 boolean iosCreateImagesetFolders, boolean enablePngCrush, boolean enableMozJpeg, boolean postConvertWebp, boolean enableAntiAliasing, boolean dryRun, boolean keepUnoptimizedFilesPostProcessor, RoundingHandler.Strategy roundingHandler) {
 		this.dst = dst;
 		this.src = src;
 		this.scale = scale;
@@ -178,7 +178,7 @@ public class Arguments implements Serializable {
 		if (iosCreateImagesetFolders != arguments.iosCreateImagesetFolders) return false;
 		if (src != null ? !src.equals(arguments.src) : arguments.src != null) return false;
 		if (dst != null ? !dst.equals(arguments.dst) : arguments.dst != null) return false;
-		if (platform != arguments.platform) return false;
+		if (platform != null ? !platform.equals(arguments.platform) : arguments.platform != null) return false;
 		if (outputCompressionMode != arguments.outputCompressionMode) return false;
 		if (scaleType != arguments.scaleType) return false;
 		if (roundingHandler != arguments.roundingHandler) return false;
@@ -230,7 +230,7 @@ public class Arguments implements Serializable {
 		private float srcScale;
 		private File src = null;
 		private EScaleType scaleType = DEFAULT_SCALE_TYPE;
-		private EPlatform platform = DEFAULT_PLATFORM;
+		private Set<EPlatform> platform = DEFAULT_PLATFORM;
 		private EOutputCompressionMode outputCompressionMode = DEFAULT_OUT_COMPRESSION;
 		private float compressionQuality = DEFAULT_COMPRESSION_QUALITY;
 		private int threadCount = DEFAULT_THREAD_COUNT;
@@ -265,7 +265,7 @@ public class Arguments implements Serializable {
 			return this;
 		}
 
-		public Builder platform(EPlatform platform) {
+		public Builder platform(Set<EPlatform> platform) {
 			this.platform = platform;
 			return this;
 		}

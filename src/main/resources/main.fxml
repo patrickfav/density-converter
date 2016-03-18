@@ -106,18 +106,15 @@
     <VBox minHeight="0" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4"/>
 
     <GridPane fx:id="gridPaneChoiceBoxes" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
-              GridPane.rowIndex="5"
-              GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
+              GridPane.rowIndex="5" GridPane.columnSpan="4" maxWidth="Infinity">
 
-        <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="%main.label.platform"
-               GridPane.columnIndex="0"
-               GridPane.rowIndex="0" GridPane.hgrow="always"/>
-        <ChoiceBox fx:id="choicePlatform" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0"
-                   GridPane.columnSpan="3" GridPane.hgrow="always" styleClass="choice-box">
-            <tooltip>
-                <Tooltip text="%arg.descr.platform"/>
-            </tooltip>
-        </ChoiceBox>
+        <GridPane fx:id="gridPaneToggleGroup" alignment="center" hgap="0" vgap="0" GridPane.columnIndex="0"
+                  GridPane.rowIndex="0" GridPane.columnSpan="4" maxWidth="Infinity">
+            <ToggleButton fx:id="tgAndroid" text="Android" GridPane.columnIndex="0" maxWidth="Infinity"/>
+            <ToggleButton fx:id="tgIos" text="iOS" GridPane.columnIndex="1" maxWidth="Infinity"/>
+            <ToggleButton fx:id="tgWindows" text="Windows" GridPane.columnIndex="2" maxWidth="Infinity"/>
+            <ToggleButton fx:id="tgWeb" text="Web" GridPane.columnIndex="3" maxWidth="Infinity"/>
+        </GridPane>
 
         <Label maxWidth="Infinity" GridPane.hgrow="always" styleClass="label" alignment="CENTER_RIGHT"
                text="%main.label.compression"

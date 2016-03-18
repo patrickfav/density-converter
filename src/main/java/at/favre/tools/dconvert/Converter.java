@@ -19,10 +19,7 @@ package at.favre.tools.dconvert;
 
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EPlatform;
-import at.favre.tools.dconvert.converters.AndroidConverter;
-import at.favre.tools.dconvert.converters.IOSConverter;
-import at.favre.tools.dconvert.converters.IPlatformConverter;
-import at.favre.tools.dconvert.converters.WindowsConverter;
+import at.favre.tools.dconvert.converters.*;
 import at.favre.tools.dconvert.converters.postprocessing.IPostProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
@@ -69,17 +66,21 @@ public class Converter {
 			List<IPlatformConverter> converters = new ArrayList<>();
 			List<IPostProcessor> postProcessors = new ArrayList<>();
 
-			if (args.platform == EPlatform.ANDROID || args.platform == EPlatform.ALL) {
+			if (args.platform.contains(EPlatform.ANDROID)) {
 				logStringBuilder.append("add android converter\n");
 				converters.add(new AndroidConverter());
 			}
-			if (args.platform == EPlatform.IOS || args.platform == EPlatform.ALL) {
+			if (args.platform.contains(EPlatform.IOS)) {
 				logStringBuilder.append("add ios converter\n");
 				converters.add(new IOSConverter());
 			}
-			if (args.platform == EPlatform.WINDOWS || args.platform == EPlatform.ALL) {
+			if (args.platform.contains(EPlatform.WINDOWS)) {
 				logStringBuilder.append("add windows converter\n");
 				converters.add(new WindowsConverter());
+			}
+			if (args.platform.contains(EPlatform.WEB)) {
+				logStringBuilder.append("add web converter\n");
+				converters.add(new WebConverter());
 			}
 
 			if (args.enablePngCrush) {

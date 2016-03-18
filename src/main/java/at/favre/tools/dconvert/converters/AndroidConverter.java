@@ -18,7 +18,6 @@
 package at.favre.tools.dconvert.converters;
 
 import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EPlatform;
 import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.converters.descriptors.AndroidDensityDescriptor;
 import at.favre.tools.dconvert.util.MiscUtil;
@@ -59,7 +58,7 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
-		if (arguments.platform != EPlatform.ANDROID) {
+		if (arguments.platform.size() > 1) {
 			return MiscUtil.createAndCheckFolder(new File(destinationFolder, "android").getAbsolutePath(), arguments.dryRun);
 		} else {
 			return destinationFolder;

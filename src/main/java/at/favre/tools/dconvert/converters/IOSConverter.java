@@ -18,9 +18,8 @@
 package at.favre.tools.dconvert.converters;
 
 import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EPlatform;
 import at.favre.tools.dconvert.arg.ImageType;
-import at.favre.tools.dconvert.converters.descriptors.IOSDensityDescriptor;
+import at.favre.tools.dconvert.converters.descriptors.PostfixDescriptor;
 import at.favre.tools.dconvert.util.MiscUtil;
 
 import java.awt.*;
@@ -33,18 +32,18 @@ import java.util.List;
 /**
  * Needed info to convert for Android
  */
-public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
+public class IOSConverter extends APlatformConverter<PostfixDescriptor> {
 
 	@Override
-	public List<IOSDensityDescriptor> usedOutputDensities(Arguments arguments) {
+	public List<PostfixDescriptor> usedOutputDensities(Arguments arguments) {
 		return getIosDescriptors();
 	}
 
-	public static List<IOSDensityDescriptor> getIosDescriptors() {
-		List<IOSDensityDescriptor> list = new ArrayList<>();
-		list.add(new IOSDensityDescriptor(1, "1x", ""));
-		list.add(new IOSDensityDescriptor(2, "2x", "@2x"));
-		list.add(new IOSDensityDescriptor(3, "3x", "@3x"));
+	public static List<PostfixDescriptor> getIosDescriptors() {
+		List<PostfixDescriptor> list = new ArrayList<>();
+		list.add(new PostfixDescriptor(1, "1x", ""));
+		list.add(new PostfixDescriptor(2, "2x", "@2x"));
+		list.add(new PostfixDescriptor(3, "3x", "@3x"));
 		return list;
 	}
 
@@ -55,7 +54,7 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
-		if (arguments.platform != EPlatform.IOS) {
+		if (arguments.platform.size() > 1) {
 			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, "ios").getAbsolutePath(), arguments.dryRun);
 		}
 		if (arguments.iosCreateImagesetFolders) {
@@ -66,17 +65,17 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 	}
 
 	@Override
-	public File createFolderForOutputFile(File mainSubFolder, IOSDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
+	public File createFolderForOutputFile(File mainSubFolder, PostfixDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
 		return mainSubFolder;
 	}
 
 	@Override
-	public String createDestinationFileNameWithoutExtension(IOSDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
+	public String createDestinationFileNameWithoutExtension(PostfixDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
 		return targetFileName + density.postFix;
 	}
 
 	@Override
-	public void onPreExecute(File dstFolder, String targetFileName, List<IOSDensityDescriptor> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception {
+	public void onPreExecute(File dstFolder, String targetFileName, List<PostfixDescriptor> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception {
 		if (!arguments.dryRun && arguments.iosCreateImagesetFolders) {
 			writeContentJson(dstFolder, targetFileName, densityDescriptions, Arguments.getOutCompressionForType(arguments.outputCompressionMode, imageType));
 		}
@@ -87,7 +86,7 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 
 	}
 
-	private void writeContentJson(File dstFolder, String targetFileName, List<IOSDensityDescriptor> iosDensityDescriptions, List<ImageType.ECompression> compressions) throws IOException {
+	private void writeContentJson(File dstFolder, String targetFileName, List<PostfixDescriptor> iosDensityDescriptions, List<ImageType.ECompression> compressions) throws IOException {
 		File contentJson = new File(dstFolder, "Content.json");
 
 		if (contentJson.exists()) {
@@ -100,10 +99,10 @@ public class IOSConverter extends APlatformConverter<IOSDensityDescriptor> {
 		}
 	}
 
-	private String createContentJson(String targetFileName, List<IOSDensityDescriptor> iosDensityDescriptions, List<ImageType.ECompression> compressions) {
+	private String createContentJson(String targetFileName, List<PostfixDescriptor> iosDensityDescriptions, List<ImageType.ECompression> compressions) {
 		StringBuilder sb = new StringBuilder("{\n\t\"images\": [");
 		for (ImageType.ECompression compression : compressions) {
-			for (IOSDensityDescriptor densityDescription : iosDensityDescriptions) {
+			for (PostfixDescriptor densityDescription : iosDensityDescriptions) {
 				sb.append("\n\t\t{\n" +
 						"\t\t\t\"filename\": \"" + targetFileName + densityDescription.postFix + "." + compression.name().toLowerCase() + "\",\n" +
 						"\t\t\t\"idiom\": \"universal\",\n" +

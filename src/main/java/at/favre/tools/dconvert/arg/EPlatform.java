@@ -17,9 +17,26 @@
 
 package at.favre.tools.dconvert.arg;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Defines platforms to convert to
  */
 public enum EPlatform {
-	ALL, ANDROID, IOS, WINDOWS
+	ANDROID, IOS, WINDOWS, WEB;
+
+	private static Set<EPlatform> ALL;
+
+	public static Set<EPlatform> getAll() {
+		if (ALL == null) {
+			Set<EPlatform> temp = new HashSet<>(EPlatform.values().length);
+			for (EPlatform ePlatform : EPlatform.values()) {
+				temp.add(ePlatform);
+			}
+			ALL = Collections.unmodifiableSet(temp);
+		}
+		return ALL;
+	}
 }

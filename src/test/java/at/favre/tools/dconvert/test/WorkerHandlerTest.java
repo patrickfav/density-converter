@@ -3,10 +3,7 @@ package at.favre.tools.dconvert.test;
 import at.favre.tools.dconvert.WorkerHandler;
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EPlatform;
-import at.favre.tools.dconvert.converters.AndroidConverter;
-import at.favre.tools.dconvert.converters.IOSConverter;
-import at.favre.tools.dconvert.converters.IPlatformConverter;
-import at.favre.tools.dconvert.converters.WindowsConverter;
+import at.favre.tools.dconvert.converters.*;
 import at.favre.tools.dconvert.converters.postprocessing.IPostProcessor;
 import at.favre.tools.dconvert.test.helper.MockException;
 import at.favre.tools.dconvert.test.helper.MockProcessor;
@@ -118,7 +115,7 @@ public class WorkerHandlerTest {
 	@Test
 	public void testAndroidConverterInHandler() throws Exception {
 		List<File> files = AConverterTest.copyToTestPath(src, "png_example2_alpha_144.png", "gif_example_640.gif", "jpg_example_1920.jpg");
-		Arguments arg = new Arguments.Builder(src, Arguments.DEFAULT_SCALE).dstFolder(dst).platform(EPlatform.ANDROID).threadCount(4).build();
+		Arguments arg = new Arguments.Builder(src, Arguments.DEFAULT_SCALE).dstFolder(dst).platform(Collections.singleton(EPlatform.ANDROID)).threadCount(4).build();
 		TestCallback callback = new TestCallback(files.size(), Collections.emptyList(), false, latch);
 		new WorkerHandler(Collections.singletonList(new AndroidConverter()), arg, callback).start(files);
 		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));
@@ -129,8 +126,8 @@ public class WorkerHandlerTest {
 	@Test
 	public void testAllPlatformConverterInHandler() throws Exception {
 		List<File> files = AConverterTest.copyToTestPath(src, "png_example3_alpha_128.png", "png_example1_alpha_144.png", "jpg_example2_512.jpg");
-		List<IPlatformConverter> converters = Arrays.asList(new AndroidConverter(), new IOSConverter(), new WindowsConverter());
-		Arguments arg = new Arguments.Builder(src, Arguments.DEFAULT_SCALE).dstFolder(dst).threadCount(4).build();
+		List<IPlatformConverter> converters = Arrays.asList(new AndroidConverter(), new IOSConverter(), new WindowsConverter(), new WebConverter());
+		Arguments arg = new Arguments.Builder(src, Arguments.DEFAULT_SCALE).platform(EPlatform.getAll()).dstFolder(dst).threadCount(4).build();
 		TestCallback callback = new TestCallback(files.size() * converters.size(), Collections.emptyList(), false, latch);
 		new WorkerHandler(converters, arg, callback).start(files);
 		assertTrue(latch.await(WAIT_SEC, TimeUnit.SECONDS));

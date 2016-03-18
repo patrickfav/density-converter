@@ -27,6 +27,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static junit.framework.TestCase.assertEquals;
 
@@ -143,9 +144,11 @@ public class CLIParserTest {
 
 	@Test
 	public void testPlatforms() throws Exception {
-		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " all", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(EPlatform.ALL).build());
-		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " android", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(EPlatform.ANDROID).build());
-		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " ios", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(EPlatform.IOS).build());
+		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " all", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(EPlatform.getAll()).build());
+		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " android", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.ANDROID)).build());
+		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " ios", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.IOS)).build());
+		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " win", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.WINDOWS)).build());
+		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " web", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.WEB)).build());
 	}
 
 	@Test

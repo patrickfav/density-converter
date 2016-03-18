@@ -44,9 +44,8 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.*;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * JavaFx main controller for GUI
@@ -56,6 +55,11 @@ public class GUIController {
 	public Label labelWhyPP;
 	public Button btnDstFolderOpen;
 	public CheckBox cbIosCreateImageset;
+	public GridPane gridPaneToggleGroup;
+	public ToggleButton tgAndroid;
+	public ToggleButton tgIos;
+	public ToggleButton tgWindows;
+	public ToggleButton tgWeb;
 
 	private IPreferenceStore preferenceStore;
 	private final FileChooser srcFileChooser = new FileChooser();
@@ -69,7 +73,6 @@ public class GUIController {
 	public TextField textFieldDstPath;
 	public Button btnDstFolder;
 
-	public ChoiceBox choicePlatform;
 	public ChoiceBox choiceCompression;
 	public ChoiceBox choiceCompressionQuality;
 	public ChoiceBox choiceRounding;
@@ -214,9 +217,7 @@ public class GUIController {
 		});
 		scaleSlider.setValue(Arguments.DEFAULT_SCALE);
 
-		choicePlatform.setItems(FXCollections.observableArrayList(
-				EPlatform.ALL, new Separator(), EPlatform.ANDROID, EPlatform.IOS, EPlatform.WINDOWS));
-		choicePlatform.getSelectionModel().select(Arguments.DEFAULT_PLATFORM);
+		setPlatformToogles(Arguments.DEFAULT_PLATFORM);
 
 		choiceCompression.setItems(FXCollections.observableArrayList(
 				EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, EOutputCompressionMode.SAME_AS_INPUT_STRICT, new Separator(), EOutputCompressionMode.AS_JPG,
@@ -278,6 +279,13 @@ public class GUIController {
 		new Thread(new PostProcessorChecker()).start();
 	}
 
+	private void setPlatformToogles(Set<EPlatform> platformSet) {
+		tgAndroid.setSelected(platformSet.contains(EPlatform.ANDROID));
+		tgIos.setSelected(platformSet.contains(EPlatform.IOS));
+		tgWindows.setSelected(platformSet.contains(EPlatform.WINDOWS));
+		tgWeb.setSelected(platformSet.contains(EPlatform.WEB));
+	}
+
 	private void setupLayout() {
 		ColumnConstraints column1M = new ColumnConstraints();
 		column1M.setPercentWidth(20);
@@ -305,6 +313,16 @@ public class GUIController {
 		column2C.setPercentWidth(50);
 		gridPaneOptionsCheckboxes.getColumnConstraints().addAll(column1C, column2C);
 		gridPanePostProcessors.getColumnConstraints().addAll(column1C, column2C);
+
+		ColumnConstraints column1D = new ColumnConstraints();
+		column1D.setPercentWidth(25);
+		ColumnConstraints column2D = new ColumnConstraints();
+		column2D.setPercentWidth(25);
+		ColumnConstraints column3D = new ColumnConstraints();
+		column3D.setPercentWidth(25);
+		ColumnConstraints column4D = new ColumnConstraints();
+		column4D.setPercentWidth(25);
+		gridPaneToggleGroup.getColumnConstraints().addAll(column1D, column2D, column3D, column4D);
 	}
 
 	private void saveToPrefs(Arguments arg) {
@@ -330,7 +348,7 @@ public class GUIController {
 				rbDpHeight.setSelected(true);
 			}
 
-			choicePlatform.getSelectionModel().select(args.platform);
+			setPlatformToogles(args.platform);
 			choiceCompression.getSelectionModel().select(args.outputCompressionMode);
 			choiceCompressionQuality.getSelectionModel().select(args.compressionQuality);
 			choiceRounding.getSelectionModel().select(args.roundingHandler);
@@ -363,10 +381,24 @@ public class GUIController {
 			}
 		}
 
+		Set<EPlatform> platformSet = new HashSet<>();
+		if (tgAndroid.isSelected()) {
+			platformSet.add(EPlatform.ANDROID);
+		}
+		if (tgIos.isSelected()) {
+			platformSet.add(EPlatform.IOS);
+		}
+		if (tgWindows.isSelected()) {
+			platformSet.add(EPlatform.WINDOWS);
+		}
+		if (tgWeb.isSelected()) {
+			platformSet.add(EPlatform.WEB);
+		}
+
 		Arguments.Builder builder = new Arguments.Builder(new File(textFieldSrcPath.getText()), scale);
 		builder.dstFolder(textFieldDstPath.getText() != null && !textFieldDstPath.getText().trim().isEmpty() ? new File(textFieldDstPath.getText()) : null);
 		builder.scaleType(rbFactor.isSelected() ? EScaleType.FACTOR : rbDpWidth.isSelected() ? EScaleType.DP_WIDTH : EScaleType.DP_HEIGHT);
-		builder.platform((EPlatform) choicePlatform.getSelectionModel().getSelectedItem());
+		builder.platform(platformSet);
 		builder.compression((EOutputCompressionMode) choiceCompression.getSelectionModel().getSelectedItem(), (Float) choiceCompressionQuality.getSelectionModel().getSelectedItem());
 		builder.scaleRoundingStragy((RoundingHandler.Strategy) choiceRounding.getSelectionModel().getSelectedItem());
 		builder.threadCount((Integer) choiceThreads.getSelectionModel().getSelectedItem());

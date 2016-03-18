@@ -20,7 +20,7 @@ package at.favre.tools.dconvert.test;
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EPlatform;
 import at.favre.tools.dconvert.converters.WindowsConverter;
-import at.favre.tools.dconvert.converters.descriptors.WindowsDensityDescriptor;
+import at.favre.tools.dconvert.converters.descriptors.PostfixDescriptor;
 import at.favre.tools.dconvert.util.ImageUtil;
 import at.favre.tools.dconvert.util.MiscUtil;
 
@@ -54,7 +54,7 @@ public class WindowsConverterTest extends AConverterTest {
 
 		Map<File, Dimension> dimensionMap = createDimensionMap(files);
 
-		List<WindowsDensityDescriptor> densityDescriptors = WindowsConverter.getWindowsDescriptors();
+		List<PostfixDescriptor> densityDescriptors = WindowsConverter.getWindowsDescriptors();
 
 		assertTrue("src files and dst folder count should match", dstDir.listFiles().length >= files.size());
 
@@ -62,7 +62,7 @@ public class WindowsConverterTest extends AConverterTest {
 
 		List<ImageInfo> expectedFiles = new ArrayList<>();
 		for (File srcImageFile : files) {
-			for (WindowsDensityDescriptor descriptor : densityDescriptors) {
+			for (PostfixDescriptor descriptor : densityDescriptors) {
 				expectedFiles.addAll(Arguments.getOutCompressionForType(arguments.outputCompressionMode, Arguments.getImageType(srcImageFile)).stream().map(compression -> new ImageInfo(srcImageFile, MiscUtil.getFileNameWithoutExtension(srcImageFile) + descriptor.postFix + "." + compression.extension, descriptor.scale)).collect(Collectors.toList()));
 			}
 		}

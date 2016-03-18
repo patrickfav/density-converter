@@ -18,9 +18,8 @@
 package at.favre.tools.dconvert.converters;
 
 import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EPlatform;
 import at.favre.tools.dconvert.arg.ImageType;
-import at.favre.tools.dconvert.converters.descriptors.WindowsDensityDescriptor;
+import at.favre.tools.dconvert.converters.descriptors.PostfixDescriptor;
 import at.favre.tools.dconvert.util.MiscUtil;
 
 import java.awt.*;
@@ -29,21 +28,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Needed info to convert for Android
+ * Needed info to convert for Windows
  */
-public class WindowsConverter extends APlatformConverter<WindowsDensityDescriptor> {
+public class WindowsConverter extends APlatformConverter<PostfixDescriptor> {
 
 	@Override
-	public List<WindowsDensityDescriptor> usedOutputDensities(Arguments arguments) {
+	public List<PostfixDescriptor> usedOutputDensities(Arguments arguments) {
 		return getWindowsDescriptors();
 	}
 
-	public static List<WindowsDensityDescriptor> getWindowsDescriptors() {
-		List<WindowsDensityDescriptor> list = new ArrayList<>();
-		list.add(new WindowsDensityDescriptor(1, "100%", ".scale-100"));
-		list.add(new WindowsDensityDescriptor(1.4f, "140%", ".scale-140"));
-		list.add(new WindowsDensityDescriptor(1.8f, "180%", ".scale-180"));
-		list.add(new WindowsDensityDescriptor(2.4f, "240%", ".scale-240"));
+	public static List<PostfixDescriptor> getWindowsDescriptors() {
+		List<PostfixDescriptor> list = new ArrayList<>();
+		list.add(new PostfixDescriptor(1, "100%", ".scale-100"));
+		list.add(new PostfixDescriptor(1.4f, "140%", ".scale-140"));
+		list.add(new PostfixDescriptor(1.8f, "180%", ".scale-180"));
+		list.add(new PostfixDescriptor(2.4f, "240%", ".scale-240"));
 		return list;
 	}
 
@@ -54,24 +53,24 @@ public class WindowsConverter extends APlatformConverter<WindowsDensityDescripto
 
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
-		if (arguments.platform != EPlatform.WINDOWS) {
+		if (arguments.platform.size() > 1) {
 			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, "windows").getAbsolutePath(), arguments.dryRun);
 		}
 		return MiscUtil.createAndCheckFolder(new File(destinationFolder, "Assets").getAbsolutePath(), arguments.dryRun);
 	}
 
 	@Override
-	public File createFolderForOutputFile(File mainSubFolder, WindowsDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
+	public File createFolderForOutputFile(File mainSubFolder, PostfixDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
 		return mainSubFolder;
 	}
 
 	@Override
-	public String createDestinationFileNameWithoutExtension(WindowsDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
+	public String createDestinationFileNameWithoutExtension(PostfixDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
 		return targetFileName + density.postFix;
 	}
 
 	@Override
-	public void onPreExecute(File dstFolder, String targetFileName, List<WindowsDensityDescriptor> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception {
+	public void onPreExecute(File dstFolder, String targetFileName, List<PostfixDescriptor> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception {
 
 	}
 

@@ -30,6 +30,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,13 +45,13 @@ public class AndroidConverterTest extends AConverterTest {
 	@Test
 	public void testMipmapFolder() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
-		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dstFolder(defaultDst).createMipMapInsteadOfDrawableDir(true).includeAndroidLdpiTvdpi(true).platform(getType()).build(), files);
+		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dstFolder(defaultDst).createMipMapInsteadOfDrawableDir(true).includeAndroidLdpiTvdpi(true).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testLdpiAndTvdpi() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
-		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dstFolder(defaultDst).includeAndroidLdpiTvdpi(true).platform(getType()).build(), files);
+		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dstFolder(defaultDst).includeAndroidLdpiTvdpi(true).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Ignore

@@ -21,7 +21,7 @@ import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EOutputCompressionMode;
 import at.favre.tools.dconvert.arg.EPlatform;
 import at.favre.tools.dconvert.converters.IOSConverter;
-import at.favre.tools.dconvert.converters.descriptors.IOSDensityDescriptor;
+import at.favre.tools.dconvert.converters.descriptors.PostfixDescriptor;
 import at.favre.tools.dconvert.util.ImageUtil;
 import at.favre.tools.dconvert.util.MiscUtil;
 import org.junit.Test;
@@ -30,6 +30,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,20 +56,20 @@ public class IOSConverterTest extends AConverterTest {
 	public void testMultiplePngImagesetFolders() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example2_alpha_144.png", "jpg_example2_512.jpg");
 		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, 0.5f)
-				.dstFolder(defaultDst).platform(getType()).iosCreateImagesetFolders(true).build(), files);
+				.dstFolder(defaultDst).platform(Collections.singleton(getType())).iosCreateImagesetFolders(true).build(), files);
 	}
 
 	@Test
 	public void testSinglePngImagesetFolder() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
 		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, 0.5f)
-				.dstFolder(defaultDst).platform(getType()).iosCreateImagesetFolders(true).build(), files);
+				.dstFolder(defaultDst).platform(Collections.singleton(getType())).iosCreateImagesetFolders(true).build(), files);
 	}
 
 	public static void checkOutDirIos(File dstDir, Arguments arguments, List<File> files) throws IOException {
 		Map<File, Dimension> dimensionMap = createDimensionMap(files);
 
-		List<IOSDensityDescriptor> densityDescriptors = IOSConverter.getIosDescriptors();
+		List<PostfixDescriptor> densityDescriptors = IOSConverter.getIosDescriptors();
 
 		System.out.println("ios-convert " + files);
 
@@ -79,11 +80,11 @@ public class IOSConverterTest extends AConverterTest {
 		}
 	}
 
-	private static void checkWithSingleRootFolder(File dstDir, Arguments arguments, List<File> files, Map<File, Dimension> dimensionMap, List<IOSDensityDescriptor> densityDescriptors) throws IOException {
+	private static void checkWithSingleRootFolder(File dstDir, Arguments arguments, List<File> files, Map<File, Dimension> dimensionMap, List<PostfixDescriptor> densityDescriptors) throws IOException {
 		dstDir = new File(dstDir, "AssetCatalog");
 		List<ImageInfo> expectedFiles = new ArrayList<>();
 		for (File srcImageFile : files) {
-			for (IOSDensityDescriptor descriptor : densityDescriptors) {
+			for (PostfixDescriptor descriptor : densityDescriptors) {
 				expectedFiles.addAll(Arguments.getOutCompressionForType(arguments.outputCompressionMode, Arguments.getImageType(srcImageFile)).stream().map(compression -> new ImageInfo(srcImageFile, MiscUtil.getFileNameWithoutExtension(srcImageFile) + descriptor.postFix + "." + compression.extension, descriptor.scale)).collect(Collectors.toList()));
 			}
 		}
@@ -106,7 +107,7 @@ public class IOSConverterTest extends AConverterTest {
 		System.out.println("found " + expectedFiles.size() + " files in " + dstDir);
 	}
 
-	private static void checkWithImagesetFolders(File dstDir, Arguments arguments, List<File> files, Map<File, Dimension> dimensionMap, List<IOSDensityDescriptor> densityDescriptors) throws IOException {
+	private static void checkWithImagesetFolders(File dstDir, Arguments arguments, List<File> files, Map<File, Dimension> dimensionMap, List<PostfixDescriptor> densityDescriptors) throws IOException {
 		assertTrue("src files and dst folder count should match", files.size() == dstDir.listFiles().length);
 		for (File iosImgFolder : dstDir.listFiles()) {
 			boolean found = false;
@@ -123,7 +124,7 @@ public class IOSConverterTest extends AConverterTest {
 			assertTrue("image folder should contain at least 1 file", iosImgFolder.listFiles().length > 0);
 
 			List<ImageInfo> expectedFiles = new ArrayList<>();
-			for (IOSDensityDescriptor densityDescriptor : densityDescriptors) {
+			for (PostfixDescriptor densityDescriptor : densityDescriptors) {
 				final File finalSrcFile = srcFile;
 				expectedFiles.addAll(Arguments.getOutCompressionForType(
 						arguments.outputCompressionMode, Arguments.getImageType(srcFile)).stream().map(compression ->

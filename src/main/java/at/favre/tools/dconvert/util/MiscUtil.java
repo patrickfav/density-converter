@@ -21,7 +21,9 @@ import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 
 /**
  * Misc util methods
@@ -105,5 +107,11 @@ public class MiscUtil {
 		}
 
 		return sb.toString();
+	}
+
+	public static <T> Set<T> toSet(T elem) {
+		Set<T> set = new HashSet<>(1);
+		set.add(elem);
+		return set;
 	}
 }
