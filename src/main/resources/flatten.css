@@ -79,11 +79,11 @@
 .toggle-button:focused,
 .button:focused,
 .button:default:focused {
-    -fx-background-color: derive(-flatter-red, 50.0%);
+    -fx-background-color: derive(-flatter-red, 40.0%);
 }
 
 .toggle-button:focused:selected {
-    -fx-background-color: derive(-flatter-red, 50.0%), derive(-flatter-red, -20.0%);
+    -fx-background-color: derive(-flatter-red, 40.0%), derive(-flatter-red, -20.0%);
     -fx-background-insets: 0.0, 0.2em;
 }
 
@@ -234,7 +234,7 @@
 
 .combo-box-base:focused,
 .choice-box:focused {
-    -fx-background-color: derive(-flatter-red, 50.0%);
+    -fx-background-color: derive(-flatter-red, 40.0%);
 }
 
 .choice-box2:focused {
@@ -453,11 +453,11 @@
 }
 
 .slider .thumb:focused {
-    -fx-background-color: derive(-flatter-red, 50.0%);
+    -fx-background-color: derive(-flatter-red, 40.0%);
 }
 
 .slider .thumb:pressed {
-    -fx-background-color: derive(-flatter-red, 50.0%), derive(-flatter-red, -20.0%);
+    -fx-background-color: derive(-flatter-red, 40.0%), derive(-flatter-red, -20.0%);
     -fx-background-insets: 0.0, 0.2em;
 }
 

@@ -365,6 +365,10 @@ public class Arguments implements Serializable {
 			if (!internalSkipParamValidation) {
 				ResourceBundle bundle = ResourceBundle.getBundle("bundles.strings", Locale.getDefault());
 
+				if (platform.isEmpty()) {
+					throw new InvalidArgumentException(bundle.getString("error.missing.platforms"));
+				}
+
 				if (src == null || !src.exists()) {
 					throw new InvalidArgumentException(MessageFormat.format(bundle.getString("error.missing.src"), src));
 				}

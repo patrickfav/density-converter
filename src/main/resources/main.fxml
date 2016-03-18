@@ -8,16 +8,32 @@
         <Insets top="20" right="15" bottom="5" left="15"/>
     </padding>
 
-    <Label text="%main.label.source" styleClass="label, label_main" alignment="CENTER_RIGHT" maxWidth="Infinity"/>
+    <GridPane fx:id="gridPaneToggleGroup" alignment="center" hgap="0" vgap="0" GridPane.columnIndex="0"
+              GridPane.rowIndex="0" GridPane.columnSpan="4" maxWidth="Infinity">
+        <padding>
+            <Insets bottom="10"/>
+        </padding>
+        <ToggleButton fx:id="tgAndroid" text="Android" GridPane.columnIndex="0" maxWidth="Infinity"
+                      styleClass="toggle-button-platform,toggle-button-platform-left,toggle-button-platform-android"/>
+        <ToggleButton fx:id="tgIos" text="iOS" GridPane.columnIndex="1" maxWidth="Infinity"
+                      styleClass="toggle-button-platform,toggle-button-platform-ios"/>
+        <ToggleButton fx:id="tgWindows" text="Windows" GridPane.columnIndex="2" maxWidth="Infinity"
+                      styleClass="toggle-button-platform,toggle-button-platform-win"/>
+        <ToggleButton fx:id="tgWeb" text="Web" GridPane.columnIndex="3" maxWidth="Infinity"
+                      styleClass="toggle-button-platform,toggle-button-platform-right,toggle-button-platform-web"/>
+    </GridPane>
+
+    <Label text="%main.label.source" styleClass="label, label_main" alignment="CENTER_RIGHT" maxWidth="Infinity"
+           GridPane.rowIndex="1"/>
     <TextField fx:id="textFieldSrcPath" disable="true" GridPane.columnIndex="1"
-               GridPane.rowIndex="0" maxWidth="Infinity" GridPane.hgrow="always"/>
-    <Button fx:id="btnSrcFile" GridPane.columnIndex="2" GridPane.rowIndex="0" maxWidth="Infinity"
+               GridPane.rowIndex="1" maxWidth="Infinity" GridPane.hgrow="always"/>
+    <Button fx:id="btnSrcFile" GridPane.columnIndex="2" GridPane.rowIndex="1" maxWidth="Infinity"
             GridPane.hgrow="always">
         <tooltip>
             <Tooltip text="%arg.descr.btnsrcFile"/>
         </tooltip>
     </Button>
-    <Button fx:id="btnSrcFolder" GridPane.columnIndex="3" GridPane.rowIndex="0" maxWidth="Infinity"
+    <Button fx:id="btnSrcFolder" GridPane.columnIndex="3" GridPane.rowIndex="1" maxWidth="Infinity"
             GridPane.hgrow="always">
         <tooltip>
             <Tooltip text="%arg.descr.btnsrcfolder"/>
@@ -26,9 +42,9 @@
 
     <Label text="%main.label.scaletype" styleClass="label, label_main" alignment="CENTER_RIGHT" maxWidth="Infinity"
            GridPane.columnIndex="0"
-           GridPane.rowIndex="1"/>
+           GridPane.rowIndex="2"/>
 
-    <GridPane alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="1" maxWidth="Infinity"
+    <GridPane alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="Infinity"
               GridPane.columnSpan="3" hgap="3" vgap="3" style="-fx-padding: 10 0 5 0">
         <fx:define>
             <ToggleGroup fx:id="scaleTypeToggleGroup"/>
@@ -58,17 +74,17 @@
 
     <Label text="%main.label.fixedW" styleClass="label, label_main" alignment="CENTER_RIGHT"
            maxWidth="Infinity" visible="false"
-           fx:id="labelDpWidth" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+           fx:id="labelDpWidth" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
     <Label text="%main.label.fixedH" styleClass="label, label_main" alignment="CENTER_RIGHT"
            maxWidth="Infinity" visible="false"
-           fx:id="labelDpHeight" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-    <TextField fx:id="textFieldDp" GridPane.columnIndex="1" GridPane.rowIndex="2" maxWidth="Infinity"
+           fx:id="labelDpHeight" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+    <TextField fx:id="textFieldDp" GridPane.columnIndex="1" GridPane.rowIndex="3" maxWidth="Infinity"
                alignment="CENTER_RIGHT" visible="false"/>
-    <Label fx:id="labelDpPostFix" GridPane.columnIndex="2" text="%main.label.dp" GridPane.rowIndex="2"
+    <Label fx:id="labelDpPostFix" GridPane.columnIndex="2" text="%main.label.dp" GridPane.rowIndex="3"
            alignment="CENTER_RIGHT"
            visible="false"/>
 
-    <GridPane fx:id="gridPaneScaleFactorLabel" alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="2"
+    <GridPane fx:id="gridPaneScaleFactorLabel" alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="3"
               maxWidth="Infinity">
         <Label text="Factor (x3.00)" styleClass="label, label_main" alignment="CENTER_RIGHT"
                maxWidth="Infinity"
@@ -78,7 +94,7 @@
                fx:id="labelScaleSubtitle" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     </GridPane>
     <Slider fx:id="scaleSlider" min="0.5" max="6" value="3" majorTickUnit="1" blockIncrement="0.25"
-            GridPane.columnIndex="1" GridPane.rowIndex="2" showTickLabels="true" snapToTicks="true"
+            GridPane.columnIndex="1" GridPane.rowIndex="3" showTickLabels="true" snapToTicks="true"
             showTickMarks="true" GridPane.columnSpan="3">
         <tooltip>
             <Tooltip
@@ -89,39 +105,32 @@
     <Label text="%main.label.dst" style="-fx-font-style: italic" styleClass="label, label_main"
            alignment="CENTER_RIGHT"
            maxWidth="Infinity" GridPane.columnIndex="0"
-           GridPane.rowIndex="3"/>
+           GridPane.rowIndex="4"/>
     <TextField fx:id="textFieldDstPath" disable="true" maxWidth="Infinity" GridPane.columnIndex="1"
-               GridPane.rowIndex="3"/>
-    <Button fx:id="btnDstFolderOpen" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="3" disable="true">
+               GridPane.rowIndex="4"/>
+    <Button fx:id="btnDstFolderOpen" maxWidth="Infinity" GridPane.columnIndex="2" GridPane.rowIndex="4" disable="true">
         <tooltip>
             <Tooltip text="%arg.descr.btnopendstfolder"/>
         </tooltip>
     </Button>
-    <Button fx:id="btnDstFolder" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="3">
+    <Button fx:id="btnDstFolder" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="4">
         <tooltip>
             <Tooltip text="%arg.descr.btndstfolder"/>
         </tooltip>
     </Button>
 
-    <VBox minHeight="0" GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4"/>
+    <VBox minHeight="0" GridPane.columnIndex="0" GridPane.rowIndex="5" GridPane.columnSpan="4"/>
 
     <GridPane fx:id="gridPaneChoiceBoxes" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
-              GridPane.rowIndex="5" GridPane.columnSpan="4" maxWidth="Infinity">
-
-        <GridPane fx:id="gridPaneToggleGroup" alignment="center" hgap="0" vgap="0" GridPane.columnIndex="0"
-                  GridPane.rowIndex="0" GridPane.columnSpan="4" maxWidth="Infinity">
-            <ToggleButton fx:id="tgAndroid" text="Android" GridPane.columnIndex="0" maxWidth="Infinity"/>
-            <ToggleButton fx:id="tgIos" text="iOS" GridPane.columnIndex="1" maxWidth="Infinity"/>
-            <ToggleButton fx:id="tgWindows" text="Windows" GridPane.columnIndex="2" maxWidth="Infinity"/>
-            <ToggleButton fx:id="tgWeb" text="Web" GridPane.columnIndex="3" maxWidth="Infinity"/>
-        </GridPane>
+              GridPane.rowIndex="6" GridPane.columnSpan="4" maxWidth="Infinity">
+        <!--<VBox minHeight="10" GridPane.rowIndex="1" GridPane.columnSpan="4"/>-->
 
         <Label maxWidth="Infinity" GridPane.hgrow="always" styleClass="label" alignment="CENTER_RIGHT"
                text="%main.label.compression"
                GridPane.columnIndex="0"
-               GridPane.rowIndex="1"/>
+               GridPane.rowIndex="2"/>
         <ChoiceBox fx:id="choiceCompression" GridPane.hgrow="always" maxWidth="Infinity" GridPane.columnIndex="1"
-                   GridPane.rowIndex="1" styleClass="choice-box">
+                   GridPane.rowIndex="2" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.compression"/>
             </tooltip>
@@ -129,9 +138,9 @@
 
         <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="%main.label.jpgquality"
                GridPane.columnIndex="2"
-               GridPane.rowIndex="1"/>
+               GridPane.rowIndex="2"/>
         <ChoiceBox fx:id="choiceCompressionQuality" maxWidth="Infinity" GridPane.columnIndex="3"
-                   GridPane.rowIndex="1" styleClass="choice-box">
+                   GridPane.rowIndex="2" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.jpegquality"/>
             </tooltip>
@@ -139,8 +148,8 @@
 
         <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="%main.label.rounding"
                GridPane.columnIndex="0"
-               GridPane.rowIndex="2" GridPane.hgrow="always"/>
-        <ChoiceBox fx:id="choiceRounding" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"
+               GridPane.rowIndex="3" GridPane.hgrow="always"/>
+        <ChoiceBox fx:id="choiceRounding" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3"
                    GridPane.hgrow="always" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.rounding"/>
@@ -149,8 +158,8 @@
 
         <Label maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT" text="%main.label.threads"
                GridPane.columnIndex="2"
-               GridPane.rowIndex="2" GridPane.hgrow="always"/>
-        <ChoiceBox fx:id="choiceThreads" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="2"
+               GridPane.rowIndex="3" GridPane.hgrow="always"/>
+        <ChoiceBox fx:id="choiceThreads" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="3"
                    GridPane.hgrow="always" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.threads"/>
@@ -158,16 +167,16 @@
         </ChoiceBox>
     </GridPane>
 
-    <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="4"/>
+    <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="7" GridPane.columnSpan="4"/>
 
     <Label text="%main.header.options" styleClass="label,label_main" maxWidth="Infinity" GridPane.columnIndex="0"
-           GridPane.rowIndex="7"
+           GridPane.rowIndex="8"
            GridPane.columnSpan="3"/>
     <Button fx:id="btnReset" text="%main.btn.reset" styleClass="button, button-sec" GridPane.columnIndex="3"
-            GridPane.rowIndex="7" alignment="CENTER_RIGHT"
+            GridPane.rowIndex="8" alignment="CENTER_RIGHT"
             GridPane.columnSpan="1" maxWidth="Infinity"/>
     <GridPane fx:id="gridPaneOptionsCheckboxes" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
-              GridPane.rowIndex="8"
+              GridPane.rowIndex="9"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
         <CheckBox fx:id="cbSkipExisting" styleClass="check-box" alignment="CENTER_LEFT" maxWidth="Infinity"
                   text="%main.cb.skipexisting"
@@ -239,17 +248,17 @@
 
     </GridPane>
 
-    <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="9" GridPane.columnSpan="4"/>
+    <VBox minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="10" GridPane.columnSpan="4"/>
 
     <Label text="%main.header.postprocessors" styleClass="label,label_main" maxWidth="Infinity" GridPane.columnIndex="0"
-           GridPane.rowIndex="10" GridPane.columnSpan="2"/>
+           GridPane.rowIndex="11" GridPane.columnSpan="2"/>
 
     <Label text="%main.label.whypostproc" fx:id="labelWhyPP" styleClass="label,label_main,why-info" maxWidth="Infinity"
-           GridPane.columnIndex="2" GridPane.rowIndex="10" alignment="CENTER_RIGHT" GridPane.columnSpan="2"
+           GridPane.columnIndex="2" GridPane.rowIndex="11" alignment="CENTER_RIGHT" GridPane.columnSpan="2"
            visible="true"/>
 
     <GridPane fx:id="gridPanePostProcessors" alignment="center" hgap="5" vgap="5" GridPane.columnIndex="0"
-              GridPane.rowIndex="11"
+              GridPane.rowIndex="12"
               GridPane.columnSpan="4" maxHeight="Infinity" maxWidth="Infinity" GridPane.hgrow="always">
         <CheckBox fx:id="cbEnablePngCrush" styleClass="check-box" maxWidth="Infinity" text="%main.cb.pngcrush"
                   GridPane.columnIndex="0" alignment="CENTER_LEFT"
@@ -289,27 +298,27 @@
         </CheckBox>
     </GridPane>
 
-    <VBox minHeight="10" GridPane.columnIndex="0" GridPane.rowIndex="12" GridPane.columnSpan="4"/>
+    <VBox minHeight="10" GridPane.columnIndex="0" GridPane.rowIndex="13" GridPane.columnSpan="4"/>
 
     <ProgressBar fx:id="progressBar" maxWidth="Infinity" disable="true" GridPane.columnIndex="0"
                  GridPane.columnSpan="4" styleClass="progress-bar"
-                 GridPane.rowIndex="13" progress="0"/>
+                 GridPane.rowIndex="14" progress="0"/>
 
     <TextArea fx:id="textFieldConsole" styleClass="text-area, console" maxWidth="Infinity" GridPane.columnIndex="0"
               GridPane.columnSpan="4" minHeight="0"
-              GridPane.rowIndex="14" visible="true" prefRowCount="250" prefColumnCount="80"/>
+              GridPane.rowIndex="15" visible="true" prefRowCount="250" prefColumnCount="80"/>
 
     <Button fx:id="btnConvert" styleClass="button, button-convert"
             maxWidth="Infinity" text="%main.btn.convert" GridPane.columnIndex="0"
-            GridPane.rowIndex="15"
+            GridPane.rowIndex="16"
             GridPane.columnSpan="4"
     />
 
     <Label fx:id="labelVersion" alignment="CENTER_LEFT" GridPane.columnIndex="0"
-           GridPane.rowIndex="16"
+           GridPane.rowIndex="17"
            GridPane.columnSpan="1" styleClass="footnote"/>
 
     <Label fx:id="labelResult" alignment="CENTER_RIGHT" maxWidth="Infinity" GridPane.columnIndex="1"
-           GridPane.rowIndex="16"
+           GridPane.rowIndex="17"
            GridPane.columnSpan="3" styleClass="footnote"/>
 </GridPane>

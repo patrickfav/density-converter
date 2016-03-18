@@ -39,3 +39,87 @@
     -fx-underline: false;
     -fx-cursor: hand;
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * Button & ToggleButton                                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+.toggle-button-platform {
+    -fx-background-color: -flatter-red;
+    -fx-background-insets: 0.0;
+    -fx-border-width: 0.0;
+    -fx-padding: 0.6em;
+    -fx-text-fill: -fx-text-base-color;
+    -fx-alignment: CENTER;
+    -fx-content-display: LEFT;
+    -fx-font-size: 1.1em;
+    -fx-background-radius: 0;
+}
+
+.toggle-button-platform-left {
+    -fx-background-radius: 2px 0 0 2px;
+}
+
+.toggle-button-platform-right {
+    -fx-background-radius: 0 2px 2px 0;
+}
+
+.toggle-button-platform:focused {
+    -fx-background-color: -flatter-red;
+}
+
+.toggle-button-platform:focused:selected {
+    -fx-background-color: derive(-flatter-red, 10.0%), derive(-flatter-red, -20.0%);
+    -fx-background-insets: 0.0, 0px;
+    -fx-font-weight: bold;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0, 0, 2);
+}
+
+.toggle-button-platform:armed,
+.toggle-button-platform:selected {
+    -fx-background-color: derive(-flatter-red, -20.0%);
+    -fx-font-weight: bold;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.25), 4, 0, 0, 2);
+}
+
+.toggle-button-platform-android {
+    -fx-graphic: url("img/android.png");
+}
+
+.toggle-button-platform-ios {
+    -fx-graphic: url("img/iphone.png");
+}
+
+.toggle-button-platform-win {
+    -fx-graphic: url("img/windows.png");
+}
+
+.toggle-button-platform-web {
+    -fx-graphic: url("img/web.png");
+}
+
+.toggle-button-platform-android:focused:selected,
+.toggle-button-platform-android:armed,
+.toggle-button-platform-android:selected {
+    /*-fx-text-fill: #97C024;*/
+}
+
+.toggle-button-platform-ios:focused:selected,
+.toggle-button-platform-ios:armed,
+.toggle-button-platform-ios:selected {
+    /*-fx-text-fill: #B6B8B7;*/
+}
+
+.toggle-button-platform-win:focused:selected,
+.toggle-button-platform-win:armed,
+.toggle-button-platform-win:selected {
+    /*-fx-text-fill: #299cf8;*/
+}
+
+.toggle-button-platform-web:focused:selected,
+.toggle-button-platform-web:armed,
+.toggle-button-platform-web:selected {
+    /*-fx-text-fill: #F16529;*/
+}
