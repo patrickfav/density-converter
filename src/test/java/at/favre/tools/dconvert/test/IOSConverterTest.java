@@ -76,35 +76,8 @@ public class IOSConverterTest extends AConverterTest {
 		if (arguments.iosCreateImagesetFolders) {
 			checkWithImagesetFolders(dstDir, arguments, files, dimensionMap, densityDescriptors);
 		} else {
-			checkWithSingleRootFolder(dstDir, arguments, files, dimensionMap, densityDescriptors);
+			checkOutDirPostfixDescr(new File(dstDir, IOSConverter.ROOT_FOLDER), arguments, files, densityDescriptors);
 		}
-	}
-
-	private static void checkWithSingleRootFolder(File dstDir, Arguments arguments, List<File> files, Map<File, Dimension> dimensionMap, List<PostfixDescriptor> densityDescriptors) throws IOException {
-		dstDir = new File(dstDir, "AssetCatalog");
-		List<ImageInfo> expectedFiles = new ArrayList<>();
-		for (File srcImageFile : files) {
-			for (PostfixDescriptor descriptor : densityDescriptors) {
-				expectedFiles.addAll(Arguments.getOutCompressionForType(arguments.outputCompressionMode, Arguments.getImageType(srcImageFile)).stream().map(compression -> new ImageInfo(srcImageFile, MiscUtil.getFileNameWithoutExtension(srcImageFile) + descriptor.postFix + "." + compression.extension, descriptor.scale)).collect(Collectors.toList()));
-			}
-		}
-
-		for (File imageFile : dstDir.listFiles()) {
-			for (ImageInfo expectedFile : expectedFiles) {
-				if (expectedFile.targetFileName.equals(imageFile.getName())) {
-					expectedFile.found = true;
-
-					Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedFile.scale);
-					assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(imageFile));
-				}
-			}
-		}
-
-		for (ImageInfo expectedFile : expectedFiles) {
-			assertTrue(expectedFile.targetFileName + " expected in folder " + dstDir, expectedFile.found);
-		}
-
-		System.out.println("found " + expectedFiles.size() + " files in " + dstDir);
 	}
 
 	private static void checkWithImagesetFolders(File dstDir, Arguments arguments, List<File> files, Map<File, Dimension> dimensionMap, List<PostfixDescriptor> densityDescriptors) throws IOException {

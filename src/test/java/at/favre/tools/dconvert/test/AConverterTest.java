@@ -18,8 +18,12 @@
 package at.favre.tools.dconvert.test;
 
 import at.favre.tools.dconvert.arg.*;
-import at.favre.tools.dconvert.converters.*;
+import at.favre.tools.dconvert.converters.ConverterCallback;
+import at.favre.tools.dconvert.converters.IPlatformConverter;
+import at.favre.tools.dconvert.converters.Result;
+import at.favre.tools.dconvert.converters.descriptors.PostfixDescriptor;
 import at.favre.tools.dconvert.util.ImageUtil;
+import at.favre.tools.dconvert.util.MiscUtil;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 
@@ -29,22 +33,22 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 /**
  * Unit tests for {@link at.favre.tools.dconvert.converters.IPlatformConverter}
  */
 public abstract class AConverterTest {
-	protected static final float DEFAULT_SCALE = 3;
+	static final float DEFAULT_SCALE = 3;
 
 	@Rule
 	public TemporaryFolder temporaryFolder = new TemporaryFolder();
-	protected File defaultDst;
-	protected File defaultSrc;
-	protected IPlatformConverter converter;
-	protected ConverterCallback defaultCallback;
+	File defaultDst;
+	File defaultSrc;
+	IPlatformConverter converter;
+	ConverterCallback defaultCallback;
 
 	@BeforeClass
 	public static void oneTimeSetUp() {
@@ -59,7 +63,7 @@ public abstract class AConverterTest {
 	public void setUp() throws IOException {
 		defaultSrc = temporaryFolder.newFolder("converter-test", "src");
 		defaultDst = temporaryFolder.newFolder("converter-test", "out");
-		converter = getType() == EPlatform.ANDROID ? new AndroidConverter() : getType() == EPlatform.IOS ? new IOSConverter() : getType() == EPlatform.WINDOWS ? new WindowsConverter() : null;
+		converter = getType().getConverter();
 	}
 
 	@After
@@ -223,6 +227,7 @@ public abstract class AConverterTest {
 		AndroidConverterTest.checkOutDirAndroid(new File(dst, "android"), arg, files);
 		IOSConverterTest.checkOutDirIos(new File(dst, "ios"), arg, files);
 		WindowsConverterTest.checkOutDirWindows(new File(dst, "windows"), arg, files);
+		WebConverterTest.checkOutDirWeb(new File(dst, "web"), arg, files);
 	}
 
 	protected static Map<File, Dimension> createDimensionMap(List<File> files) throws IOException {
@@ -270,6 +275,40 @@ public abstract class AConverterTest {
 			this.srcFile = srcFile;
 			this.targetFileName = targetFileName;
 			this.scale = scale;
+		}
+	}
+
+	public static void checkOutDirPostfixDescr(File dstRootDir, Arguments arguments, List<File> files, List<PostfixDescriptor> densityDescriptors) throws IOException {
+		Map<File, Dimension> dimensionMap = createDimensionMap(files);
+
+		if (!files.isEmpty()) {
+			assertTrue("src files and dst folder count should match", dstRootDir.listFiles().length >= files.size());
+
+			List<ImageInfo> expectedFiles = new ArrayList<>();
+			for (File srcImageFile : files) {
+				for (PostfixDescriptor descriptor : densityDescriptors) {
+					expectedFiles.addAll(Arguments.getOutCompressionForType(arguments.outputCompressionMode, Arguments.getImageType(srcImageFile)).stream().map(compression -> new ImageInfo(srcImageFile, MiscUtil.getFileNameWithoutExtension(srcImageFile) + descriptor.postFix + "." + compression.extension, descriptor.scale)).collect(Collectors.toList()));
+				}
+			}
+
+			for (File imageFile : dstRootDir.listFiles()) {
+				for (ImageInfo expectedFile : expectedFiles) {
+					if (expectedFile.targetFileName.equals(imageFile.getName())) {
+						expectedFile.found = true;
+
+						Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedFile.scale);
+						assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(imageFile));
+					}
+				}
+			}
+
+			for (ImageInfo expectedFile : expectedFiles) {
+				assertTrue(expectedFile.targetFileName + " expected in folder " + dstRootDir, expectedFile.found);
+			}
+
+			System.out.println("found " + expectedFiles.size() + " files in " + dstRootDir);
+		} else {
+			assertTrue(dstRootDir.list() == null || dstRootDir.list().length == 0);
 		}
 	}
 }

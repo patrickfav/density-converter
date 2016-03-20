@@ -19,28 +19,28 @@ package at.favre.tools.dconvert.test;
 
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EPlatform;
-import at.favre.tools.dconvert.converters.WindowsConverter;
+import at.favre.tools.dconvert.converters.WebConverter;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 /**
- * Unit test of the {@link at.favre.tools.dconvert.converters.IPlatformConverter} for windows
+ * Unit test of the {@link at.favre.tools.dconvert.converters.IPlatformConverter} for web
  */
-public class WindowsConverterTest extends AConverterTest {
+public class WebConverterTest extends AConverterTest {
 	@Override
 	protected EPlatform getType() {
-		return EPlatform.WINDOWS;
+		return EPlatform.WEB;
 	}
 
 	@Override
 	protected void checkOutDir(File dstDir, Arguments arguments, List<File> files, EPlatform type) throws IOException {
-		checkOutDirWindows(dstDir, arguments, files);
+		checkOutDirWeb(dstDir, arguments, files);
 	}
 
-	public static void checkOutDirWindows(File dstDir, Arguments arguments, List<File> files) throws IOException {
-		System.out.println("windows-convert " + files);
-		checkOutDirPostfixDescr(new File(dstDir, WindowsConverter.ROOT_FOLDER), arguments, files, WindowsConverter.getWindowsDescriptors());
+	public static void checkOutDirWeb(File dstDir, Arguments arguments, List<File> files) throws IOException {
+		System.out.println("web-convert " + files);
+		checkOutDirPostfixDescr(new File(dstDir, WebConverter.ROOT_FOLDER), arguments, files, WebConverter.getWebDescriptors());
 	}
 }

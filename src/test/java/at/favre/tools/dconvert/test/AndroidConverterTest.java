@@ -82,46 +82,51 @@ public class AndroidConverterTest extends AConverterTest {
 				androidDensityDescriptor -> new DensityFolder(prefix + androidDensityDescriptor.folderName.replace("drawable", ""), androidDensityDescriptor.scale)).collect(Collectors.toList()));
 
 		assertFalse("expected dirs should not be empty", expectedDirs.isEmpty());
-		assertFalse("output dir should not be empty", dstDir.list().length == 0);
+		if (!files.isEmpty()) {
+			assertFalse("output dir should not be empty", dstDir.list() == null && dstDir.list().length == 0);
 
-		System.out.println("Android-convert " + files);
 
-		for (String path : dstDir.list()) {
-			expectedDirs.stream().filter(expectedDir -> expectedDir.folderName.equals(path)).forEach(expectedDir -> {
-				try {
-					expectedDir.found = true;
+			System.out.println("Android-convert " + files);
 
-					List<ImageCheck> expectedFiles = createExpectedFilesMap(arguments, new File(dstDir, path), files);
+			for (String path : dstDir.list()) {
+				expectedDirs.stream().filter(expectedDir -> expectedDir.folderName.equals(path)).forEach(expectedDir -> {
+					try {
+						expectedDir.found = true;
 
-					assertTrue("files count should match input", files.isEmpty() == expectedFiles.isEmpty());
+						List<ImageCheck> expectedFiles = createExpectedFilesMap(arguments, new File(dstDir, path), files);
 
-					for (ImageCheck expectedFile : expectedFiles) {
-						for (File imageFile : new File(dstDir, path).listFiles()) {
-							if (expectedFile.targetFile.equals(imageFile)) {
-								expectedFile.found = true;
-								Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedDir.scaleFactor);
-								assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(imageFile));
+						assertTrue("files count should match input", files.isEmpty() == expectedFiles.isEmpty());
+
+						for (ImageCheck expectedFile : expectedFiles) {
+							for (File imageFile : new File(dstDir, path).listFiles()) {
+								if (expectedFile.targetFile.equals(imageFile)) {
+									expectedFile.found = true;
+									Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedDir.scaleFactor);
+									assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(imageFile));
+								}
 							}
 						}
+
+						for (ImageCheck expectedFile : expectedFiles) {
+							assertTrue(expectedFile.targetFile + " file should be generated in path", expectedFile.found);
+						}
+						System.out.print("found " + expectedFiles.size() + " files in " + expectedDir.folderName + ", ");
+					} catch (Exception e) {
+						fail();
+						e.printStackTrace();
 					}
+				});
 
-					for (ImageCheck expectedFile : expectedFiles) {
-						assertTrue(expectedFile.targetFile + " file should be generated in path", expectedFile.found);
-					}
-					System.out.print("found " + expectedFiles.size() + " files in " + expectedDir.folderName + ", ");
-				} catch (Exception e) {
-					fail();
-					e.printStackTrace();
-				}
-			});
+			}
 
+			for (DensityFolder expectedDir : expectedDirs) {
+				assertTrue(expectedDir.folderName + " should be generated in path", expectedDir.found);
+			}
+
+			System.out.println();
+		} else {
+			assertTrue(dstDir.list() == null || dstDir.list().length == 0);
 		}
-
-		for (DensityFolder expectedDir : expectedDirs) {
-			assertTrue(expectedDir.folderName + " should be generated in path", expectedDir.found);
-		}
-
-		System.out.println();
 	}
 
 	private static List<ImageCheck> createExpectedFilesMap(Arguments arguments, File file, List<File> files) throws IOException {

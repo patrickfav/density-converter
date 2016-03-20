@@ -19,7 +19,7 @@ package at.favre.tools.dconvert.test;
 
 import at.favre.tools.dconvert.arg.*;
 import at.favre.tools.dconvert.exceptions.InvalidArgumentException;
-import at.favre.tools.dconvert.ui.CLInterpreter;
+import at.favre.tools.dconvert.ui.CLIInterpreter;
 import org.apache.tools.ant.types.Commandline;
 import org.junit.*;
 import org.junit.rules.TemporaryFolder;
@@ -56,7 +56,7 @@ public class CLIParserTest {
 	@Before
 	public void setUp() throws IOException {
 		defaultSrc = temporaryFolder.newFolder(FOLDER1);
-		defaultCmd = "-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\" -" + CLInterpreter.SCALE_ARG + " " + DEFAULT_SCALE;
+		defaultCmd = "-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\" -" + CLIInterpreter.SCALE_ARG + " " + DEFAULT_SCALE;
 	}
 
 	@After
@@ -68,14 +68,14 @@ public class CLIParserTest {
 	@Test
 	public void testSimpleUsage() throws Exception {
 		float scale = 2f;
-		check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\" -" + CLInterpreter.SCALE_ARG + " " + scale,
+		check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\" -" + CLIInterpreter.SCALE_ARG + " " + scale,
 				new Arguments.Builder(defaultSrc, scale).build());
 	}
 
 	@Test
 	public void testScales() throws Exception {
 		for (Float scale : Arrays.asList(new Float[]{0.75f, 1f, 2f, 3f, 4f, 5f, 6f, 1.33f, 2.3936573f})) {
-			check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + scale,
+			check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLIInterpreter.SCALE_ARG + " " + scale,
 					new Arguments.Builder(defaultSrc, scale).build());
 		}
 	}
@@ -83,40 +83,40 @@ public class CLIParserTest {
 	@Test
 	public void testScalesWidthInDp() throws Exception {
 		for (Integer scale : Arrays.asList(new Integer[]{1, 12, 24, 48, 106, 33, 500, 96, 256, 480})) {
-			check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + scale + "dp",
+			check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLIInterpreter.SCALE_ARG + " " + scale + "dp",
 					new Arguments.Builder(defaultSrc, scale).scaleType(EScaleType.DP_WIDTH).build());
 		}
 	}
 
 	@Test(expected = InvalidArgumentException.class)
 	public void test0ScalesWidthInDp() throws Exception {
-		check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + 0 + "dp",
+		check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLIInterpreter.SCALE_ARG + " " + 0 + "dp",
 				new Arguments.Builder(defaultSrc, 0).scaleType(EScaleType.DP_WIDTH).build());
 	}
 
 	@Test(expected = InvalidArgumentException.class)
 	public void test9999ScalesWidthInDp() throws Exception {
-		check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + 9999 + "dp",
+		check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLIInterpreter.SCALE_ARG + " " + 9999 + "dp",
 				new Arguments.Builder(defaultSrc, 9999).scaleType(EScaleType.DP_WIDTH).build());
 	}
 
 	@Test
 	public void testScalesHeightInDp() throws Exception {
 		for (Integer scale : Arrays.asList(new Integer[]{1, 12, 24, 48, 106, 33, 500, 96, 256, 480})) {
-			check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\" -" + CLInterpreter.SCALE_IS_HEIGHT_DP_ARG + "  -" + CLInterpreter.SCALE_ARG + " " + scale + "dp",
+			check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\" -" + CLIInterpreter.SCALE_IS_HEIGHT_DP_ARG + "  -" + CLIInterpreter.SCALE_ARG + " " + scale + "dp",
 					new Arguments.Builder(defaultSrc, scale).scaleType(EScaleType.DP_HEIGHT).build());
 		}
 	}
 
 	@Test(expected = InvalidArgumentException.class)
 	public void testScale0fShouldFail() throws Exception {
-		check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + 0f,
+		check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLIInterpreter.SCALE_ARG + " " + 0f,
 				new Arguments.Builder(defaultSrc, 0f).build());
 	}
 
 	@Test(expected = InvalidArgumentException.class)
 	public void testScale100ShouldFail() throws Exception {
-		check("-" + CLInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLInterpreter.SCALE_ARG + " " + 100f,
+		check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLIInterpreter.SCALE_ARG + " " + 100f,
 				new Arguments.Builder(defaultSrc, 100f).build());
 	}
 
@@ -126,7 +126,7 @@ public class CLIParserTest {
 				temporaryFolder.newFolder("layer1", "layer2"), temporaryFolder.newFolder("user", "Project", "su_Bf4-ldr")};
 
 		for (File srcFolder : Arrays.asList(srcDirs)) {
-			check("-" + CLInterpreter.SOURCE_ARG + " \"" + srcFolder.getAbsolutePath() + "\" -" + CLInterpreter.SCALE_ARG + " " + DEFAULT_SCALE,
+			check("-" + CLIInterpreter.SOURCE_ARG + " \"" + srcFolder.getAbsolutePath() + "\" -" + CLIInterpreter.SCALE_ARG + " " + DEFAULT_SCALE,
 					new Arguments.Builder(srcFolder, DEFAULT_SCALE).build());
 		}
 	}
@@ -137,67 +137,67 @@ public class CLIParserTest {
 				temporaryFolder.newFolder("res", "drawable-xxhdpi"), temporaryFolder.newFolder("user", "Project", "su_Bf4-ldr")};
 
 		for (File dstFolder : Arrays.asList(dstDirs)) {
-			check(defaultCmd + " -" + CLInterpreter.DST_ARG + " \"" + dstFolder.getAbsolutePath() + "\"",
+			check(defaultCmd + " -" + CLIInterpreter.DST_ARG + " \"" + dstFolder.getAbsolutePath() + "\"",
 					new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dstFolder(dstFolder).build());
 		}
 	}
 
 	@Test
 	public void testPlatforms() throws Exception {
-		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " all", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(EPlatform.getAll()).build());
-		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " android", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.ANDROID)).build());
-		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " ios", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.IOS)).build());
-		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " win", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.WINDOWS)).build());
-		check(defaultCmd + " -" + CLInterpreter.PLATFORM_ARG + " web", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.WEB)).build());
+		check(defaultCmd + " -" + CLIInterpreter.PLATFORM_ARG + " all", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(EPlatform.getAll()).build());
+		check(defaultCmd + " -" + CLIInterpreter.PLATFORM_ARG + " android", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.ANDROID)).build());
+		check(defaultCmd + " -" + CLIInterpreter.PLATFORM_ARG + " ios", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.IOS)).build());
+		check(defaultCmd + " -" + CLIInterpreter.PLATFORM_ARG + " win", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.WINDOWS)).build());
+		check(defaultCmd + " -" + CLIInterpreter.PLATFORM_ARG + " web", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.WEB)).build());
 	}
 
 	@Test
 	public void testOutCompressions() throws Exception {
-		check(defaultCmd + " -" + CLInterpreter.OUT_COMPRESSION_ARG + " jpg", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG).build());
-		check(defaultCmd + " -" + CLInterpreter.OUT_COMPRESSION_ARG + " png", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_PNG).build());
-		check(defaultCmd + " -" + CLInterpreter.OUT_COMPRESSION_ARG + " gif", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_GIF).build());
-		check(defaultCmd + " -" + CLInterpreter.OUT_COMPRESSION_ARG + " bmp", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_BMP).build());
-		check(defaultCmd + " -" + CLInterpreter.OUT_COMPRESSION_ARG + " png+jpg", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG_AND_PNG).build());
+		check(defaultCmd + " -" + CLIInterpreter.OUT_COMPRESSION_ARG + " jpg", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG).build());
+		check(defaultCmd + " -" + CLIInterpreter.OUT_COMPRESSION_ARG + " png", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_PNG).build());
+		check(defaultCmd + " -" + CLIInterpreter.OUT_COMPRESSION_ARG + " gif", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_GIF).build());
+		check(defaultCmd + " -" + CLIInterpreter.OUT_COMPRESSION_ARG + " bmp", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_BMP).build());
+		check(defaultCmd + " -" + CLIInterpreter.OUT_COMPRESSION_ARG + " png+jpg", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG_AND_PNG).build());
 	}
 
 	@Test
 	public void testCompressionQuality() throws Exception {
 		for (Float compression : Arrays.asList(new Float[]{0.0f, 0.1f, 0.05f, 1.0f, 0.5f, 0.7f, 0.8f, 0.999f, 0.0001f})) {
-			check(defaultCmd + " -" + CLInterpreter.OUT_COMPRESSION_ARG + " jpg" + " -" + CLInterpreter.COMPRESSION_QUALITY_ARG + " " + compression, new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG, compression).build());
+			check(defaultCmd + " -" + CLIInterpreter.OUT_COMPRESSION_ARG + " jpg" + " -" + CLIInterpreter.COMPRESSION_QUALITY_ARG + " " + compression, new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG, compression).build());
 		}
 	}
 
 	@Test(expected = InvalidArgumentException.class)
 	public void testCompressionQualityShouldFail() throws Exception {
-		check(defaultCmd + " -" + CLInterpreter.OUT_COMPRESSION_ARG + " jpg" + " -" + CLInterpreter.COMPRESSION_QUALITY_ARG + " " + 1.1f,
+		check(defaultCmd + " -" + CLIInterpreter.OUT_COMPRESSION_ARG + " jpg" + " -" + CLIInterpreter.COMPRESSION_QUALITY_ARG + " " + 1.1f,
 				new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.AS_JPG, 1.1f).build());
 	}
 
 	@Test
 	public void testThreadCounts() throws Exception {
 		for (Integer threadCount : Arrays.asList(new Integer[]{1, 2, 3, 4, 5, 6, 7, 8})) {
-			check(defaultCmd + " -" + CLInterpreter.THREADS_ARG + " " + threadCount, new Arguments.Builder(defaultSrc, DEFAULT_SCALE).threadCount(threadCount).build());
+			check(defaultCmd + " -" + CLIInterpreter.THREADS_ARG + " " + threadCount, new Arguments.Builder(defaultSrc, DEFAULT_SCALE).threadCount(threadCount).build());
 		}
 	}
 
 	@Test(expected = InvalidArgumentException.class)
 	public void testThreadCount0ShouldFail() throws Exception {
-		check(defaultCmd + " -" + CLInterpreter.THREADS_ARG + " " + 0, new Arguments.Builder(defaultSrc, DEFAULT_SCALE).threadCount(0).build());
+		check(defaultCmd + " -" + CLIInterpreter.THREADS_ARG + " " + 0, new Arguments.Builder(defaultSrc, DEFAULT_SCALE).threadCount(0).build());
 	}
 
 	@Test
 	public void testRoundingModes() throws Exception {
-		check(defaultCmd + " -" + CLInterpreter.ROUNDING_MODE_ARG + " round", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleRoundingStragy(RoundingHandler.Strategy.ROUND_HALF_UP).build());
-		check(defaultCmd + " -" + CLInterpreter.ROUNDING_MODE_ARG + " floor", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleRoundingStragy(RoundingHandler.Strategy.FLOOR).build());
-		check(defaultCmd + " -" + CLInterpreter.ROUNDING_MODE_ARG + " ceil", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleRoundingStragy(RoundingHandler.Strategy.CEIL).build());
+		check(defaultCmd + " -" + CLIInterpreter.ROUNDING_MODE_ARG + " round", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleRoundingStragy(RoundingHandler.Strategy.ROUND_HALF_UP).build());
+		check(defaultCmd + " -" + CLIInterpreter.ROUNDING_MODE_ARG + " floor", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleRoundingStragy(RoundingHandler.Strategy.FLOOR).build());
+		check(defaultCmd + " -" + CLIInterpreter.ROUNDING_MODE_ARG + " ceil", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleRoundingStragy(RoundingHandler.Strategy.CEIL).build());
 	}
 
 	@Test
 	public void testFlags() throws Exception {
 		check(defaultCmd + " -skipUpscaling", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).skipUpscaling(true).build());
-		check(defaultCmd + " -" + CLInterpreter.SKIP_EXISTING_ARG, new Arguments.Builder(defaultSrc, DEFAULT_SCALE).skipExistingFiles(true).build());
+		check(defaultCmd + " -" + CLIInterpreter.SKIP_EXISTING_ARG, new Arguments.Builder(defaultSrc, DEFAULT_SCALE).skipExistingFiles(true).build());
 		check(defaultCmd + " -androidIncludeLdpiTvdpi", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).includeAndroidLdpiTvdpi(true).build());
-		check(defaultCmd + " -" + CLInterpreter.VERBOSE_ARG, new Arguments.Builder(defaultSrc, DEFAULT_SCALE).verboseLog(true).build());
+		check(defaultCmd + " -" + CLIInterpreter.VERBOSE_ARG, new Arguments.Builder(defaultSrc, DEFAULT_SCALE).verboseLog(true).build());
 		check(defaultCmd + " -haltOnError", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).haltOnError(true).build());
 		check(defaultCmd + " -androidMipmapInsteadOfDrawable", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).createMipMapInsteadOfDrawableDir(true).build());
 		check(defaultCmd + " -antiAliasing", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).build());
@@ -212,7 +212,7 @@ public class CLIParserTest {
 	public void testFlagsCombinations() throws Exception {
 		check(defaultCmd + " -skipUpscaling -haltOnError -postProcessorPngCrush", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).haltOnError(true).enablePngCrush(true).skipUpscaling(true).build());
 		check(defaultCmd + " -antiAliasing -androidIncludeLdpiTvdpi", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).includeAndroidLdpiTvdpi(true).build());
-		check(defaultCmd + " -postProcessorWebp -" + CLInterpreter.VERBOSE_ARG + " -skipUpscaling -antiAliasing", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).postConvertWebp(true).verboseLog(true).skipUpscaling(true).build());
+		check(defaultCmd + " -postProcessorWebp -" + CLIInterpreter.VERBOSE_ARG + " -skipUpscaling -antiAliasing", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).antiAliasing(true).postConvertWebp(true).verboseLog(true).skipUpscaling(true).build());
 	}
 
 	@Test
@@ -220,8 +220,8 @@ public class CLIParserTest {
 		check(defaultCmd + " -dryRun", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dryRun(true).build());
 	}
 
-	public static void check(String cmd, Arguments ref) {
-		Arguments arg = CLInterpreter.parse(asArgArray(cmd));
+	private static void check(String cmd, Arguments ref) {
+		Arguments arg = CLIInterpreter.parse(asArgArray(cmd));
 		assertEquals("should create same args", ref, arg);
 		System.out.println("command line: " + cmd);
 		System.out.println("resulting arg: " + arg);

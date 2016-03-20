@@ -30,7 +30,7 @@ import java.util.Set;
 /**
  * Handles parsing of command line arguments
  */
-public class CLInterpreter {
+public class CLIInterpreter {
 	public static final String COMPRESSION_QUALITY_ARG = "compressionQuality";
 	public static final String THREADS_ARG = "threads";
 	public final static String SOURCE_ARG = "src";
@@ -62,7 +62,7 @@ public class CLInterpreter {
 			}
 
 			if (commandLine.hasOption("v") || commandLine.hasOption("version")) {
-				System.out.println("Version: " + CLInterpreter.class.getPackage().getImplementationVersion());
+				System.out.println("Version: " + CLIInterpreter.class.getPackage().getImplementationVersion());
 				return null;
 			}
 
@@ -188,7 +188,7 @@ public class CLInterpreter {
 		HelpFormatter help = new HelpFormatter();
 		help.setWidth(110);
 		help.setLeftPadding(4);
-		help.printHelp("converter", "version: " + CLInterpreter.class.getPackage().getImplementationVersion(), options, "", true);
+		help.printHelp("converter", "version: " + CLIInterpreter.class.getPackage().getImplementationVersion(), options, "", true);
 	}
 
 	private static Options setupOptions(ResourceBundle bundle) {

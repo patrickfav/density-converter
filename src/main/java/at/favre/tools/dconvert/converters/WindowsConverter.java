@@ -32,6 +32,8 @@ import java.util.List;
  */
 public class WindowsConverter extends APlatformConverter<PostfixDescriptor> {
 
+	public static final String ROOT_FOLDER = "Assets";
+
 	@Override
 	public List<PostfixDescriptor> usedOutputDensities(Arguments arguments) {
 		return getWindowsDescriptors();
@@ -56,7 +58,7 @@ public class WindowsConverter extends APlatformConverter<PostfixDescriptor> {
 		if (arguments.platform.size() > 1) {
 			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, "windows").getAbsolutePath(), arguments.dryRun);
 		}
-		return MiscUtil.createAndCheckFolder(new File(destinationFolder, "Assets").getAbsolutePath(), arguments.dryRun);
+		return MiscUtil.createAndCheckFolder(new File(destinationFolder, WindowsConverter.ROOT_FOLDER).getAbsolutePath(), arguments.dryRun);
 	}
 
 	@Override

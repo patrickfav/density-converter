@@ -17,7 +17,7 @@
 
 package at.favre.tools.dconvert.ui;
 
-import at.favre.tools.dconvert.Converter;
+import at.favre.tools.dconvert.DConvert;
 import at.favre.tools.dconvert.arg.*;
 import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
@@ -153,7 +153,7 @@ public class GUIController {
 				progressBar.setProgress(0);
 				progressBar.setDisable(false);
 
-				new Converter().execute(arg, false, new Converter.HandlerCallback() {
+				new DConvert().execute(arg, false, new DConvert.HandlerCallback() {
 					@Override
 					public void onProgress(float progress) {
 						Platform.runLater(() -> progressBar.setProgress(progress));

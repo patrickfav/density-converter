@@ -17,15 +17,32 @@
 
 package at.favre.tools.dconvert.arg;
 
+import at.favre.tools.dconvert.converters.*;
+
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Defines platforms to convert to
  */
 public enum EPlatform {
-	ANDROID, IOS, WINDOWS, WEB;
+	ANDROID(new AndroidConverter()),
+	IOS(new IOSConverter()),
+	WINDOWS(new WindowsConverter()),
+	WEB(new WebConverter());
+
+	private final IPlatformConverter converter;
+
+	EPlatform(IPlatformConverter converter) {
+		this.converter = converter;
+	}
+
+	public IPlatformConverter getConverter() {
+		return converter;
+	}
 
 	private static Set<EPlatform> ALL;
 
@@ -38,5 +55,9 @@ public enum EPlatform {
 			ALL = Collections.unmodifiableSet(temp);
 		}
 		return ALL;
+	}
+
+	public static List<IPlatformConverter> getAllConverters() {
+		return getAll().stream().map(EPlatform::getConverter).collect(Collectors.toList());
 	}
 }

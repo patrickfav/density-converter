@@ -18,7 +18,7 @@
 package at.favre.tools.dconvert;
 
 import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.ui.CLInterpreter;
+import at.favre.tools.dconvert.ui.CLIInterpreter;
 import at.favre.tools.dconvert.ui.GUI;
 import at.favre.tools.dconvert.util.MiscUtil;
 
@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Entry point of the app
+ * Entry point of the app. Use arg -h to get help.
  */
 public class Main {
 	public static void main(String[] rawArgs) {
@@ -36,7 +36,7 @@ public class Main {
 			return;
 		}
 
-		Arguments args = CLInterpreter.parse(rawArgs);
+		Arguments args = CLIInterpreter.parse(rawArgs);
 
 		if (args == null) {
 			return;
@@ -48,7 +48,7 @@ public class Main {
 
 		System.out.println("start converting " + args.filesToProcess.size() + " files");
 
-		new Converter().execute(args, true, new Converter.HandlerCallback() {
+		new DConvert().execute(args, true, new DConvert.HandlerCallback() {
 			int i = 0;
 			@Override
 			public void onProgress(float progress) {

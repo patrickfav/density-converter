@@ -14,13 +14,14 @@ import java.util.List;
  * Converts and creates css image-set style images
  */
 public class WebConverter extends APlatformConverter<PostfixDescriptor> {
+    public static final String ROOT_FOLDER = "img";
 
     @Override
     public List<PostfixDescriptor> usedOutputDensities(Arguments arguments) {
-        return getWindowsDescriptors();
+        return getWebDescriptors();
     }
 
-    public static List<PostfixDescriptor> getWindowsDescriptors() {
+    public static List<PostfixDescriptor> getWebDescriptors() {
         List<PostfixDescriptor> list = new ArrayList<>();
         list.add(new PostfixDescriptor(1, "1x", "-1x"));
         list.add(new PostfixDescriptor(2f, "2x", "-2x"));
@@ -37,7 +38,7 @@ public class WebConverter extends APlatformConverter<PostfixDescriptor> {
         if (arguments.platform.size() > 1) {
             destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, "web").getAbsolutePath(), arguments.dryRun);
         }
-        return MiscUtil.createAndCheckFolder(new File(destinationFolder, "img").getAbsolutePath(), arguments.dryRun);
+        return MiscUtil.createAndCheckFolder(new File(destinationFolder, ROOT_FOLDER).getAbsolutePath(), arguments.dryRun);
     }
 
     @Override

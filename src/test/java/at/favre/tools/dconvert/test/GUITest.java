@@ -131,9 +131,29 @@ public class GUITest extends ApplicationTest {
 
 	@Test
 	public void testPlatforms() throws Exception {
+		for (EPlatform ePlatform : Arguments.DEFAULT_PLATFORM) {
+			clickOn(getIdForPlatform(ePlatform));
+		}
+
 		for (EPlatform ePlatform : EPlatform.values()) {
-			clickOn("#choicePlatform").clickOn(ePlatform.toString());
-//			assertEquals("arguments should match", defaultBuilder.platform(ePlatform).build(), controller.getFromUI(false));
+			clickOn(getIdForPlatform(ePlatform));
+			assertEquals("arguments should match", defaultBuilder.platform(Collections.singleton(ePlatform)).build(), controller.getFromUI(false));
+			clickOn(getIdForPlatform(ePlatform));
+		}
+	}
+
+	private String getIdForPlatform(EPlatform platform) {
+		switch (platform) {
+			case ANDROID:
+				return "#tgAndroid";
+			case IOS:
+				return "#tgIos";
+			case WINDOWS:
+				return "#tgWindows";
+			case WEB:
+				return "#tgWeb";
+			default:
+				throw new IllegalArgumentException("platform unknown");
 		}
 	}
 
@@ -191,8 +211,12 @@ public class GUITest extends ApplicationTest {
 
 	@Test
 	public void testCase1() throws Exception {
+		for (EPlatform ePlatform : Arguments.DEFAULT_PLATFORM) {
+			clickOn(getIdForPlatform(ePlatform));
+		}
+
 		clickOn("#rbDpHeight").clickOn("#textFieldDp").write("64");
-		clickOn("#choicePlatform").clickOn(EPlatform.ANDROID.toString());
+		clickOn(getIdForPlatform(EPlatform.ANDROID));
 		clickOn("#cbSkipUpscaling");
 		clickOn("#cbEnablePngCrush");
 		clickOn("#choiceThreads").clickOn(String.valueOf(2));
@@ -203,8 +227,12 @@ public class GUITest extends ApplicationTest {
 
 	@Test
 	public void testCase2() throws Exception {
+		for (EPlatform ePlatform : Arguments.DEFAULT_PLATFORM) {
+			clickOn(getIdForPlatform(ePlatform));
+		}
+
 		clickOn("#rbDpWidth").clickOn("#textFieldDp").write("128");
-		clickOn("#choicePlatform").clickOn(EPlatform.ANDROID.toString());
+		clickOn(getIdForPlatform(EPlatform.ANDROID));
 		clickOn("#choiceCompression").clickOn(EOutputCompressionMode.AS_JPG.toString());
 		String quality = String.format(Locale.US, "%.1f", 0.3);
 		clickOn("#choiceCompressionQuality").clickOn(quality);

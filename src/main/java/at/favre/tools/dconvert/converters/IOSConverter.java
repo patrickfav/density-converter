@@ -33,6 +33,7 @@ import java.util.List;
  * Needed info to convert for Android
  */
 public class IOSConverter extends APlatformConverter<PostfixDescriptor> {
+	public static final String ROOT_FOLDER = "AssetCatalog";
 
 	@Override
 	public List<PostfixDescriptor> usedOutputDensities(Arguments arguments) {
@@ -60,7 +61,7 @@ public class IOSConverter extends APlatformConverter<PostfixDescriptor> {
 		if (arguments.iosCreateImagesetFolders) {
 			return MiscUtil.createAndCheckFolder(new File(destinationFolder, targetImageFileName + ".imageset").getAbsolutePath(), arguments.dryRun);
 		} else {
-			return MiscUtil.createAndCheckFolder(new File(destinationFolder, "AssetCatalog").getAbsolutePath(), arguments.dryRun);
+			return MiscUtil.createAndCheckFolder(new File(destinationFolder, ROOT_FOLDER).getAbsolutePath(), arguments.dryRun);
 		}
 	}
 
