@@ -82,6 +82,11 @@
     -fx-background-color: derive(-flatter-red, 40.0%);
 }
 
+.toggle-button:hover,
+.button:hover {
+    -fx-background-color: derive(-flatter-red, 20.0%);
+}
+
 .toggle-button:focused:selected {
     -fx-background-color: derive(-flatter-red, 40.0%), derive(-flatter-red, -20.0%);
     -fx-background-insets: 0.0, 0.2em;
@@ -237,6 +242,15 @@
     -fx-background-color: derive(-flatter-red, 40.0%);
 }
 
+.combo-box-base:hover,
+.choice-box:hover {
+    -fx-background-color: derive(-flatter-red, 20.0%);
+}
+
+.choice-box2:hover {
+    -fx-background-color: derive(-flatter-blue2, 20.0%);
+}
+
 .choice-box2:focused {
     -fx-background-color: derive(-flatter-blue2, 50.0%);
 }
@@ -297,12 +311,21 @@
 
 .check-box:focused > .box {
     -fx-background-color: -flatter-blue, derive(rgb(94.0, 203.0, 234.0), 80.0%);
-    -fx-background-insets: 0.0, 0.15em;
+    -fx-background-insets: 0.0, 0.1em;
+}
+
+.check-box:hover > .box {
+    -fx-background-color: -flatter-blue, derive(rgb(94.0, 203.0, 234.0), 80.0%);
+    -fx-background-insets: 0.0, 0.1em;
+}
+
+.check-box:hover {
+    -fx-cursor: hand;
 }
 
 .check-box:focused:armed > .box {
     -fx-background-color: -flatter-blue, derive(-fx-text-base-color, 80.0%);
-    -fx-background-insets: 0.0, 0.15em;
+    -fx-background-insets: 0.0, 0.1em;
 }
 
 .check-box:selected > .box > .mark,
@@ -329,22 +352,28 @@
 .radio-button:disabled > .radio,
 .radio-button:selected > .radio {
     -fx-background-color: -fx-text-base-color;
-    -fx-padding: 0.4em;
+    -fx-padding: 0.5em;
 }
 
 .radio-button:focused > .radio {
     -fx-background-color: -flatter-blue, derive(rgb(94.0, 203.0, 234.0), 80.0%);
-    -fx-background-insets: 0.0, 0.15em;
-    -fx-padding: 0.4em;
+    -fx-background-insets: 0.0, 0.1em;
+    -fx-padding: 0.5em;
 }
 
 .radio-button:focused:armed > .radio {
     -fx-background-color: -flatter-blue, derive(-fx-text-base-color, 80.0%);
-    -fx-background-insets: 0.0, 0.15em;
+    -fx-background-insets: 0.0, 0.1em;
 }
 
 .radio-button:selected > .radio > .dot {
     -fx-background-color: -dark;
+}
+
+.radio-button:hover > .radio {
+    -fx-background-color: -flatter-blue, derive(rgb(94.0, 203.0, 234.0), 80.0%);
+    -fx-background-insets: 0.0, 0.1em;
+    -fx-padding: 0.5em;
 }
 
 /*******************************************************************************
@@ -452,6 +481,7 @@
     -fx-background-color: -flatter-red;
 }
 
+.slider .thumb:hover,
 .slider .thumb:focused {
     -fx-background-color: derive(-flatter-red, 40.0%);
 }

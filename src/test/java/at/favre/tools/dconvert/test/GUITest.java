@@ -17,6 +17,7 @@ import java.awt.*;
 import java.io.File;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.ResourceBundle;
 
 import static org.junit.Assert.assertEquals;
 
@@ -29,11 +30,11 @@ public class GUITest extends ApplicationTest {
 	private GUIController controller;
 	private Arguments.Builder defaultBuilder;
 	private File defaultSrcFolder;
+	private ResourceBundle bundle = ResourceBundle.getBundle("bundles.strings", Locale.getDefault());
 
 	@BeforeClass
 	public static void setupSpec() throws Exception {
-
-		if (true) {
+		if (false) {
 			System.setProperty("testfx.robot", "glass");
 			System.setProperty("testfx.headless", "true");
 			System.setProperty("prism.order", "sw");
@@ -95,6 +96,11 @@ public class GUITest extends ApplicationTest {
 			clickOn("#cbEnableMozJpeg");
 			assertEquals("arguments should match", defaultBuilder.enableMozJpeg(false).build(), controller.getFromUI(false));
 		}
+
+		clickOn("#cbKeepUnoptimized");
+		assertEquals("arguments should match", defaultBuilder.keepUnoptimizedFilesPostProcessor(true).build(), controller.getFromUI(false));
+		clickOn("#cbKeepUnoptimized");
+		assertEquals("arguments should match", defaultBuilder.keepUnoptimizedFilesPostProcessor(false).build(), controller.getFromUI(false));
 	}
 
 	@Test
@@ -127,6 +133,10 @@ public class GUITest extends ApplicationTest {
 		assertEquals("arguments should match", defaultBuilder.skipExistingFiles(true).build(), controller.getFromUI(false));
 		clickOn("#cbSkipExisting");
 		assertEquals("arguments should match", defaultBuilder.skipExistingFiles(false).build(), controller.getFromUI(false));
+		clickOn("#cbIosCreateImageset");
+		assertEquals("arguments should match", defaultBuilder.iosCreateImagesetFolders(true).build(), controller.getFromUI(false));
+		clickOn("#cbIosCreateImageset");
+		assertEquals("arguments should match", defaultBuilder.iosCreateImagesetFolders(false).build(), controller.getFromUI(false));
 	}
 
 	@Test
@@ -160,7 +170,7 @@ public class GUITest extends ApplicationTest {
 	@Test
 	public void testCompressions() throws Exception {
 		for (EOutputCompressionMode eOutputCompressionMode : EOutputCompressionMode.values()) {
-			clickOn("#choiceCompression").clickOn(eOutputCompressionMode.toString());
+			clickOn("#choiceCompression").clickOn(bundle.getString(eOutputCompressionMode.rbKey));
 			assertEquals("arguments should match", defaultBuilder.compression(eOutputCompressionMode).build(), controller.getFromUI(false));
 		}
 	}
@@ -183,14 +193,13 @@ public class GUITest extends ApplicationTest {
 
 	@Test
 	public void testJpegQuality() throws Exception {
-		clickOn("#choiceCompression").clickOn(EOutputCompressionMode.AS_JPG.toString());
+		clickOn("#choiceCompression").clickOn(bundle.getString(EOutputCompressionMode.AS_JPG.rbKey));
 		for (float i = 0f; i < 1.1f; i += 0.1) {
-			String quality = String.format(Locale.US, "%.1f", i);
-			clickOn("#choiceCompressionQuality").clickOn(quality);
-			assertEquals("arguments should match", defaultBuilder.compression(EOutputCompressionMode.AS_JPG, Float.parseFloat(quality)).build(), controller.getFromUI(false));
+			clickOn("#choiceCompressionQuality").clickOn(GUIController.toJpgQ(i));
+			assertEquals("arguments should match", defaultBuilder.compression(EOutputCompressionMode.AS_JPG, Float.parseFloat(String.format(Locale.US, "%.1f", i))).build(), controller.getFromUI(false));
 		}
-		clickOn("#choiceCompressionQuality").clickOn(String.format(Locale.US, "%.1f", Arguments.DEFAULT_COMPRESSION_QUALITY));
-		clickOn("#choiceCompression").clickOn(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG.toString());
+		clickOn("#choiceCompressionQuality").clickOn(GUIController.toJpgQ(Arguments.DEFAULT_COMPRESSION_QUALITY));
+		clickOn("#choiceCompression").clickOn(bundle.getString(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG.rbKey));
 		assertEquals("arguments should match", defaultBuilder.compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, Arguments.DEFAULT_COMPRESSION_QUALITY).build(), controller.getFromUI(false));
 	}
 
@@ -233,13 +242,13 @@ public class GUITest extends ApplicationTest {
 
 		clickOn("#rbDpWidth").clickOn("#textFieldDp").write("128");
 		clickOn(getIdForPlatform(EPlatform.ANDROID));
-		clickOn("#choiceCompression").clickOn(EOutputCompressionMode.AS_JPG.toString());
-		String quality = String.format(Locale.US, "%.1f", 0.3);
-		clickOn("#choiceCompressionQuality").clickOn(quality);
+		clickOn("#choiceCompression").clickOn(bundle.getString(EOutputCompressionMode.AS_JPG.rbKey));
+		float jpegQ = 0.3f;
+		clickOn("#choiceCompressionQuality").clickOn(GUIController.toJpgQ(jpegQ));
 		clickOn("#cbSkipExisting");
 		assertEquals("arguments should match", new Arguments.Builder(defaultSrcFolder, 128).verboseLog(true)
 				.scaleType(EScaleType.DP_WIDTH).platform(Collections.singleton(EPlatform.ANDROID)).skipExistingFiles(true)
-				.compression(EOutputCompressionMode.AS_JPG, Float.parseFloat(quality))
+				.compression(EOutputCompressionMode.AS_JPG, Float.parseFloat(String.format(Locale.US, "%.1f", jpegQ)))
 				.build(), controller.getFromUI(false));
 	}
 

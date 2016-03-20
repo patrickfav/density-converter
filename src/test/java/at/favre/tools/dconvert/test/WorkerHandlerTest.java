@@ -28,6 +28,7 @@ public class WorkerHandlerTest extends AIntegrationTest {
 
 	@Before
 	public void setUp() throws Exception {
+		super.setUp();
 		random = new Random(12363012L);
 	}
 

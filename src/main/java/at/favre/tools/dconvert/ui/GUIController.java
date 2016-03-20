@@ -39,6 +39,7 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.util.StringConverter;
 
 import java.awt.*;
 import java.io.File;
@@ -219,15 +220,25 @@ public class GUIController {
 		scaleSlider.setValue(Arguments.DEFAULT_SCALE);
 
 		setPlatformToogles(Arguments.DEFAULT_PLATFORM);
+		choiceCompression.setConverter(new StringConverter() {
+			@Override
+			public String toString(Object object) {
+				return bundle.getString(((EOutputCompressionMode) object).rbKey);
+			}
 
+			@Override
+			public Object fromString(String string) {
+				return EOutputCompressionMode.getFromString(string, bundle);
+			}
+		});
 		choiceCompression.setItems(FXCollections.observableArrayList(
 				EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, EOutputCompressionMode.SAME_AS_INPUT_STRICT, new Separator(), EOutputCompressionMode.AS_JPG,
 				EOutputCompressionMode.AS_PNG, EOutputCompressionMode.AS_GIF, EOutputCompressionMode.AS_BMP, EOutputCompressionMode.AS_JPG_AND_PNG));
 		choiceCompression.getSelectionModel().select(Arguments.DEFAULT_OUT_COMPRESSION);
 
 		choiceCompressionQuality.setItems(FXCollections.observableArrayList(
-				0f, 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.75f, 0.8f, 0.85f, 0.9f, 0.95f, 1.0f));
-		choiceCompressionQuality.getSelectionModel().select(Float.valueOf(Arguments.DEFAULT_COMPRESSION_QUALITY));
+				toJpgQ(0f), toJpgQ(0.1f), toJpgQ(0.2f), toJpgQ(0.3f), toJpgQ(0.4f), toJpgQ(0.5f), toJpgQ(0.6f), toJpgQ(0.7f), toJpgQ(0.75f), toJpgQ(0.8f), toJpgQ(0.85f), toJpgQ(0.9f), toJpgQ(0.95f), toJpgQ(1.0f)));
+		choiceCompressionQuality.getSelectionModel().select(toJpgQ(Float.valueOf(Arguments.DEFAULT_COMPRESSION_QUALITY)));
 
 		choiceRounding.setItems(FXCollections.observableArrayList(
 				RoundingHandler.Strategy.ROUND_HALF_UP, RoundingHandler.Strategy.CEIL, RoundingHandler.Strategy.FLOOR));
@@ -278,6 +289,10 @@ public class GUIController {
 
 		loadPrefs();
 		new Thread(new PostProcessorChecker()).start();
+	}
+
+	public static String toJpgQ(Float floatQuality) {
+		return String.format(Locale.US, "%.0f", floatQuality * 100f) + "%";
 	}
 
 	private void setPlatformToogles(Set<EPlatform> platformSet) {
@@ -351,7 +366,7 @@ public class GUIController {
 
 			setPlatformToogles(args.platform);
 			choiceCompression.getSelectionModel().select(args.outputCompressionMode);
-			choiceCompressionQuality.getSelectionModel().select(args.compressionQuality);
+			choiceCompressionQuality.getSelectionModel().select(toJpgQ(args.compressionQuality));
 			choiceRounding.getSelectionModel().select(args.roundingHandler);
 			choiceThreads.getSelectionModel().select(Integer.valueOf(args.threadCount));
 
@@ -400,7 +415,7 @@ public class GUIController {
 		builder.dstFolder(textFieldDstPath.getText() != null && !textFieldDstPath.getText().trim().isEmpty() ? new File(textFieldDstPath.getText()) : null);
 		builder.scaleType(rbFactor.isSelected() ? EScaleType.FACTOR : rbDpWidth.isSelected() ? EScaleType.DP_WIDTH : EScaleType.DP_HEIGHT);
 		builder.platform(platformSet);
-		builder.compression((EOutputCompressionMode) choiceCompression.getSelectionModel().getSelectedItem(), (Float) choiceCompressionQuality.getSelectionModel().getSelectedItem());
+		builder.compression((EOutputCompressionMode) choiceCompression.getSelectionModel().getSelectedItem(), toJpgQFloat(choiceCompressionQuality.getSelectionModel().getSelectedItem()));
 		builder.scaleRoundingStragy((RoundingHandler.Strategy) choiceRounding.getSelectionModel().getSelectedItem());
 		builder.threadCount((Integer) choiceThreads.getSelectionModel().getSelectedItem());
 
@@ -419,6 +434,13 @@ public class GUIController {
 		builder.iosCreateImagesetFolders(cbIosCreateImageset.isSelected());
 
 		return builder.skipParamValidation(skipValidation).build();
+	}
+
+	private float toJpgQFloat(Object selectedItem) {
+		String raw = selectedItem.toString();
+		raw = raw.replace("%", "");
+		int rawInt = Integer.parseInt(raw);
+		return (float) rawInt / 100f;
 	}
 
 	private void resetUIAfterExecution() {

@@ -61,6 +61,8 @@ public class GUI extends Application {
 
 		Scene scene = new Scene(root, 600, height);
 		primaryStage.setScene(scene);
+		primaryStage.setMinWidth(400);
+		primaryStage.setMinHeight(500);
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_16.png"));
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_24.png"));
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_48.png"));
