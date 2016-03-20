@@ -14,7 +14,7 @@ import java.util.List;
  * System test through command line interface
  */
 public class CLISystemTest extends AIntegrationTest {
-	String defaultArgRaw;
+	private String defaultArgRaw;
 
 	@Before
 	public void setUp() throws Exception {

@@ -1,6 +1,6 @@
 # ![logo](src/main/resources/img/density_converter_icon_24.png) Density Image Converter Tool for Android, iOS and Windows
 
-This is a powerful little tool that helps **converting single or batches of images** to **Android**, **iOS** and **Windows** specific formats and density
+This is a powerful little tool that helps **converting single or batches of images** to **Android**, **iOS**, **Windows** and **Web** specific formats and density
 versions given the source scale factor or target width/height in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
 It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
 including PNG, JPEG, SVG, PSD and Android 9-patches. Using sophisticated scaling algorithms, it is designed to make conversion of images easy and
@@ -54,63 +54,68 @@ Will generate `mdpi`, `hdpi`, etc. folders in "C:/master-image/" containing the 
 
 Full list of arguments:
 
-    -androidIncludeLdpiTvdpi            Android only: creates mipmap sub-folders instead of drawable.
-    -androidMipmapInsteadOfDrawable     Android only: If set will include additional densities (ldpi and
-                                        tvdpi)
-    -antiAliasing                       Anti-aliases images creating a little more blurred result; useful for
-                                        very small images
-    -compressionQuality <0.0-1.0>       Only used with compression 'jpg' sets the quality [0-1.0] where 1.0 is
-                                        the highest quality. Default is 0.9
-    -dryRun                             Will not create any images or folder. Useful as fast preview in log
-                                        what images in what resolutions would be created.
-    -dst <path>                         The directory in which the converted files will be written. Will use
-                                        the source folder if this argument is omitted.
-    -gui                                Starts graphical user interface
-    -h,--help                           This help page
-    -haltOnError                        If set will stop the process if an error occurred during conversion
-    -keepOriginalPostProcessedFiles     If a post processor is run on a file, this flag will ensure that the
-                                        original will be kept (renamed _orig), otherwise only the optimized
-                                        image will be kept
-    -outCompression <png|jpg|gif|bmp>   Sets the compression of the converted images. Can be 'png', 'jpg',
-                                        'gif', 'bmp', 'png+jpg' or 'strict' which tries to use same
-                                        compression as source. By default will convert to png except if source
-                                        compression is jpeg.
-    -platform <all|android|ios|win>     Can be 'all', 'android', 'ios' or 'win'. Sets what formats the
-                                        converted images will be generated for. E.g. set 'android' if you only
-                                        want to convert to android format. Default is ALL
-    -postProcessorMozJpeg               Will post-process all jpegs with mozJpegs lossless compressor
-                                        'jpegtran'. Mozjpeg (specifically 'jpegtran') must be set in PATH,
-                                        tested with mozJpeg 3. Binaries for mozJpeg can be found on the
-                                        internet.
-    -postProcessorPngCrush              Will post-process all pngs with pngcrush, a lossless compressor. The
-                                        executable must be set in the system PATH as 'pngcrush' i.e executable
-                                        from every path. Pngcrush is a tool to compress pngs. Requires
-                                        v1.7.22+
-    -postProcessorWebp                  Will additionally convert all png/gif to lossless wepb and all jpg to
-                                        lossy webp with cwebp. Does not delete source files. The executable
-                                        must be set in the system path as 'cwebp' i.e executable from every
-                                        path. cwebp is the official converter from Google.
-    -roundingMode <round|ceil|floor>    Defines the rounding mode when scaling the dimensions. Possible
-                                        options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and
-                                        'ceil' (rounds up). Default is ROUND_HALF_UP
-    -scale <<float>|<int>dp>            The source. Can be an image file or a folder containing image files to
-                                        be converted. This argument is mandatory.
-    -scaleIsHeightDp                    If set and scale is in dp it will be interpreted as fixed height not
-                                        width
-    -skipExisting                       If set will not overwrite a already existing file
-    -skipUpscaling                      If set will only scale down, but not up to prevent image quality loss
-    -src <path to file or folder>       The source scale. This can either be a factor (1,1.5,2,3,4,etc.) used
-                                        if the images already have the correct resolution for one scale factor
-                                        and up- and downscaling for all other densities are needed. Ie. if you
-                                        have the src file in density xxxhdpi you pass '4'. You could also pass
-                                        a value in dp (density independent pixels) which denotes the output
-                                        pixel width (or height if the flag is set) in mdpi/x1. In this mode
-                                        all output images will have the same width (height). This argument is
-                                        mandatory.
-    -threads <1-8>                      Sets the count of max parallel threads (more is faster but uses more
-                                        memory). Possible values are 1-8. Default is 4
-    -v,--version                        Gets current version
-    -verbose                            If set will log to console more verbose
+    -androidIncludeLdpiTvdpi              Android only: creates mipmap sub-folders instead of drawable.
+    -androidMipmapInsteadOfDrawable       Android only: If set will include additional densities (ldpi and
+                                          tvdpi)
+    -antiAliasing                         Anti-aliases images creating a little more blurred result; useful
+                                          for very small images
+    -compressionQuality <0.0-1.0>         Only used with compression 'jpg' sets the quality [0-1.0] where 1.0
+                                          is the highest quality. Default is 0.9
+    -dryRun                               Will not create any images or folder. Useful as fast preview in log
+                                          what images in what resolutions would be created.
+    -dst <path>                           The directory in which the converted files will be written. Will use
+                                          the source folder if this argument is omitted.
+    -gui                                  Starts graphical user interface
+    -h,--help                             This help page
+    -haltOnError                          If set will stop the process if an error occurred during conversion
+    -iosCreateImagesetFolders             iOS only: Will create .imageset folders and Content.json for every
+                                          source image n iOS converter. Default is just all images in the root
+                                          folder.
+    -keepOriginalPostProcessedFiles       If a post processor is run on a file, this flag will ensure that the
+                                          original will be kept (renamed _orig), otherwise only the optimized
+                                          image will be kept
+    -outCompression <png|jpg|gif|bmp>     Sets the compression of the converted images. Can be 'png', 'jpg',
+                                          'gif', 'bmp', 'png+jpg' or 'strict' which tries to use same
+                                          compression as source. By default will convert to png except if
+                                          source compression is jpeg.
+    -platform <all|android|ios|win|web>   Can be 'all', 'android', 'ios', 'win' or 'web'. Sets what formats
+                                          the converted images will be generated for. E.g. set 'android' if
+                                          you only want to convert to android format. Default is [IOS,
+                                          ANDROID]
+    -postProcessorMozJpeg                 Will post-process all jpegs with mozJpegs lossless compressor
+                                          'jpegtran'. Mozjpeg (specifically 'jpegtran') must be set in PATH,
+                                          tested with mozJpeg 3. Binaries for mozJpeg can be found on the
+                                          internet.
+    -postProcessorPngCrush                Will post-process all pngs with pngcrush, a lossless compressor. The
+                                          executable must be set in the system PATH as 'pngcrush' i.e
+                                          executable from every path. Pngcrush is a tool to compress pngs.
+                                          Requires v1.7.22+
+    -postProcessorWebp                    Will additionally convert all png/gif to lossless wepb and all jpg
+                                          to lossy webp with cwebp. Does not delete source files. The
+                                          executable must be set in the system path as 'cwebp' i.e executable
+                                          from every path. cwebp is the official converter from Google.
+    -roundingMode <round|ceil|floor>      Defines the rounding mode when scaling the dimensions. Possible
+                                          options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and
+                                          'ceil' (rounds up). Default is ROUND_HALF_UP
+    -scale <[float]|[int]dp>              The source. Can be an image file or a folder containing image files
+                                          to be converted. This argument is mandatory.
+    -scaleIsHeightDp                      If set and scale is in dp it will be interpreted as fixed height not
+                                          width
+    -skipExisting                         If set will not overwrite a already existing file
+    -skipUpscaling                        If set will only scale down, but not up to prevent image quality
+                                          loss
+    -src <path to file or folder>         The source scale. This can either be a factor (1,1.5,2,3,4,etc.)
+                                          used if the images already have the correct resolution for one scale
+                                          factor and up- and downscaling for all other densities are needed.
+                                          Ie. if you have the src file in density xxxhdpi you pass '4'. You
+                                          could also pass a value in dp (density independent pixels) which
+                                          denotes the output pixel width (or height if the flag is set) in
+                                          mdpi/x1. In this mode all output images will have the same width
+                                          (height). This argument is mandatory.
+    -threads <1-8>                        Sets the count of max parallel threads (more is faster but uses more
+                                          memory). Possible values are 1-8. Default is 4
+    -v,--version                          Gets current version
+    -verbose                              If set will log to console more verbose
 
 # Details
 
@@ -155,11 +160,12 @@ You get an icon in 512x512 and want to display it in 48x48dp. The tool will gene
 
 This tool can converts to formats used in Android, iOS and Windows:
 
- * The Android converter will create `drawable-ldpi`, `drawable-mdpi`, etc. folders and saves images with the original name in there.
- * The iOS converter will create a folder for each image with the `.imageset` postfix and creates 3 images in them with no, `_2x` and `_3x` postfix; also including is the `Content.json`
- * The Windows converter will create an `Assets` folder containing all the images with `.scale-100`, `.scale-140` etc. postfixes
+ * **Android**: The Android converter will create `drawable-ldpi`, `drawable-mdpi`, etc. folders and saves images with the original name and respective scale factor in there. 9-Patches are specifically supported for Android - must have `.9.png` extension and only size correctly if out-compression is PNG.
+ * **iOS**: The iOS converter will either create a folder for each image with the `.imageset` postfix and 3 images in them with no, `@2x` and `@3x` postfix also including is the `Content.json`; or creates a single folder `AssetCatalog` with all the images in it.
+ * **Windows**: The Windows converter will create an `Assets` folder containing all the images with `.scale-100`, `.scale-140` etc. postfixes. This should be compatible with Windows universal apps.
+ * **Web**: The web converter will create an `img` folder containing all the images with a `1x` and a `2x` scale factor which is compatible with [the css image-set](http://www.hongkiat.com/blog/css-image-set/) definition for multiple densities.
 
-9-Patches are specifically supported for Android - must have `.9.png` extension and only size correctly if out-compression is PNG.
+There are some options that might change the format of the output. See cmd help or tooltips for more info.
 
 ## Supported File Types
 
