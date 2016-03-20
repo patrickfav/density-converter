@@ -166,7 +166,7 @@ public class DConvert {
 			for (Exception exception : exceptions) {
 				logStringBuilder.append(MiscUtil.getStackTrace(exception)).append("\n");
 			}
-			handlerCallback.onFinished(finishedJobs, exceptions, (System.currentTimeMillis() - beginMs), haltedDuringProcess, logStringBuilder.toString());
+			handlerCallback.onFinished(finishedJobs, exceptions, (System.currentTimeMillis() - beginMs), haltedDuringProcess, logStringBuilder.toString().trim());
 		}
 	}
 

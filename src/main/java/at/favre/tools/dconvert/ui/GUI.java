@@ -33,6 +33,8 @@ import java.util.ResourceBundle;
  * Main GUI Class
  */
 public class GUI extends Application {
+	public static int MIN_HEIGHT = 820;
+
 	public void launchApp(String[] args) {
 		launch(args);
 	}
@@ -52,15 +54,15 @@ public class GUI extends Application {
 		loader.setResources(bundle);
 		Parent root = loader.load();
 		GUIController controller = loader.<GUIController>getController();
-		controller.onCreate(store, bundle);
+		controller.onCreate(primaryStage, store, bundle);
 
-		int height = 820;
 		if (screenSize.getHeight() <= 768) {
-			height = 730;
+			MIN_HEIGHT = 740;
 		}
 
-		Scene scene = new Scene(root, 600, height);
+		Scene scene = new Scene(root, 600, MIN_HEIGHT);
 		primaryStage.setScene(scene);
+		primaryStage.setResizable(true);
 		primaryStage.setMinWidth(400);
 		primaryStage.setMinHeight(500);
 		primaryStage.getIcons().add(new Image("img/density_converter_icon_16.png"));

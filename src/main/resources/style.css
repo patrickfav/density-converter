@@ -19,12 +19,7 @@
     -fx-font-weight: bold;
 }
 
-.button-convert {
-    -fx-font-size: 1.5em;
-    -fx-font-weight: bold;
-}
-
-.button-sec {
+.button-sm {
     -fx-font-size: 0.8em;
     -fx-padding: 0.3em;
 }
@@ -38,6 +33,22 @@
 .why-info:hover {
     -fx-underline: false;
     -fx-cursor: hand;
+}
+
+.button-convert {
+    -fx-font-size: 1.5em;
+    -fx-font-weight: bold;
+    -fx-min-height: 3em;
+}
+
+.progress-convert {
+    -fx-font-size: 1.5em;
+    -fx-opacity: 0.3;
+    -fx-min-height: 3em;
+}
+
+.progress-convert > .track {
+    -fx-background-color: transparent;
 }
 
 /*******************************************************************************

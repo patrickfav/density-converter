@@ -376,6 +376,40 @@
     -fx-padding: 0.5em;
 }
 
+/* small */
+.radio-button-sm {
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.radio-button-sm > .radio,
+.radio-button-sm > .radio.unfocused,
+.radio-button-sm:disabled > .radio,
+.radio-button-sm:selected > .radio {
+    -fx-background-color: -fx-text-base-color;
+    -fx-padding: 0.3em;
+}
+
+.radio-button-sm:focused > .radio {
+    -fx-background-color: -flatter-blue, derive(rgb(94.0, 203.0, 234.0), 80.0%);
+    -fx-background-insets: 0.0, 0.05em;
+    -fx-padding: 0.3em;
+}
+
+.radio-button-sm:focused:armed > .radio {
+    -fx-background-color: -flatter-blue, derive(-fx-text-base-color, 80.0%);
+    -fx-background-insets: 0.0, 0.05em;
+}
+
+.radio-button-sm:selected > .radio > .dot {
+    -fx-background-color: -dark;
+}
+
+.radio-button-sm:hover > .radio {
+    -fx-background-color: -flatter-blue, derive(rgb(94.0, 203.0, 234.0), 80.0%);
+    -fx-background-insets: 0.0, 0.05em;
+    -fx-padding: 0.3em;
+}
+
 /*******************************************************************************
  *                                                                             *
  * ProgressBar                                                                 *

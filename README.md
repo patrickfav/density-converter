@@ -1,6 +1,6 @@
-# ![logo](src/main/resources/img/density_converter_icon_24.png) Density Image Converter Tool for Android, iOS and Windows
+# ![logo](src/main/resources/img/density_converter_icon_24.png) Density Image Converter Tool for Android, iOS, Windows and CSS
 
-This is a powerful little tool that helps **converting single or batches of images** to **Android**, **iOS**, **Windows** and **Web** specific formats and density
+This is a powerful little tool that helps **converting single or batches of images** to **Android**, **iOS**, **Windows** and **CSS** specific formats and density
 versions given the source scale factor or target width/height in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
 It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
 including PNG, JPEG, SVG, PSD and Android 9-patches. Using sophisticated scaling algorithms, it is designed to make conversion of images easy and
@@ -21,7 +21,6 @@ java -jar ./dconvert.jar
 will start the UI (_or double click the jar file_).
 
 **[Download here](https://github.com/patrickfav/density-converter/releases/)**
-
 <sup><sub>Requires Java 8 to run</sub></sup>
 
 _To use the post processor ([pngcrush](http://pmt.sourceforge.net/pngcrush/), [mozJpeg](http://mozjpeg.codelove.de/binaries.html) and [webp](https://developers.google.com/speed/webp/download)) the respective cmd tool must be set in PATH._

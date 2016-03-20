@@ -37,8 +37,11 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 
 import java.awt.*;
@@ -52,20 +55,17 @@ import java.util.List;
  * JavaFx main controller for GUI
  */
 public class GUIController {
-	public GridPane rootGridPane;
-	public Label labelWhyPP;
-	public Button btnDstFolderOpen;
-	public CheckBox cbIosCreateImageset;
-	public GridPane gridPaneToggleGroup;
-	public ToggleButton tgAndroid;
-	public ToggleButton tgIos;
-	public ToggleButton tgWindows;
-	public ToggleButton tgWeb;
-
+	public VBox vboxOptionsCheckboxes;
+	public VBox vboxPostProcessors;
+	public Label labelRounding;
+	public Label labelThreads;
+	public HBox hboxWhy;
+	public VBox vboxFillFreeSpace;
 	private IPreferenceStore preferenceStore;
 	private final FileChooser srcFileChooser = new FileChooser();
 	private final DirectoryChooser srcDirectoryChooser = new DirectoryChooser();
-
+	private ResourceBundle bundle;
+	public Label labelPostProcessor;
 	public TextField textFieldSrcPath;
 	public Button btnSrcFile;
 	public Button btnSrcFolder;
@@ -73,12 +73,10 @@ public class GUIController {
 	public Button btnConvert;
 	public TextField textFieldDstPath;
 	public Button btnDstFolder;
-
 	public ChoiceBox choiceCompression;
 	public ChoiceBox choiceCompressionQuality;
 	public ChoiceBox choiceRounding;
 	public ChoiceBox choiceThreads;
-
 	public CheckBox cbSkipExisting;
 	public CheckBox cbSkipUpscaling;
 	public CheckBox cbAndroidIncludeLdpiTvdpi;
@@ -109,10 +107,20 @@ public class GUIController {
 	public GridPane gridPaneScaleFactorLabel;
 	public Label labelDpPostFix;
 	public CheckBox cbDryRun;
+	public GridPane rootGridPane;
+	public Label labelWhyPP;
+	public Button btnDstFolderOpen;
+	public CheckBox cbIosCreateImageset;
+	public GridPane gridPaneToggleGroup;
+	public ToggleButton tgAndroid;
+	public ToggleButton tgIos;
+	public ToggleButton tgWindows;
+	public ToggleButton tgWeb;
+	public RadioButton rbOptSimple;
+	public RadioButton rbOptAdvanced;
+	public ToggleGroup optionTypeToggleGroup;
 
-	private ResourceBundle bundle;
-
-	public void onCreate(IPreferenceStore store, ResourceBundle bundle) {
+	public void onCreate(final Stage stage, IPreferenceStore store, ResourceBundle bundle) {
 		this.bundle = bundle;
 		this.preferenceStore = store;
 
@@ -139,6 +147,7 @@ public class GUIController {
 				}
 			}
 		});
+
 		btnSrcFolder.setOnAction(new FolderPicker(srcDirectoryChooser, textFieldSrcPath, textFieldDstPath, bundle));
 		btnDstFolder.setOnAction(new FolderPicker(srcDirectoryChooser, textFieldDstPath, null, bundle));
 		btnConvert.setOnAction(event -> {
@@ -147,12 +156,11 @@ public class GUIController {
 				Arguments arg = getFromUI(false);
 				saveToPrefs(arg);
 				btnConvert.setDisable(true);
-				progressBar.setDisable(true);
 				labelResult.setText("");
 				textFieldConsole.setText("");
 				textFieldConsole.setDisable(true);
 				progressBar.setProgress(0);
-				progressBar.setDisable(false);
+				btnConvert.setText("");
 
 				new DConvert().execute(arg, false, new DConvert.HandlerCallback() {
 					@Override
@@ -211,6 +219,39 @@ public class GUIController {
 			labelDpWidth.setVisible(rbDpWidth.isSelected());
 			labelDpHeight.setVisible(rbDpHeight.isSelected());
 		});
+
+		optionTypeToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+			if (rbOptAdvanced.isSelected()) {
+				if (stage.getHeight() < GUI.MIN_HEIGHT) {
+					stage.setHeight(GUI.MIN_HEIGHT);
+				}
+			}
+		});
+
+		gridPaneOptionsCheckboxes.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		gridPaneOptionsCheckboxes.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		gridPanePostProcessors.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		gridPanePostProcessors.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		labelPostProcessor.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		labelPostProcessor.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		hboxWhy.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		hboxWhy.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		vboxOptionsCheckboxes.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		vboxOptionsCheckboxes.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		vboxPostProcessors.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		vboxPostProcessors.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		labelRounding.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		labelRounding.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		labelThreads.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		labelThreads.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		choiceThreads.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		choiceThreads.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		choiceRounding.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		choiceRounding.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		textFieldConsole.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		textFieldConsole.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		vboxFillFreeSpace.managedProperty().bind(rbOptSimple.selectedProperty());
+		vboxFillFreeSpace.visibleProperty().bind(rbOptSimple.selectedProperty());
 
 		scaleSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
 			labelScale.setText(
@@ -382,6 +423,8 @@ public class GUIController {
 			cbEnableMozJpeg.setSelected(args.enableMozJpeg);
 			cbKeepUnoptimized.setSelected(args.keepUnoptimizedFilesPostProcessor);
 			cbIosCreateImageset.setSelected(args.iosCreateImagesetFolders);
+			rbOptAdvanced.setSelected(args.guiAdvancedOptions);
+			rbOptSimple.setSelected(!args.guiAdvancedOptions);
 		}
 	}
 
@@ -432,6 +475,7 @@ public class GUIController {
 		builder.enableMozJpeg(cbEnableMozJpeg.isSelected());
 		builder.keepUnoptimizedFilesPostProcessor(cbKeepUnoptimized.isSelected());
 		builder.iosCreateImagesetFolders(cbIosCreateImageset.isSelected());
+		builder.guiAdvancedOptions(rbOptAdvanced.isSelected());
 
 		return builder.skipParamValidation(skipValidation).build();
 	}
@@ -444,9 +488,10 @@ public class GUIController {
 	}
 
 	private void resetUIAfterExecution() {
-		progressBar.setProgress(1);
+		progressBar.setProgress(0);
 		btnConvert.setDisable(false);
 		textFieldConsole.setDisable(false);
+		btnConvert.setText(bundle.getString("main.btn.convert"));
 	}
 
 	public void setSrcForTest(File srcFile) {
