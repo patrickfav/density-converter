@@ -34,7 +34,7 @@ public class GUITest extends ApplicationTest {
 
 	@BeforeClass
 	public static void setupSpec() throws Exception {
-		if (true) {
+		if (false) {
 			System.setProperty("testfx.robot", "glass");
 			System.setProperty("testfx.headless", "true");
 			System.setProperty("prism.order", "sw");
@@ -138,6 +138,10 @@ public class GUITest extends ApplicationTest {
 		assertEquals("arguments should match", defaultBuilder.iosCreateImagesetFolders(true).build(), controller.getFromUI(false));
 		clickOn("#cbIosCreateImageset");
 		assertEquals("arguments should match", defaultBuilder.iosCreateImagesetFolders(false).build(), controller.getFromUI(false));
+		clickOn("#cbCleanBeforeConvert");
+		assertEquals("arguments should match", defaultBuilder.clearDirBeforeConvert(true).build(), controller.getFromUI(false));
+		clickOn("#cbCleanBeforeConvert");
+		assertEquals("arguments should match", defaultBuilder.clearDirBeforeConvert(false).build(), controller.getFromUI(false));
 	}
 
 	@Test

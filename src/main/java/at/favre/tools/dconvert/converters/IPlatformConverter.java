@@ -34,4 +34,11 @@ public interface IPlatformConverter {
 	 * @return result
 	 */
 	Result convert(File srcImageFile, Arguments arguments);
+
+	/**
+	 * Cleans (ie. deletes) all dirs that would be generated with this converter and arguments
+	 *
+	 * @param arguments
+	 */
+	void clean(Arguments arguments);
 }

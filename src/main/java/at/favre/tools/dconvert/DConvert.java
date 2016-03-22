@@ -71,6 +71,13 @@ public class DConvert {
 				converters.add(ePlatform.getConverter());
 			}
 
+			if (args.clearDirBeforeConvert) {
+				logStringBuilder.append("clear out dirs before convert\n");
+				for (IPlatformConverter converter : converters) {
+					converter.clean(args);
+				}
+			}
+
 			if (args.enablePngCrush) {
 				IPostProcessor postProcessor = new PngCrushProcessor();
 				if (postProcessor.isSupported()) {

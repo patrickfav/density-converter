@@ -76,10 +76,9 @@ public class AndroidConverterTest extends AConverterTest {
 
 		List<DensityFolder> expectedDirs = new ArrayList<>();
 
-		String prefix = arguments.createMipMapInsteadOfDrawableDir ? "mipmap" : "drawable";
 
 		expectedDirs.addAll(AndroidConverter.getAndroidDensityDescriptors(arguments).stream().map(
-				androidDensityDescriptor -> new DensityFolder(prefix + androidDensityDescriptor.folderName.replace("drawable", ""), androidDensityDescriptor.scale)).collect(Collectors.toList()));
+				androidDensityDescriptor -> new DensityFolder(androidDensityDescriptor.folderName, androidDensityDescriptor.scale)).collect(Collectors.toList()));
 
 		assertFalse("expected dirs should not be empty", expectedDirs.isEmpty());
 		if (!files.isEmpty()) {

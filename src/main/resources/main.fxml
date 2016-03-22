@@ -268,7 +268,15 @@
                 <Tooltip text="%arg.descr.iosimageset"/>
             </tooltip>
         </CheckBox>
-
+        <CheckBox fx:id="cbCleanBeforeConvert" styleClass="check-box" maxWidth="Infinity"
+                  text="%main.cb.clean"
+                  GridPane.columnIndex="0" alignment="CENTER_LEFT"
+                  GridPane.rowIndex="4" GridPane.hgrow="always"
+                  GridPane.vgrow="always">
+            <tooltip>
+                <Tooltip text="%arg.descr.clean"/>
+            </tooltip>
+        </CheckBox>
     </GridPane>
 
     <VBox fx:id="vboxPostProcessors" minHeight="5" GridPane.columnIndex="0" GridPane.rowIndex="10"

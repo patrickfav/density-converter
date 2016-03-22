@@ -176,6 +176,7 @@ public class CLIInterpreter {
 			builder.enableMozJpeg(commandLine.hasOption("postProcessorMozJpeg"));
 			builder.keepUnoptimizedFilesPostProcessor(commandLine.hasOption("keepOriginalPostProcessedFiles"));
 			builder.iosCreateImagesetFolders(commandLine.hasOption("iosCreateImagesetFolders"));
+			builder.clearDirBeforeConvert(commandLine.hasOption("clean"));
 
 			return builder.build();
 		} catch (Exception e) {
@@ -218,6 +219,7 @@ public class CLIInterpreter {
 		Option dpScaleIsHeight = Option.builder(SCALE_IS_HEIGHT_DP_ARG).desc(bundle.getString("arg.descr.cmd.dpIsHeight")).build();
 		Option dryRun = Option.builder("dryRun").desc(bundle.getString("arg.descr.dryrun")).build();
 		Option enableMozJpeg = Option.builder("postProcessorMozJpeg").desc(bundle.getString("arg.descr.mozjpeg")).build();
+		Option cleanBeforeConvert = Option.builder("clean").desc(bundle.getString("arg.descr.clean")).build();
 
 		Option help = Option.builder("h").longOpt("help").desc(bundle.getString("arg.descr.cmd.help")).build();
 		Option version = Option.builder("v").longOpt("version").desc(bundle.getString("arg.descr.cmd.version")).build();
@@ -232,7 +234,7 @@ public class CLIInterpreter {
 		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(androidIncludeLdpiTvdpi).addOption(verboseLog)
 				.addOption(antiAliasing).addOption(dryRun).addOption(haltOnError).addOption(mipmapInsteadOfDrawable)
 				.addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight).addOption(enableMozJpeg)
-				.addOption(keepUnPostProcessed).addOption(iosCreateImagesetFolders);
+				.addOption(keepUnPostProcessed).addOption(iosCreateImagesetFolders).addOption(cleanBeforeConvert);
 
 		options.addOptionGroup(mainArgs);
 

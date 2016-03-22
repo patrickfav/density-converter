@@ -30,7 +30,7 @@ import java.util.*;
  * Handles all the arguments that can be set in the dconvert
  */
 public class Arguments implements Serializable {
-	private static final long serialVersionUID = 5;
+	private static final long serialVersionUID = 6;
 
 	public static final float DEFAULT_SCALE = 3f;
 	public static final float DEFAULT_COMPRESSION_QUALITY = 0.9f;
@@ -43,7 +43,7 @@ public class Arguments implements Serializable {
 
 
 	public final static Arguments START_GUI = new Arguments(null, null, 0.27346f, null, null, null, 0.9362f, 996254, false,
-			false, false, false, false, false, false, false, false, false, false, false, false, null, false);
+			false, false, false, false, false, false, false, false, false, false, false, false, null, false, false);
 
 	public final File src;
 	public final File dst;
@@ -68,13 +68,14 @@ public class Arguments implements Serializable {
 	public final RoundingHandler.Strategy roundingHandler;
 	public final boolean iosCreateImagesetFolders;
 	public final boolean guiAdvancedOptions;
+	public final boolean clearDirBeforeConvert;
 	public transient final List<File> filesToProcess;
 
 
 	public Arguments(File src, File dst, float scale, Set<EPlatform> platform, EOutputCompressionMode outputCompressionMode,
 	                 EScaleType scaleType, float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
 	                 boolean verboseLog, boolean includeAndroidLdpiTvdpi, boolean haltOnError, boolean createMipMapInsteadOfDrawableDir,
-	                 boolean iosCreateImagesetFolders, boolean enablePngCrush, boolean enableMozJpeg, boolean postConvertWebp, boolean enableAntiAliasing, boolean dryRun, boolean keepUnoptimizedFilesPostProcessor, RoundingHandler.Strategy roundingHandler, boolean guiAdvancedOptions) {
+	                 boolean iosCreateImagesetFolders, boolean enablePngCrush, boolean enableMozJpeg, boolean postConvertWebp, boolean enableAntiAliasing, boolean dryRun, boolean keepUnoptimizedFilesPostProcessor, RoundingHandler.Strategy roundingHandler, boolean guiAdvancedOptions, boolean clearDirBeforeConvert) {
 		this.dst = dst;
 		this.src = src;
 		this.scale = scale;
@@ -98,6 +99,7 @@ public class Arguments implements Serializable {
 		this.keepUnoptimizedFilesPostProcessor = keepUnoptimizedFilesPostProcessor;
 		this.roundingHandler = roundingHandler;
 		this.guiAdvancedOptions = guiAdvancedOptions;
+		this.clearDirBeforeConvert = clearDirBeforeConvert;
 
 		this.filesToProcess = new ArrayList<>();
 
@@ -119,7 +121,7 @@ public class Arguments implements Serializable {
 
 	public Arguments() {
 		this(null, null, DEFAULT_SCALE, DEFAULT_PLATFORM, DEFAULT_OUT_COMPRESSION, DEFAULT_SCALE_TYPE, DEFAULT_COMPRESSION_QUALITY, DEFAULT_THREAD_COUNT,
-				false, false, true, false, false, false, false, false, false, false, false, false, false, DEFAULT_ROUNDING_STRATEGY, false);
+				false, false, true, false, false, false, false, false, false, false, false, false, false, DEFAULT_ROUNDING_STRATEGY, false, false);
 	}
 
 	public double round(double raw) {
@@ -152,6 +154,7 @@ public class Arguments implements Serializable {
 				", roundingHandler=" + roundingHandler +
 				", iosCreateImagesetFolders=" + iosCreateImagesetFolders +
 				", guiAdvancedOptions=" + guiAdvancedOptions +
+				", clearDirBeforeConvert=" + clearDirBeforeConvert +
 				", filesToProcess=" + filesToProcess +
 				'}';
 	}
@@ -180,6 +183,7 @@ public class Arguments implements Serializable {
 		if (keepUnoptimizedFilesPostProcessor != arguments.keepUnoptimizedFilesPostProcessor) return false;
 		if (iosCreateImagesetFolders != arguments.iosCreateImagesetFolders) return false;
 		if (guiAdvancedOptions != arguments.guiAdvancedOptions) return false;
+		if (clearDirBeforeConvert != arguments.clearDirBeforeConvert) return false;
 		if (src != null ? !src.equals(arguments.src) : arguments.src != null) return false;
 		if (dst != null ? !dst.equals(arguments.dst) : arguments.dst != null) return false;
 		if (platform != null ? !platform.equals(arguments.platform) : arguments.platform != null) return false;
@@ -215,6 +219,7 @@ public class Arguments implements Serializable {
 		result = 31 * result + (roundingHandler != null ? roundingHandler.hashCode() : 0);
 		result = 31 * result + (iosCreateImagesetFolders ? 1 : 0);
 		result = 31 * result + (guiAdvancedOptions ? 1 : 0);
+		result = 31 * result + (clearDirBeforeConvert ? 1 : 0);
 		result = 31 * result + (filesToProcess != null ? filesToProcess.hashCode() : 0);
 		return result;
 	}
@@ -255,6 +260,7 @@ public class Arguments implements Serializable {
 		private boolean keepUnoptimizedFilesPostProcessor;
 		private boolean iosCreateImagesetFolders = false;
 		private boolean guiAdvancedOptions;
+		private boolean clearDirBeforeConvert;
 
 		public Builder(File src, float srcScale) {
 			this.src = src;
@@ -372,6 +378,11 @@ public class Arguments implements Serializable {
 			return this;
 		}
 
+		public Builder clearDirBeforeConvert(boolean b) {
+			this.clearDirBeforeConvert = b;
+			return this;
+		}
+
 		public Arguments build() throws InvalidArgumentException {
 			if (!internalSkipParamValidation) {
 				ResourceBundle bundle = ResourceBundle.getBundle("bundles.strings", Locale.getDefault());
@@ -416,7 +427,7 @@ public class Arguments implements Serializable {
 			}
 			return new Arguments(src, dst, srcScale, platform, outputCompressionMode, scaleType, compressionQuality, threadCount,
 					skipExistingFiles, skipUpscaling, verboseLog, includeAndroidLdpiTvdpi, haltOnError, createMipMapInsteadOfDrawableDir,
-					iosCreateImagesetFolders, enablePngCrush, enableMozJpeg, postConvertWebp, enableAntiAliasing, dryRun, keepUnoptimizedFilesPostProcessor, roundingStrategy, guiAdvancedOptions);
+					iosCreateImagesetFolders, enablePngCrush, enableMozJpeg, postConvertWebp, enableAntiAliasing, dryRun, keepUnoptimizedFilesPostProcessor, roundingStrategy, guiAdvancedOptions, clearDirBeforeConvert);
 		}
 	}
 

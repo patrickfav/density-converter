@@ -31,7 +31,7 @@ import java.util.List;
  * Needed info to convert for Windows
  */
 public class WindowsConverter extends APlatformConverter<PostfixDescriptor> {
-
+	private static final String WINDOWS_FOLDER_NAME = "windows";
 	public static final String ROOT_FOLDER = "Assets";
 
 	@Override
@@ -56,7 +56,7 @@ public class WindowsConverter extends APlatformConverter<PostfixDescriptor> {
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
 		if (arguments.platform.size() > 1) {
-			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, "windows").getAbsolutePath(), arguments.dryRun);
+			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, WINDOWS_FOLDER_NAME).getAbsolutePath(), arguments.dryRun);
 		}
 		return MiscUtil.createAndCheckFolder(new File(destinationFolder, WindowsConverter.ROOT_FOLDER).getAbsolutePath(), arguments.dryRun);
 	}
@@ -79,5 +79,14 @@ public class WindowsConverter extends APlatformConverter<PostfixDescriptor> {
 	@Override
 	public void onPostExecute(Arguments arguments) {
 
+	}
+
+	@Override
+	public void clean(Arguments arguments) {
+		if (arguments.platform.size() == 1) {
+			MiscUtil.deleteFolder(new File(arguments.dst, ROOT_FOLDER));
+		} else {
+			MiscUtil.deleteFolder(new File(new File(arguments.dst, WINDOWS_FOLDER_NAME), ROOT_FOLDER));
+		}
 	}
 }

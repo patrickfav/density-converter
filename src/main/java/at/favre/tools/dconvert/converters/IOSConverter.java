@@ -34,6 +34,7 @@ import java.util.List;
  */
 public class IOSConverter extends APlatformConverter<PostfixDescriptor> {
 	public static final String ROOT_FOLDER = "AssetCatalog";
+	private static final String IOS_FOLDER_NAME = "ios";
 
 	@Override
 	public List<PostfixDescriptor> usedOutputDensities(Arguments arguments) {
@@ -56,7 +57,7 @@ public class IOSConverter extends APlatformConverter<PostfixDescriptor> {
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
 		if (arguments.platform.size() > 1) {
-			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, "ios").getAbsolutePath(), arguments.dryRun);
+			destinationFolder = MiscUtil.createAndCheckFolder(new File(destinationFolder, IOS_FOLDER_NAME).getAbsolutePath(), arguments.dryRun);
 		}
 		if (arguments.iosCreateImagesetFolders) {
 			return MiscUtil.createAndCheckFolder(new File(destinationFolder, targetImageFileName + ".imageset").getAbsolutePath(), arguments.dryRun);
@@ -115,5 +116,20 @@ public class IOSConverter extends APlatformConverter<PostfixDescriptor> {
 		sb.append("\n\t],\n\t\"info\": {\n\t\t\"author\": \"xcode\",\n\t\t\"version\": 1\n\t}\n}");
 
 		return sb.toString();
+	}
+
+	@Override
+	public void clean(Arguments arguments) {
+		if (arguments.platform.size() == 1) {
+			if (arguments.iosCreateImagesetFolders) {
+				for (File filesToProcess : arguments.filesToProcess) {
+					MiscUtil.deleteFolder(new File(arguments.dst, MiscUtil.getFileNameWithoutExtension(filesToProcess) + ".imageset"));
+				}
+			} else {
+				MiscUtil.deleteFolder(new File(arguments.dst, ROOT_FOLDER));
+			}
+		} else {
+			MiscUtil.deleteFolder(new File(arguments.dst, IOS_FOLDER_NAME));
+		}
 	}
 }

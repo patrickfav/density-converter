@@ -32,6 +32,8 @@ import java.util.List;
  */
 public class AndroidConverter extends APlatformConverter<AndroidDensityDescriptor> {
 
+	private static final String ANDROID_FOLDER_NAME = "android";
+
 	@Override
 	public List<AndroidDensityDescriptor> usedOutputDensities(Arguments arguments) {
 		return getAndroidDensityDescriptors(arguments);
@@ -39,15 +41,16 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 
 	public static List<AndroidDensityDescriptor> getAndroidDensityDescriptors(Arguments arguments) {
 		List<AndroidDensityDescriptor> list = new ArrayList<>();
+		String dirPrefix = arguments.createMipMapInsteadOfDrawableDir ? "mipmap" : "drawable";
 		if (arguments.includeAndroidLdpiTvdpi) {
-			list.add(new AndroidDensityDescriptor(0.75f, "ldpi", "drawable-ldpi"));
-			list.add(new AndroidDensityDescriptor(1.33f, "tvdpi", "drawable-tvdpi"));
+			list.add(new AndroidDensityDescriptor(0.75f, "ldpi", dirPrefix + "-ldpi"));
+			list.add(new AndroidDensityDescriptor(1.33f, "tvdpi", dirPrefix + "-tvdpi"));
 		}
-		list.add(new AndroidDensityDescriptor(1, "mdpi", "drawable-mdpi"));
-		list.add(new AndroidDensityDescriptor(1.5f, "hdpi", "drawable-hdpi"));
-		list.add(new AndroidDensityDescriptor(2, "xhdpi", "drawable-xhdpi"));
-		list.add(new AndroidDensityDescriptor(3, "xxhdpi", "drawable-xxhdpi"));
-		list.add(new AndroidDensityDescriptor(4, "xxxhdpi", "drawable-xxxhdpi"));
+		list.add(new AndroidDensityDescriptor(1, "mdpi", dirPrefix + "-mdpi"));
+		list.add(new AndroidDensityDescriptor(1.5f, "hdpi", dirPrefix + "-hdpi"));
+		list.add(new AndroidDensityDescriptor(2, "xhdpi", dirPrefix + "-xhdpi"));
+		list.add(new AndroidDensityDescriptor(3, "xxhdpi", dirPrefix + "-xxhdpi"));
+		list.add(new AndroidDensityDescriptor(4, "xxxhdpi", dirPrefix + "-xxxhdpi"));
 		return list;
 	}
 
@@ -59,7 +62,7 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 	@Override
 	public File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments) {
 		if (arguments.platform.size() > 1) {
-			return MiscUtil.createAndCheckFolder(new File(destinationFolder, "android").getAbsolutePath(), arguments.dryRun);
+			return MiscUtil.createAndCheckFolder(new File(destinationFolder, ANDROID_FOLDER_NAME).getAbsolutePath(), arguments.dryRun);
 		} else {
 			return destinationFolder;
 		}
@@ -67,8 +70,7 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 
 	@Override
 	public File createFolderForOutputFile(File mainSubFolder, AndroidDensityDescriptor density, Dimension dimension, String targetFileName, Arguments arguments) {
-		String folderName = (arguments.createMipMapInsteadOfDrawableDir ? density.folderName.replaceAll("drawable", "mipmap") : density.folderName);
-		return MiscUtil.createAndCheckFolder(new File(mainSubFolder, folderName).getAbsolutePath(), arguments.dryRun);
+		return MiscUtil.createAndCheckFolder(new File(mainSubFolder, density.folderName).getAbsolutePath(), arguments.dryRun);
 	}
 
 	@Override
@@ -88,5 +90,17 @@ public class AndroidConverter extends APlatformConverter<AndroidDensityDescripto
 
 	public static boolean isNinePatch(File file) {
 		return file.getName().endsWith(".9.png");
+	}
+
+	@Override
+	public void clean(Arguments arguments) {
+		if (arguments.platform.size() == 1) {
+			for (AndroidDensityDescriptor androidDensityDescriptor : getAndroidDensityDescriptors(arguments)) {
+				File dir = new File(arguments.dst, androidDensityDescriptor.folderName);
+				MiscUtil.deleteFolder(dir);
+			}
+		} else {
+			MiscUtil.deleteFolder(new File(arguments.dst, ANDROID_FOLDER_NAME));
+		}
 	}
 }

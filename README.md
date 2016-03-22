@@ -58,6 +58,8 @@ Full list of arguments:
                                           tvdpi)
     -antiAliasing                         Anti-aliases images creating a little more blurred result; useful
                                           for very small images
+    -clean                                Deletes all file and folders in out dir that would be used in
+                                          current configuration before converting.
     -compressionQuality <0.0-1.0>         Only used with compression 'jpg' sets the quality [0-1.0] where 1.0
                                           is the highest quality. Default is 0.9
     -dryRun                               Will not create any images or folder. Useful as fast preview in log

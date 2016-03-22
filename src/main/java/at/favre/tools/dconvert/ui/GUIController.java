@@ -61,6 +61,7 @@ public class GUIController {
 	public Label labelThreads;
 	public HBox hboxWhy;
 	public VBox vboxFillFreeSpace;
+	public CheckBox cbCleanBeforeConvert;
 	private IPreferenceStore preferenceStore;
 	private final FileChooser srcFileChooser = new FileChooser();
 	private final DirectoryChooser srcDirectoryChooser = new DirectoryChooser();
@@ -417,8 +418,10 @@ public class GUIController {
 			cbEnableMozJpeg.setSelected(args.enableMozJpeg);
 			cbKeepUnoptimized.setSelected(args.keepUnoptimizedFilesPostProcessor);
 			cbIosCreateImageset.setSelected(args.iosCreateImagesetFolders);
+			cbCleanBeforeConvert.setSelected(args.clearDirBeforeConvert);
 			rbOptAdvanced.setSelected(args.guiAdvancedOptions);
 			rbOptSimple.setSelected(!args.guiAdvancedOptions);
+
 		}
 	}
 
@@ -470,6 +473,7 @@ public class GUIController {
 		builder.keepUnoptimizedFilesPostProcessor(cbKeepUnoptimized.isSelected());
 		builder.iosCreateImagesetFolders(cbIosCreateImageset.isSelected());
 		builder.guiAdvancedOptions(rbOptAdvanced.isSelected());
+		builder.clearDirBeforeConvert(cbCleanBeforeConvert.isSelected());
 
 		return builder.skipParamValidation(skipValidation).build();
 	}
