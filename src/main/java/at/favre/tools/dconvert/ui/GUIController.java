@@ -240,14 +240,8 @@ public class GUIController {
 		vboxOptionsCheckboxes.visibleProperty().bind(rbOptAdvanced.selectedProperty());
 		vboxPostProcessors.managedProperty().bind(rbOptAdvanced.selectedProperty());
 		vboxPostProcessors.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		labelRounding.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		labelRounding.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		labelThreads.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		labelThreads.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		choiceThreads.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		choiceThreads.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		choiceRounding.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		choiceRounding.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+		gridPaneChoiceBoxes.managedProperty().bind(rbOptAdvanced.selectedProperty());
+		gridPaneChoiceBoxes.visibleProperty().bind(rbOptAdvanced.selectedProperty());
 		textFieldConsole.managedProperty().bind(rbOptAdvanced.selectedProperty());
 		textFieldConsole.visibleProperty().bind(rbOptAdvanced.selectedProperty());
 		vboxFillFreeSpace.managedProperty().bind(rbOptSimple.selectedProperty());
@@ -542,6 +536,13 @@ public class GUIController {
 
 			if (dir != null && dir.isFile()) {
 				dir = dir.getParentFile();
+			}
+
+			while (true) {
+				if (dir == null || dir.isDirectory()) break;
+				if (!dir.exists()) {
+					dir = dir.getParentFile();
+				}
 			}
 
 			if (textFieldPath.getText().isEmpty() || !dir.exists() || !dir.isDirectory()) {
