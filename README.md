@@ -198,10 +198,10 @@ One of the main features of this converter is downscaling. Unfortunately without
 ![comparison-ldpi](src/main/resources/img/ldpi_comparison.png)
 ![comparison-ldpi](src/main/resources/img/mdpi_comparison.png)
 
-1) Density Converter using Thumbnailator with default settings
-2) Photoshop CS5 with bicubic algorithm
-3) imgscalr with ULTRA_QUALITY setting
-4) Java2d with render hints VALUE_INTERPOLATION_BICUBIC, VALUE_RENDER_QUALITY, VALUE_ANTIALIAS_ON
+1. Density Converter using Thumbnailator with default settings
+2. Photoshop CS5 with bicubic algorithm
+3. imgscalr with ULTRA_QUALITY setting
+4. Java2d with render hints VALUE_INTERPOLATION_BICUBIC, VALUE_RENDER_QUALITY, VALUE_ANTIALIAS_ON
 
 ## Post Processors
 
