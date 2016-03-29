@@ -4,7 +4,7 @@ This is a powerful little tool that helps **converting single or batches of imag
 versions given the source scale factor or target width/height in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
 It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
 including PNG, JPEG, SVG, PSD and Android 9-patches. Using sophisticated scaling algorithms, it is designed to make conversion of images easy and
-fast while keeping the image quality high. To further optimize the output post processors like **pngcrush** and **mozJpeg** can be used (see section below).
+fast while keeping the image quality high (comparable to PS). To further optimize the output post processors like **pngcrush** and **mozJpeg** can be used (see section below).
 
 Usage:
 
@@ -56,8 +56,8 @@ Full list of arguments:
     -androidIncludeLdpiTvdpi              Android only: creates mipmap sub-folders instead of drawable.
     -androidMipmapInsteadOfDrawable       Android only: If set will include additional densities (ldpi and
                                           tvdpi)
-    -antiAliasing                         Anti-aliases images creating a little more blurred result; useful
-                                          for very small images
+    -antiAliasing                         Anti-aliases images creating a little more blurred result; a light
+                                          3x3 convolve matrix is used; useful for very small images
     -clean                                Deletes all file and folders in out dir that would be used in
                                           current configuration before converting.
     -compressionQuality <0.0-1.0>         Only used with compression 'jpg' sets the quality [0-1.0] where 1.0
@@ -192,12 +192,16 @@ If an image will be re-compressed with a file type that does not support alpha, 
 
 ## Quality Comparison
 One of the main features of this converter is downscaling. Unfortunately without using specific algorithms, down scaled
- images may look jagged. Density converter uses the algorithms of [imgscalr](https://github.com/thebuzzmedia/imgscalr) which
- provide fairly good quality, comparable to Photoshop output (although PS comes out ahead a bit). The following
- diagram is to compare the expected quality when using this tool in comparison to Java's native Graphics2D and Photoshop.
+ images may look jagged. Density converter uses the algorithms of [Thumbnailator](https://github.com/coobird/thumbnailator) which
+ provide fairly good quality, comparable to Photoshop output. Thumbnailator turned out to generater better results than the other popular open source resizer lib [imgscalr](https://github.com/thebuzzmedia/imgscalr) which was used in previous versions. The following diagram is to compare the expected quality when using this tool in comparison to Java's native Graphics2D and Photoshop.
 
+![comparison-ldpi](src/main/resources/img/ldpi_comparison.png)
+![comparison-ldpi](src/main/resources/img/mdpi_comparison.png)
 
-![comparison](src/main/resources/img/quality_comparison.png)
+1) Density Converter using Thumbnailator with default settings
+2) Photoshop CS5 with bicubic algorithm
+3) imgscalr with ULTRA_QUALITY setting
+4) Java2d with render hints VALUE_INTERPOLATION_BICUBIC, VALUE_RENDER_QUALITY, VALUE_ANTIALIAS_ON
 
 ## Post Processors
 
@@ -266,7 +270,7 @@ The .jar file will be in the generated `/target` folder
 ## Credits
 
 * TIFF, PSD, SVG image type support [TwelveMonkeys](https://github.com/haraldk/TwelveMonkeys)
-* HQ image resizing with [imgscalr](https://github.com/thebuzzmedia/imgscalr)
+* HQ image resizing with [Thumbnailator](https://github.com/coobird/thumbnailator)
 * JavaFx theme based on Flatter by [hendrikebbers](https://github.com/guigarage/javafx-collection/tree/master/flatter)
 * Image file icon: Icon made by [Freepik](http://www.freepik.com/)
 * 9-patch resizing routine from [Redwarp](https://github.com/redwarp/9-Patch-Resizer)

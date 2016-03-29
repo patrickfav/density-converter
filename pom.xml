@@ -6,7 +6,7 @@
 
     <groupId>at.favre.tools</groupId>
     <artifactId>dconvert</artifactId>
-    <version>0.9.1</version>
+    <version>0.9.2</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -85,9 +85,9 @@
         </dependency>
         <!-- hq image scaling -->
         <dependency>
-            <groupId>org.imgscalr</groupId>
-            <artifactId>imgscalr-lib</artifactId>
-            <version>4.2</version>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>[0.4, 0.5)</version>
         </dependency>
         <!-- supported reading/writing image types -->
         <dependency>

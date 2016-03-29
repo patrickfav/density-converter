@@ -24,7 +24,9 @@ import com.twelvemonkeys.imageio.metadata.exif.EXIFReader;
 import com.twelvemonkeys.imageio.metadata.jpeg.JPEG;
 import com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegment;
 import com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegmentUtil;
-import org.imgscalr.Scalr;
+import net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker;
+import net.coobird.thumbnailator.resizers.DefaultResizerFactory;
+import net.coobird.thumbnailator.resizers.Resizer;
 
 import javax.imageio.*;
 import javax.imageio.metadata.IIOMetadata;
@@ -34,7 +36,8 @@ import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +49,9 @@ import java.util.List;
  * Main Util class containing all
  */
 public class ImageUtil {
+    public static final ConvolveOp OP_ANTIALIAS = new ConvolveOp(
+            new Kernel(3, 3, new float[]{.0f, .08f, .0f, .08f, .68f, .08f,
+                    .0f, .08f, .0f}), ConvolveOp.EDGE_NO_OP, null);
 
     public static LoadedImage loadImage(File input) throws Exception {
         if (input == null) {
@@ -172,13 +178,16 @@ public class ImageUtil {
         BufferedImage scaledImage = null;
         if (imageToScale != null) {
 
-            BufferedImageOp[] bufferedImageOpArray = new BufferedImageOp[]{};
+            Resizer resizer = DefaultResizerFactory.getInstance()
+                    .getResizer(new Dimension(imageToScale.getWidth(), imageToScale.getHeight()), new Dimension(dWidth, dHeight));
+
+            scaledImage = new FixedSizeThumbnailMaker(dWidth, dHeight, false, true)
+                    .resizer(resizer)
+                    .make(imageToScale);
 
             if (antiAlias) {
-                bufferedImageOpArray = new BufferedImageOp[]{Scalr.OP_ANTIALIAS};
+                scaledImage = OP_ANTIALIAS.filter(scaledImage, null);
             }
-
-            scaledImage = Scalr.resize(imageToScale, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_EXACT, dWidth, dHeight, bufferedImageOpArray);
 
             if (!compression.hasTransparency) {
                 BufferedImage convertedImg = new BufferedImage(scaledImage.getWidth(), scaledImage.getHeight(), BufferedImage.TYPE_INT_RGB);

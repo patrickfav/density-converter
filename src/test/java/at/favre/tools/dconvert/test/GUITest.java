@@ -34,7 +34,7 @@ public class GUITest extends ApplicationTest {
 
 	@BeforeClass
 	public static void setupSpec() throws Exception {
-		if (false) {
+		if (true) {
 			System.setProperty("testfx.robot", "glass");
 			System.setProperty("testfx.headless", "true");
 			System.setProperty("prism.order", "sw");
