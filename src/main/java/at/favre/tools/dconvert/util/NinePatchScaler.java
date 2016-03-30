@@ -35,7 +35,7 @@ public class NinePatchScaler {
 	public BufferedImage scale(BufferedImage inputImage, Dimension dimensions) throws NinePatchException {
 		BufferedImage trimmedImage = this.trim9PBorder(inputImage);
 
-		trimmedImage = ImageUtil.scale(trimmedImage, dimensions.width, dimensions.height, ImageType.ECompression.PNG, Color.white, false);
+		trimmedImage = ImageUtil.getDefaultScaler().scale(trimmedImage, dimensions.width, dimensions.height, ImageType.ECompression.PNG, Color.white, false);
 
 		BufferedImage borderImage;
 
@@ -118,7 +118,7 @@ public class NinePatchScaler {
 	private BufferedImage resizeBorder(final BufferedImage border, int targetWidth, int targetHeight) {
 		if (targetWidth > border.getWidth()
 				|| targetHeight > border.getHeight()) {
-			BufferedImage endImage = ImageUtil.scale(border, targetWidth,
+			BufferedImage endImage = ImageUtil.getDefaultScaler().scale(border, targetWidth,
 					targetHeight, ImageType.ECompression.PNG, Color.white, false);
 			this.enforceBorderColors(endImage);
 			return endImage;
