@@ -157,7 +157,6 @@ public class CLIParserTest {
 		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " bilinear", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.BILINEAR).build());
 		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " bicubic", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.BICUBIC).build());
 		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " nn", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.NEAREST_NEIGHBOR).build());
-		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " progressive", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.PROGRESSIVE_BILINEAR).build());
 	}
 
 	@Test

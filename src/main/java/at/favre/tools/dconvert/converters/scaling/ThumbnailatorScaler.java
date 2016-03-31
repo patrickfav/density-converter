@@ -7,7 +7,6 @@ import net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker;
 import net.coobird.thumbnailator.resizers.AbstractResizer;
 import net.coobird.thumbnailator.resizers.DefaultResizerFactory;
 import net.coobird.thumbnailator.resizers.Resizer;
-import net.coobird.thumbnailator.resizers.Resizers;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -23,7 +22,7 @@ public class ThumbnailatorScaler implements IBufferedImageScaler {
         BufferedImage scaledImage = null;
         if (imageToScale != null) {
 
-            Resizer resizer = get(algorithm, new Dimension(imageToScale.getWidth(), imageToScale.getHeight()), new Dimension(dWidth, dHeight));
+            Resizer resizer = translate(algorithm, new Dimension(imageToScale.getWidth(), imageToScale.getHeight()), new Dimension(dWidth, dHeight));
 
             scaledImage = new FixedSizeThumbnailMaker(dWidth, dHeight, false, true)
                     .resizer(resizer).make(imageToScale);
@@ -41,23 +40,21 @@ public class ThumbnailatorScaler implements IBufferedImageScaler {
         return scaledImage;
     }
 
-    private Resizer get(EScalingAlgorithm algorithm, Dimension image, Dimension target) {
+    private Resizer translate(EScalingAlgorithm algorithm, Dimension image, Dimension target) {
         switch (algorithm) {
             default:
             case AUTO:
                 return DefaultResizerFactory.getInstance().getResizer(image, target);
             case BILINEAR:
-                return Resizers.BILINEAR;
+                return new ProgressiveResizer(RenderingHints.VALUE_INTERPOLATION_BILINEAR);
             case BICUBIC:
-                return Resizers.BICUBIC;
-            case PROGRESSIVE_BILINEAR:
-                return new ProgressiveBicubicResizer();
+                return new ProgressiveResizer(RenderingHints.VALUE_INTERPOLATION_BICUBIC);
             case NEAREST_NEIGHBOR:
                 return new NearestNeighborResizer();
         }
     }
 
-    private static class NearestNeighborResizer extends AbstractResizer {
+    public static class NearestNeighborResizer extends AbstractResizer {
         public NearestNeighborResizer() {
             this(Collections.<RenderingHints.Key, Object>emptyMap());
         }
@@ -73,14 +70,23 @@ public class ThumbnailatorScaler implements IBufferedImageScaler {
         }
     }
 
-    public class ProgressiveBicubicResizer extends AbstractResizer {
-
-        public ProgressiveBicubicResizer() {
-            this(Collections.<RenderingHints.Key, Object>emptyMap());
+    public static class ProgressiveResizer extends AbstractResizer {
+        public ProgressiveResizer(Object interpolationValue) {
+            this(interpolationValue, Collections.emptyMap());
         }
 
-        public ProgressiveBicubicResizer(Map<RenderingHints.Key, Object> hints) {
-            super(RenderingHints.VALUE_INTERPOLATION_BICUBIC, hints);
+        public ProgressiveResizer(Object interpolationValue, Map<RenderingHints.Key, Object> hints) {
+            super(interpolationValue, hints);
+            checkArg(interpolationValue);
+        }
+
+        private void checkArg(Object interpolationValue) {
+            if (interpolationValue != RenderingHints.VALUE_INTERPOLATION_BICUBIC &&
+                    interpolationValue != RenderingHints.VALUE_INTERPOLATION_BILINEAR &&
+                    interpolationValue != RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
+                    )
+                throw new IllegalArgumentException("wrong argument passed muts be one of RenderingHints.VALUE_INTERPOLATION_BICUBIC, " +
+                        "RenderingHints.VALUE_INTERPOLATION_BILINEAR or RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR");
         }
 
         @Override
@@ -96,9 +102,7 @@ public class ThumbnailatorScaler implements IBufferedImageScaler {
 
             // If multi-step downscaling is not required, perform one-step.
             if ((targetWidth * 2 >= currentWidth) && (targetHeight * 2 >= currentHeight)) {
-                Graphics2D g = destImage.createGraphics();
-                g.drawImage(srcImage, 0, 0, targetWidth, targetHeight, null);
-                g.dispose();
+                super.resize(srcImage, destImage);
                 return;
             }
 

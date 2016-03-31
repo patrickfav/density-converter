@@ -40,7 +40,7 @@ public class Arguments implements Serializable {
 	public static final Set<EPlatform> DEFAULT_PLATFORM = new HashSet<>(Arrays.asList(EPlatform.ANDROID, EPlatform.IOS));
 	public static final EOutputCompressionMode DEFAULT_OUT_COMPRESSION = EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG;
 	public static final EScaleMode DEFAULT_SCALE_TYPE = EScaleMode.FACTOR;
-	public static final EScalingAlgorithm DEFAULT_SCALING_ALGO = EScalingAlgorithm.PROGRESSIVE_BILINEAR;
+	public static final EScalingAlgorithm DEFAULT_SCALING_ALGO = EScalingAlgorithm.AUTO;
 
 
 	public final static Arguments START_GUI = new Arguments(null, null, 0.27346f, null, null, null, null, 0.9362f, 996254, false,

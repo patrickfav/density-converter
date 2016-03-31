@@ -10,8 +10,8 @@ import java.awt.image.BufferedImage;
 /**
  * Using java natives Graphics2d with best possible renderhints
  */
-public class Graphics2dScaler implements IBufferedImageScaler {
-	@Override
+public class NaiveGraphics2dScaler implements IBufferedImageScaler {
+    @Override
 	public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, EScalingAlgorithm algorithm, Color background, boolean antiAlias) {
 		BufferedImage scaledImage = null;
 		if (imageToScale != null) {
@@ -22,8 +22,8 @@ public class Graphics2dScaler implements IBufferedImageScaler {
 
 			scaledImage = new BufferedImage(dWidth, dHeight, imageType);
 			Graphics2D graphics2D = scaledImage.createGraphics();
-			graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-			graphics2D.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+            graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, translate(algorithm));
+            graphics2D.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
 			graphics2D.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
 			graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 			graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -42,5 +42,18 @@ public class Graphics2dScaler implements IBufferedImageScaler {
 			}
 		}
 		return scaledImage;
-	}
+    }
+
+    private Object translate(EScalingAlgorithm algorithm) {
+        switch (algorithm) {
+            default:
+            case BICUBIC:
+            case AUTO:
+                return RenderingHints.VALUE_INTERPOLATION_BICUBIC;
+            case BILINEAR:
+                return RenderingHints.VALUE_INTERPOLATION_BICUBIC;
+            case NEAREST_NEIGHBOR:
+                return RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
+        }
+    }
 }
