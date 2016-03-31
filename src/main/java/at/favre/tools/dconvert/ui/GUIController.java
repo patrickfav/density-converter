@@ -390,13 +390,13 @@ public class GUIController {
 			scaleSlider.setValue(Arguments.DEFAULT_SCALE);
 			textFieldDp.setText(String.valueOf((int) args.scale));
 
-			if (args.scaleType == EScaleType.FACTOR) {
+			if (args.scaleMode == EScaleMode.FACTOR) {
 				rbFactor.setSelected(true);
 				scaleSlider.setValue(args.scale);
 				textFieldDp.setText("");
-			} else if (args.scaleType == EScaleType.DP_WIDTH) {
+			} else if (args.scaleMode == EScaleMode.DP_WIDTH) {
 				rbDpWidth.setSelected(true);
-			} else if (args.scaleType == EScaleType.DP_HEIGHT) {
+			} else if (args.scaleMode == EScaleMode.DP_HEIGHT) {
 				rbDpHeight.setSelected(true);
 			}
 
@@ -453,7 +453,7 @@ public class GUIController {
 
 		Arguments.Builder builder = new Arguments.Builder(new File(textFieldSrcPath.getText()), scale);
 		builder.dstFolder(textFieldDstPath.getText() != null && !textFieldDstPath.getText().trim().isEmpty() ? new File(textFieldDstPath.getText()) : null);
-		builder.scaleType(rbFactor.isSelected() ? EScaleType.FACTOR : rbDpWidth.isSelected() ? EScaleType.DP_WIDTH : EScaleType.DP_HEIGHT);
+		builder.scaleMode(rbFactor.isSelected() ? EScaleMode.FACTOR : rbDpWidth.isSelected() ? EScaleMode.DP_WIDTH : EScaleMode.DP_HEIGHT);
 		builder.platform(platformSet);
 		builder.compression((EOutputCompressionMode) choiceCompression.getSelectionModel().getSelectedItem(), toJpgQFloat(choiceCompressionQuality.getSelectionModel().getSelectedItem()));
 		builder.scaleRoundingStragy((RoundingHandler.Strategy) choiceRounding.getSelectionModel().getSelectedItem());

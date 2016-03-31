@@ -19,7 +19,7 @@
 package at.favre.tools.dconvert.util;
 
 import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EScaleType;
+import at.favre.tools.dconvert.arg.EScaleMode;
 import at.favre.tools.dconvert.converters.descriptors.DensityDescriptor;
 
 import java.awt.*;
@@ -40,7 +40,7 @@ public class DensityBucketUtil {
             srcDimension.setSize(srcDimension.getWidth() - 2, srcDimension.getHeight() - 2);
         }
 
-        switch (args.scaleType) {
+        switch (args.scaleMode) {
             default:
             case FACTOR:
                 return getDensityBucketsWithFactorScale(densities, srcDimension, args, scale);
@@ -94,12 +94,12 @@ public class DensityBucketUtil {
     private static Dimension getHqDimension(File image, Arguments args) throws IOException {
         Dimension srcDimension = ImageUtil.getImageDimension(image);
         Dimension hqDimension;
-        if (args.scaleType == EScaleType.FACTOR && args.scale < SVG_UPSCALE_FACTOR) {
+        if (args.scaleMode == EScaleMode.FACTOR && args.scale < SVG_UPSCALE_FACTOR) {
             hqDimension = new Dimension((int) args.round(SVG_UPSCALE_FACTOR / args.scale * (float) srcDimension.width), (int) args.round(SVG_UPSCALE_FACTOR / args.scale * (float) srcDimension.width));
-        } else if (args.scaleType == EScaleType.DP_WIDTH && (args.scale * SVG_UPSCALE_FACTOR < srcDimension.width)) {
+        } else if (args.scaleMode == EScaleMode.DP_WIDTH && (args.scale * SVG_UPSCALE_FACTOR < srcDimension.width)) {
             float scaleFactor = args.scale / (float) srcDimension.width * SVG_UPSCALE_FACTOR;
             hqDimension = new Dimension((int) args.round(scaleFactor * (float) srcDimension.width), (int) args.round(scaleFactor * (float) srcDimension.height));
-        } else if (args.scaleType == EScaleType.DP_HEIGHT && (args.scale * SVG_UPSCALE_FACTOR < srcDimension.height)) {
+        } else if (args.scaleMode == EScaleMode.DP_HEIGHT && (args.scale * SVG_UPSCALE_FACTOR < srcDimension.height)) {
             float scaleFactor = args.scale / (float) srcDimension.height * SVG_UPSCALE_FACTOR;
             hqDimension = new Dimension((int) args.round(scaleFactor * (float) srcDimension.width), (int) args.round(scaleFactor * (float) srcDimension.height));
         } else {

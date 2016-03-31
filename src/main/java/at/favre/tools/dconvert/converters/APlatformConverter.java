@@ -18,7 +18,7 @@
 package at.favre.tools.dconvert.converters;
 
 import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EScaleType;
+import at.favre.tools.dconvert.arg.EScaleMode;
 import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.converters.descriptors.DensityDescriptor;
 import at.favre.tools.dconvert.util.DensityBucketUtil;
@@ -47,7 +47,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 			StringBuilder log = new StringBuilder();
 			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ")
-					.append(imageData.getImage().getWidth()).append("x").append(imageData.getImage().getHeight()).append(" (").append(args.scale).append(args.scaleType == EScaleType.FACTOR ? "x" : "dp").append(")\n");
+					.append(imageData.getImage().getWidth()).append("x").append(imageData.getImage().getHeight()).append(" (").append(args.scale).append(args.scaleMode == EScaleMode.FACTOR ? "x" : "dp").append(")\n");
 
 			Map<T, Dimension> densityMap = DensityBucketUtil.getDensityBuckets(usedOutputDensities(args), new Dimension(imageData.getImage().getWidth(), imageData.getImage().getHeight()), args, args.scale, isNinePatch);
 
@@ -67,7 +67,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 							.append(entry.getKey().scale).append(") ").append(isNinePatch ? "(9-patch)" : "").append("\n");
 
 					if (!args.dryRun) {
-						List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), imageData, entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing, isNinePatch);
+						List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), imageData, entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing, isNinePatch, args.scaleAlgorithm);
 
 						allResultingFiles.addAll(files);
 

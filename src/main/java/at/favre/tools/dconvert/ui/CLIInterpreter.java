@@ -36,6 +36,7 @@ public class CLIInterpreter {
 	public final static String SOURCE_ARG = "src";
 	public final static String SCALE_ARG = "scale";
 	public final static String PLATFORM_ARG = "platform";
+	public final static String SCALING_ALGO_ARG = "algorithm";
 	public static final String OUT_COMPRESSION_ARG = "outCompression";
 	public static final String ROUNDING_MODE_ARG = "roundingMode";
 	public static final String DST_ARG = "dst";
@@ -78,11 +79,11 @@ public class CLIInterpreter {
 			builder = new Arguments.Builder(new File(commandLine.getOptionValue(SOURCE_ARG)), Float.parseFloat(scaleRawParam));
 
 			if (dp && commandLine.hasOption(SCALE_IS_HEIGHT_DP_ARG)) {
-				builder.scaleType(EScaleType.DP_HEIGHT);
+				builder.scaleMode(EScaleMode.DP_HEIGHT);
 			} else if (dp && !commandLine.hasOption(SCALE_IS_HEIGHT_DP_ARG)) {
-				builder.scaleType(EScaleType.DP_WIDTH);
+				builder.scaleMode(EScaleMode.DP_WIDTH);
 			} else {
-				builder.scaleType(EScaleType.FACTOR);
+				builder.scaleMode(EScaleMode.FACTOR);
 			}
 
 			if (commandLine.hasOption(DST_ARG)) {
@@ -141,6 +142,28 @@ public class CLIInterpreter {
 						System.err.println("unknown mode: " + commandLine.getOptionValue(PLATFORM_ARG));
 				}
 				builder.platform(platformSet);
+			}
+
+			if (commandLine.hasOption(SCALING_ALGO_ARG)) {
+				switch (commandLine.getOptionValue(SCALING_ALGO_ARG)) {
+					case "auto":
+						builder.scaleAlgorithm(EScalingAlgorithm.AUTO);
+						break;
+					case "bilinear":
+						builder.scaleAlgorithm(EScalingAlgorithm.BILINEAR);
+						break;
+					case "bicubic":
+						builder.scaleAlgorithm(EScalingAlgorithm.BICUBIC);
+						break;
+					case "nn":
+						builder.scaleAlgorithm(EScalingAlgorithm.NEAREST_NEIGHBOR);
+						break;
+					case "progressive":
+						builder.scaleAlgorithm(EScalingAlgorithm.PROGRESSIVE_BILINEAR);
+						break;
+					default:
+						System.err.println("unknown algorithm: " + commandLine.getOptionValue(SCALING_ALGO_ARG));
+				}
 			}
 
 			if (commandLine.hasOption(ROUNDING_MODE_ARG)) {
@@ -204,6 +227,7 @@ public class CLIInterpreter {
 		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc(MessageFormat.format(bundle.getString("arg.descr.cmd.rounding"), Arguments.DEFAULT_ROUNDING_STRATEGY)).build();
 		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg|gif|bmp").desc(bundle.getString("arg.descr.cmd.outcompression")).build();
 		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).hasArg(true).argName("0.0-1.0").desc(MessageFormat.format(bundle.getString("arg.descr.cmd.compression"), String.valueOf(Arguments.DEFAULT_COMPRESSION_QUALITY))).build();
+		Option scalingAlgo = Option.builder(SCALING_ALGO_ARG).hasArg(true).argName("auto|bilinear|bicubic|progressive|nn").desc(MessageFormat.format(bundle.getString("arg.descr.cmd.scalingalgo"), Arguments.DEFAULT_PLATFORM)).build();
 
 		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc(bundle.getString("arg.descr.skipexisting")).build();
 		Option androidIncludeLdpiTvdpi = Option.builder("androidIncludeLdpiTvdpi").desc(bundle.getString("arg.descr.androidmipmap")).build();
@@ -230,7 +254,8 @@ public class CLIInterpreter {
 		mainArgs.setRequired(true);
 
 		options.addOption(srcScaleOpt).addOption(dstOpt);
-		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler);
+		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler)
+				.addOption(scalingAlgo);
 		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(androidIncludeLdpiTvdpi).addOption(verboseLog)
 				.addOption(antiAliasing).addOption(dryRun).addOption(haltOnError).addOption(mipmapInsteadOfDrawable)
 				.addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight).addOption(enableMozJpeg)

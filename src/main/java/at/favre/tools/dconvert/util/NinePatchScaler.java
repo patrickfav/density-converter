@@ -17,6 +17,7 @@
 
 package at.favre.tools.dconvert.util;
 
+import at.favre.tools.dconvert.arg.EScalingAlgorithm;
 import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.exceptions.NinePatchException;
 
@@ -32,10 +33,13 @@ import java.awt.image.BufferedImage;
  */
 public class NinePatchScaler {
 
-	public BufferedImage scale(BufferedImage inputImage, Dimension dimensions) throws NinePatchException {
+	private EScalingAlgorithm algo;
+
+	public BufferedImage scale(BufferedImage inputImage, Dimension dimensions, EScalingAlgorithm algo) throws NinePatchException {
+		this.algo = algo;
 		BufferedImage trimmedImage = this.trim9PBorder(inputImage);
 
-		trimmedImage = ImageUtil.getDefaultScaler().scale(trimmedImage, dimensions.width, dimensions.height, ImageType.ECompression.PNG, Color.white, false);
+		trimmedImage = ImageUtil.getDefaultScaler().scale(trimmedImage, dimensions.width, dimensions.height, ImageType.ECompression.PNG, algo, Color.white, false);
 
 		BufferedImage borderImage;
 
@@ -119,7 +123,7 @@ public class NinePatchScaler {
 		if (targetWidth > border.getWidth()
 				|| targetHeight > border.getHeight()) {
 			BufferedImage endImage = ImageUtil.getDefaultScaler().scale(border, targetWidth,
-					targetHeight, ImageType.ECompression.PNG, Color.white, false);
+					targetHeight, ImageType.ECompression.PNG, algo, Color.white, false);
 			this.enforceBorderColors(endImage);
 			return endImage;
 		}

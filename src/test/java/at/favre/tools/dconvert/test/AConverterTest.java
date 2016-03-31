@@ -128,25 +128,25 @@ public abstract class AConverterTest {
 	@Test
 	public void testScaleWidthInDp() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "jpg_example_1920.jpg");
-		test(new Arguments.Builder(defaultSrc, 24).dstFolder(defaultDst).scaleType(EScaleType.DP_WIDTH).platform(Collections.singleton(getType())).build(), files);
+		test(new Arguments.Builder(defaultSrc, 24).dstFolder(defaultDst).scaleMode(EScaleMode.DP_WIDTH).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testMultipleScaleWidthInDp() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example4_500.png", "jpg_example_1920.jpg");
-		test(new Arguments.Builder(defaultSrc, 48).dstFolder(defaultDst).scaleType(EScaleType.DP_WIDTH).platform(Collections.singleton(getType())).build(), files);
+		test(new Arguments.Builder(defaultSrc, 48).dstFolder(defaultDst).scaleMode(EScaleMode.DP_WIDTH).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testScaleHeightInDp() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "jpg_example_1920.jpg");
-		test(new Arguments.Builder(defaultSrc, 128).dstFolder(defaultDst).scaleType(EScaleType.DP_HEIGHT).platform(Collections.singleton(getType())).build(), files);
+		test(new Arguments.Builder(defaultSrc, 128).dstFolder(defaultDst).scaleMode(EScaleMode.DP_HEIGHT).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
 	public void testMultipleScaleHeightInDp() throws Exception {
 		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example4_500.png", "jpg_example_1920.jpg");
-		test(new Arguments.Builder(defaultSrc, 48).dstFolder(defaultDst).scaleType(EScaleType.DP_HEIGHT).platform(Collections.singleton(getType())).build(), files);
+		test(new Arguments.Builder(defaultSrc, 48).dstFolder(defaultDst).scaleMode(EScaleMode.DP_HEIGHT).platform(Collections.singleton(getType())).build(), files);
 	}
 
 	@Test
@@ -243,13 +243,13 @@ public abstract class AConverterTest {
 		double baseWidth;
 		double baseHeight;
 
-		if (args.scaleType == EScaleType.DP_WIDTH) {
+		if (args.scaleMode == EScaleMode.DP_WIDTH) {
 			Dimension srcDimension = ImageUtil.getImageDimension(srcFile);
 			float scaleFactor = args.scale / (float) srcDimension.width;
 
 			baseWidth = (int) args.round(args.scale);
 			baseHeight = (int) args.round(scaleFactor * (float) srcDimension.height);
-		} else if (args.scaleType == EScaleType.DP_HEIGHT) {
+		} else if (args.scaleMode == EScaleMode.DP_HEIGHT) {
 			Dimension srcDimension = ImageUtil.getImageDimension(srcFile);
 			float scaleFactor = args.scale / (float) srcDimension.height;
 

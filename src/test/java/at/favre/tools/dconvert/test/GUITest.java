@@ -68,13 +68,13 @@ public class GUITest extends ApplicationTest {
 	public void testScaleTypes() throws Exception {
 		clickOn("#rbDpWidth").clickOn("#textFieldDp").write("48");
 		assertEquals("arguments should match",
-				new Arguments.Builder(defaultSrcFolder, 48).scaleType(EScaleType.DP_WIDTH).guiAdvancedOptions(true).verboseLog(true).build(), controller.getFromUI(false));
+				new Arguments.Builder(defaultSrcFolder, 48).scaleMode(EScaleMode.DP_WIDTH).guiAdvancedOptions(true).verboseLog(true).build(), controller.getFromUI(false));
 		clickOn("#rbDpHeight").clickOn("#textFieldDp").write("1");
 		assertEquals("arguments should match",
-				new Arguments.Builder(defaultSrcFolder, 148).scaleType(EScaleType.DP_HEIGHT).guiAdvancedOptions(true).verboseLog(true).build(), controller.getFromUI(false));
+				new Arguments.Builder(defaultSrcFolder, 148).scaleMode(EScaleMode.DP_HEIGHT).guiAdvancedOptions(true).verboseLog(true).build(), controller.getFromUI(false));
 		clickOn("#rbFactor").clickOn("#scaleSlider");
 		assertEquals("arguments should match",
-				new Arguments.Builder(defaultSrcFolder, 3).scaleType(EScaleType.FACTOR).guiAdvancedOptions(true).verboseLog(true).build(), controller.getFromUI(false));
+				new Arguments.Builder(defaultSrcFolder, 3).scaleMode(EScaleMode.FACTOR).guiAdvancedOptions(true).verboseLog(true).build(), controller.getFromUI(false));
 	}
 
 	@Test
@@ -235,7 +235,7 @@ public class GUITest extends ApplicationTest {
 		clickOn("#cbEnablePngCrush");
 		clickOn("#choiceThreads").clickOn(String.valueOf(2));
 		assertEquals("arguments should match", new Arguments.Builder(defaultSrcFolder, 64).guiAdvancedOptions(true).verboseLog(true)
-				.scaleType(EScaleType.DP_HEIGHT).platform(Collections.singleton(EPlatform.ANDROID)).skipUpscaling(true).threadCount(2).enablePngCrush(true)
+				.scaleMode(EScaleMode.DP_HEIGHT).platform(Collections.singleton(EPlatform.ANDROID)).skipUpscaling(true).threadCount(2).enablePngCrush(true)
 				.build(), controller.getFromUI(false));
 	}
 
@@ -252,7 +252,7 @@ public class GUITest extends ApplicationTest {
 		clickOn("#choiceCompressionQuality").clickOn(GUIController.toJpgQ(jpegQ));
 		clickOn("#cbSkipExisting");
 		assertEquals("arguments should match", new Arguments.Builder(defaultSrcFolder, 128).guiAdvancedOptions(true).verboseLog(true)
-				.scaleType(EScaleType.DP_WIDTH).platform(Collections.singleton(EPlatform.ANDROID)).skipExistingFiles(true)
+				.scaleMode(EScaleMode.DP_WIDTH).platform(Collections.singleton(EPlatform.ANDROID)).skipExistingFiles(true)
 				.compression(EOutputCompressionMode.AS_JPG, Float.parseFloat(String.format(Locale.US, "%.1f", jpegQ)))
 				.build(), controller.getFromUI(false));
 	}

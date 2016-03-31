@@ -1,5 +1,6 @@
 package at.favre.tools.dconvert.converters.scaling;
 
+import at.favre.tools.dconvert.arg.EScalingAlgorithm;
 import at.favre.tools.dconvert.arg.ImageType;
 import org.imgscalr.Scalr;
 
@@ -12,7 +13,7 @@ import java.awt.image.BufferedImageOp;
  */
 public class ImgscalrScaler implements IBufferedImageScaler {
 	@Override
-	public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, Color background, boolean antiAlias) {
+	public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, EScalingAlgorithm algorithm, Color background, boolean antiAlias) {
 		BufferedImage scaledImage = null;
 		if (imageToScale != null) {
 

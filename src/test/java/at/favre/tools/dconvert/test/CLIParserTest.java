@@ -84,27 +84,27 @@ public class CLIParserTest {
 	public void testScalesWidthInDp() throws Exception {
 		for (Integer scale : Arrays.asList(new Integer[]{1, 12, 24, 48, 106, 33, 500, 96, 256, 480})) {
 			check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLIInterpreter.SCALE_ARG + " " + scale + "dp",
-					new Arguments.Builder(defaultSrc, scale).scaleType(EScaleType.DP_WIDTH).build());
+					new Arguments.Builder(defaultSrc, scale).scaleMode(EScaleMode.DP_WIDTH).build());
 		}
 	}
 
 	@Test(expected = InvalidArgumentException.class)
 	public void test0ScalesWidthInDp() throws Exception {
 		check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLIInterpreter.SCALE_ARG + " " + 0 + "dp",
-				new Arguments.Builder(defaultSrc, 0).scaleType(EScaleType.DP_WIDTH).build());
+				new Arguments.Builder(defaultSrc, 0).scaleMode(EScaleMode.DP_WIDTH).build());
 	}
 
 	@Test(expected = InvalidArgumentException.class)
 	public void test9999ScalesWidthInDp() throws Exception {
 		check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\"  -" + CLIInterpreter.SCALE_ARG + " " + 9999 + "dp",
-				new Arguments.Builder(defaultSrc, 9999).scaleType(EScaleType.DP_WIDTH).build());
+				new Arguments.Builder(defaultSrc, 9999).scaleMode(EScaleMode.DP_WIDTH).build());
 	}
 
 	@Test
 	public void testScalesHeightInDp() throws Exception {
 		for (Integer scale : Arrays.asList(new Integer[]{1, 12, 24, 48, 106, 33, 500, 96, 256, 480})) {
 			check("-" + CLIInterpreter.SOURCE_ARG + " \"" + defaultSrc.getAbsolutePath() + "\" -" + CLIInterpreter.SCALE_IS_HEIGHT_DP_ARG + "  -" + CLIInterpreter.SCALE_ARG + " " + scale + "dp",
-					new Arguments.Builder(defaultSrc, scale).scaleType(EScaleType.DP_HEIGHT).build());
+					new Arguments.Builder(defaultSrc, scale).scaleMode(EScaleMode.DP_HEIGHT).build());
 		}
 	}
 
@@ -149,6 +149,15 @@ public class CLIParserTest {
 		check(defaultCmd + " -" + CLIInterpreter.PLATFORM_ARG + " ios", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.IOS)).build());
 		check(defaultCmd + " -" + CLIInterpreter.PLATFORM_ARG + " win", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.WINDOWS)).build());
 		check(defaultCmd + " -" + CLIInterpreter.PLATFORM_ARG + " web", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).platform(Collections.singleton(EPlatform.WEB)).build());
+	}
+
+	@Test
+	public void testScalingAlgorithms() throws Exception {
+		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " auto", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.AUTO).build());
+		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " bilinear", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.BILINEAR).build());
+		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " bicubic", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.BICUBIC).build());
+		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " nn", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.NEAREST_NEIGHBOR).build());
+		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " progressive", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.PROGRESSIVE_BILINEAR).build());
 	}
 
 	@Test
