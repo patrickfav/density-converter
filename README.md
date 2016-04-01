@@ -203,15 +203,14 @@ The tool provides 3 quality profiles:
 
 In most cases `Lanczos3` creates best results, although in some cases progressive bilinear scaling may be superior for very sharp edges of e.g. simple icons. Here are some example to see the difference yourself:
 
-![comparison](src/main/resources/img/comparison_icons_48.png)
-![comparison](src/main/resources/img/comparison_photo_72.png)
 ![comparison](src/main/resources/img/comparison_icons_72.png)
-![comparison](src/main/resources/img/comparison_photo_144.png)
+![comparison](src/main/resources/img/comparison_icons_48.png)
 
+![comparison](src/main/resources/img/comparison_photo_144.png)
+![comparison](src/main/resources/img/comparison_photo_72.png)
 
 As reference here are results of other methods:
 
-![comparison-ldpi](src/main/resources/img/ldpi_comparison.png)
 ![comparison-ldpi](src/main/resources/img/mdpi_comparison.png)
 
 1. Thumbnailator with default settings (progressive bilinear (2))
