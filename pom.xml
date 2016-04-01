@@ -68,8 +68,8 @@
                                         <resource>mdpi_comparison.png</resource>
                                         <resource>comparison_icons_48.png</resource>
                                         <resource>comparison_icons_72.png</resource>
-                                        <resource>comparison_photo_48.png</resource>
                                         <resource>comparison_photo_72.png</resource>
+                                        <resource>comparison_photo_144.png</resource>
                                         <resource>screenshot1.jpg</resource>
                                     </resources>
                                 </transformer>
