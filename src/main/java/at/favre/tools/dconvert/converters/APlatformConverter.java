@@ -67,7 +67,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 							.append(entry.getKey().scale).append(") ").append(isNinePatch ? "(9-patch)" : "").append("\n");
 
 					if (!args.dryRun) {
-						List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), imageData, entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing, isNinePatch, args.scaleAlgorithm);
+						List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), imageData, entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing, isNinePatch, args.scaleQuality);
 
 						allResultingFiles.addAll(files);
 

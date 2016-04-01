@@ -18,7 +18,7 @@
 package at.favre.tools.dconvert.util;
 
 import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EScalingAlgorithm;
+import at.favre.tools.dconvert.arg.EScalingQuality;
 import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.converters.scaling.DConvertScaler;
 import at.favre.tools.dconvert.converters.scaling.IBufferedImageScaler;
@@ -41,8 +41,7 @@ import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -118,9 +117,10 @@ public class ImageUtil {
         return new LoadedImage(null, bi, metadata, null);
     }
 
+    public static Map<IBufferedImageScaler, Map<EScalingQuality, Long>> traceMap = new HashMap<>();
 
     public static List<File> compressToFile(File targetFile, List<ImageType.ECompression> compressionList, LoadedImage imageData, Dimension targetDimension,
-                                            float compressionQuality, boolean skipIfExists, boolean antiAlias, boolean isNinePatch, EScalingAlgorithm algo) throws Exception {
+                                            float compressionQuality, boolean skipIfExists, boolean antiAlias, boolean isNinePatch, EScalingQuality algo) throws Exception {
         List<File> files = new ArrayList<>(2);
         for (ImageType.ECompression compression : compressionList) {
             File imageFile = new File(targetFile.getAbsolutePath() + "." + compression.extension);
@@ -131,24 +131,34 @@ public class ImageUtil {
 
 //            Set<IBufferedImageScaler> scalers = new HashSet<>();
 //            scalers.add(new DConvertScaler());
-//            scalers.add(new ThumbnailatorScaler());
-//            scalers.add(new NaiveGraphics2dScaler());
-//            scalers.add(new ImgscalrScaler());
+////            scalers.add(new MortennobelScaler());
+////            scalers.add(new ThumbnailatorScaler());
+////            scalers.add(new NaiveGraphics2dScaler());
+////            scalers.add(new ImgscalrScaler());
 //            for (IBufferedImageScaler scaler : scalers) {
-//                Set<EScalingAlgorithm> set = new HashSet<>();
-//                set.add(EScalingAlgorithm.AUTO);
-//                set.add(EScalingAlgorithm.BICUBIC);
-//                set.add(EScalingAlgorithm.BILINEAR);
-//                set.add(EScalingAlgorithm.NEAREST_NEIGHBOR);
-//                for (EScalingAlgorithm eScalingAlgorithm : set) {
-//                    BufferedImage scaledImage;
-//                    if (isNinePatch && compression == ImageType.ECompression.PNG) {
-//                        scaledImage = new NinePatchScaler().scale(imageData.getImage(), targetDimension, algo);
-//                    } else {
-//                        scaledImage = scaler.scale(imageData.getImage(), targetDimension.width, targetDimension.height, compression, eScalingAlgorithm, Color.white, antiAlias);
+//                if(!traceMap.containsKey(scaler)) {
+//                    traceMap.put(scaler,new HashMap<>());
+//                }
+//
+//                Set<EScalingQuality> set = new HashSet<>();
+//                set.add(EScalingQuality.BALANCE);
+//                set.add(EScalingQuality.HIGH_QUALITY);
+//                set.add(EScalingQuality.SPEED);
+//                for (EScalingQuality sAlgo : set) {
+//                    if(!traceMap.get(scaler).containsKey(sAlgo)) {
+//                        traceMap.get(scaler).put(sAlgo,0L);
 //                    }
 //
-//                    File f = new File(imageFile.getParentFile(), MiscUtil.getFileNameWithoutExtension(imageFile) + "."+ scaler.getClass().getSimpleName() +"." + eScalingAlgorithm +"."  + MiscUtil.getFileExtension(imageFile));
+//                    BufferedImage scaledImage;
+//                    if (isNinePatch && compression == ImageType.ECompression.PNG) {
+//                        scaledImage = new NinePatchScaler().scale(imageData.getImage(), targetDimension, sAlgo);
+//                    } else {
+//                        long startNanos = System.nanoTime();
+//                        scaledImage = scaler.scale(imageData.getImage(), targetDimension.width, targetDimension.height, compression, sAlgo, Color.white, antiAlias);
+//                        traceMap.get(scaler).put(sAlgo,traceMap.get(scaler).get(sAlgo)+(System.nanoTime()-startNanos));
+//                    }
+//
+//                    File f = new File(imageFile.getParentFile(), MiscUtil.getFileNameWithoutExtension(imageFile) + "."+ scaler.getClass().getSimpleName() +"." + sAlgo +"."  + MiscUtil.getFileExtension(imageFile));
 //
 //                    if (compression == ImageType.ECompression.JPG) {
 //                        compressJpeg(scaledImage, null, compressionQuality, f);

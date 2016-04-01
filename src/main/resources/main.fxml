@@ -172,14 +172,14 @@
             </tooltip>
         </ChoiceBox>
 
-        <Label fx:id="labelRounding" maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT"
-               text="%main.label.rounding"
+        <Label fx:id="labelScaleQ" maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT"
+               text="%main.label.scaleQ"
                GridPane.columnIndex="0"
                GridPane.rowIndex="3" GridPane.hgrow="always"/>
-        <ChoiceBox fx:id="choiceRounding" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3"
+        <ChoiceBox fx:id="choiceScaleQ" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3"
                    GridPane.hgrow="always" styleClass="choice-box">
             <tooltip>
-                <Tooltip text="%arg.descr.rounding"/>
+                <Tooltip text="%arg.descr.scalingalgo"/>
             </tooltip>
         </ChoiceBox>
 
@@ -191,6 +191,17 @@
                    GridPane.hgrow="always" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.threads"/>
+            </tooltip>
+        </ChoiceBox>
+
+        <Label fx:id="labelRounding" maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT"
+               text="%main.label.rounding"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="4" GridPane.hgrow="always"/>
+        <ChoiceBox fx:id="choiceRounding" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="4"
+                   GridPane.hgrow="always" styleClass="choice-box">
+            <tooltip>
+                <Tooltip text="%arg.descr.rounding"/>
             </tooltip>
         </ChoiceBox>
     </GridPane>

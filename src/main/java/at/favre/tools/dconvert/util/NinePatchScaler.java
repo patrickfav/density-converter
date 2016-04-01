@@ -17,7 +17,7 @@
 
 package at.favre.tools.dconvert.util;
 
-import at.favre.tools.dconvert.arg.EScalingAlgorithm;
+import at.favre.tools.dconvert.arg.EScalingQuality;
 import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.exceptions.NinePatchException;
 
@@ -33,9 +33,9 @@ import java.awt.image.BufferedImage;
  */
 public class NinePatchScaler {
 
-	private EScalingAlgorithm algo;
+	private EScalingQuality algo;
 
-	public BufferedImage scale(BufferedImage inputImage, Dimension dimensions, EScalingAlgorithm algo) throws NinePatchException {
+	public BufferedImage scale(BufferedImage inputImage, Dimension dimensions, EScalingQuality algo) throws NinePatchException {
 		this.algo = algo;
 		BufferedImage trimmedImage = this.trim9PBorder(inputImage);
 

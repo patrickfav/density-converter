@@ -1,6 +1,6 @@
 package at.favre.tools.dconvert.converters.scaling;
 
-import at.favre.tools.dconvert.arg.EScalingAlgorithm;
+import at.favre.tools.dconvert.arg.EScalingQuality;
 import at.favre.tools.dconvert.arg.ImageType;
 import org.imgscalr.Scalr;
 
@@ -11,9 +11,9 @@ import java.awt.image.BufferedImageOp;
 /**
  * Using https://github.com/thebuzzmedia/imgscalr lib with ULTRA_QUALITY
  */
-public class ImgscalrScaler implements IBufferedImageScaler {
+public class ImgscalrScaler extends ABufferedImageScaler {
     @Override
-    public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, EScalingAlgorithm algorithm, Color background, boolean antiAlias) {
+    public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, EScalingQuality algorithm, Color background, boolean antiAlias) {
         BufferedImage scaledImage = null;
         if (imageToScale != null) {
 
@@ -34,16 +34,14 @@ public class ImgscalrScaler implements IBufferedImageScaler {
         return scaledImage;
     }
 
-    private Scalr.Method translate(EScalingAlgorithm algorithm) {
+    private Scalr.Method translate(EScalingQuality algorithm) {
         switch (algorithm) {
             default:
-            case AUTO:
+            case HIGH_QUALITY:
                 return Scalr.Method.ULTRA_QUALITY;
-            case BICUBIC:
-                return Scalr.Method.QUALITY;
-            case BILINEAR:
+            case BALANCE:
                 return Scalr.Method.BALANCED;
-            case NEAREST_NEIGHBOR:
+            case SPEED:
                 return Scalr.Method.SPEED;
         }
     }

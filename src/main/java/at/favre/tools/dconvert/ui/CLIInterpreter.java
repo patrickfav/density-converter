@@ -146,17 +146,14 @@ public class CLIInterpreter {
 
 			if (commandLine.hasOption(SCALING_ALGO_ARG)) {
 				switch (commandLine.getOptionValue(SCALING_ALGO_ARG)) {
-					case "auto":
-						builder.scaleAlgorithm(EScalingAlgorithm.AUTO);
+					case "balance":
+						builder.scaleQuality(EScalingQuality.BALANCE);
 						break;
-					case "bilinear":
-						builder.scaleAlgorithm(EScalingAlgorithm.BILINEAR);
+					case "high-quality":
+						builder.scaleQuality(EScalingQuality.HIGH_QUALITY);
 						break;
-					case "bicubic":
-						builder.scaleAlgorithm(EScalingAlgorithm.BICUBIC);
-						break;
-					case "nn":
-						builder.scaleAlgorithm(EScalingAlgorithm.NEAREST_NEIGHBOR);
+					case "speed":
+						builder.scaleQuality(EScalingQuality.SPEED);
 						break;
 					default:
 						System.err.println("unknown algorithm: " + commandLine.getOptionValue(SCALING_ALGO_ARG));
@@ -224,7 +221,7 @@ public class CLIInterpreter {
 		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc(MessageFormat.format(bundle.getString("arg.descr.cmd.rounding"), Arguments.DEFAULT_ROUNDING_STRATEGY)).build();
 		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg|gif|bmp").desc(bundle.getString("arg.descr.cmd.outcompression")).build();
 		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).hasArg(true).argName("0.0-1.0").desc(MessageFormat.format(bundle.getString("arg.descr.cmd.compression"), String.valueOf(Arguments.DEFAULT_COMPRESSION_QUALITY))).build();
-		Option scalingAlgo = Option.builder(SCALING_ALGO_ARG).hasArg(true).argName("auto|bilinear|bicubic|nn").desc(MessageFormat.format(bundle.getString("arg.descr.cmd.scalingalgo"), Arguments.DEFAULT_PLATFORM)).build();
+		Option scalingAlgo = Option.builder(SCALING_ALGO_ARG).hasArg(true).argName("high-quality|balanced|speed").desc(MessageFormat.format(bundle.getString("arg.descr.scalingalgo"), Arguments.DEFAULT_PLATFORM)).build();
 
 		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc(bundle.getString("arg.descr.skipexisting")).build();
 		Option androidIncludeLdpiTvdpi = Option.builder("androidIncludeLdpiTvdpi").desc(bundle.getString("arg.descr.androidmipmap")).build();

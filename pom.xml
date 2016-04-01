@@ -6,7 +6,7 @@
 
     <groupId>at.favre.tools</groupId>
     <artifactId>dconvert</artifactId>
-    <version>0.9.3</version>
+    <version>0.10.0</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
@@ -66,6 +66,10 @@
                                         <resource>.psd</resource>
                                         <resource>ldpi_comparison.png</resource>
                                         <resource>mdpi_comparison.png</resource>
+                                        <resource>comparison_icons_48.png</resource>
+                                        <resource>comparison_icons_72.png</resource>
+                                        <resource>comparison_photo_48.png</resource>
+                                        <resource>comparison_photo_72.png</resource>
                                         <resource>screenshot1.jpg</resource>
                                     </resources>
                                 </transformer>
@@ -94,6 +98,11 @@
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
             <version>0.4.8</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mortennobel</groupId>
+            <artifactId>java-image-scaling</artifactId>
+            <version>0.8.6</version>
         </dependency>
         <!-- supported reading/writing image types -->
         <dependency>

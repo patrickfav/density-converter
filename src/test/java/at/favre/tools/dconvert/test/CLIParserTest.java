@@ -153,10 +153,9 @@ public class CLIParserTest {
 
 	@Test
 	public void testScalingAlgorithms() throws Exception {
-		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " auto", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.AUTO).build());
-		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " bilinear", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.BILINEAR).build());
-		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " bicubic", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.BICUBIC).build());
-		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " nn", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleAlgorithm(EScalingAlgorithm.NEAREST_NEIGHBOR).build());
+		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " balance", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleQuality(EScalingQuality.BALANCE).build());
+		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " speed", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleQuality(EScalingQuality.SPEED).build());
+		check(defaultCmd + " -" + CLIInterpreter.SCALING_ALGO_ARG + " high-quality", new Arguments.Builder(defaultSrc, DEFAULT_SCALE).scaleQuality(EScalingQuality.HIGH_QUALITY).build());
 	}
 
 	@Test

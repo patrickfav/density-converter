@@ -1,6 +1,6 @@
 package at.favre.tools.dconvert.converters.scaling;
 
-import at.favre.tools.dconvert.arg.EScalingAlgorithm;
+import at.favre.tools.dconvert.arg.EScalingQuality;
 import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.util.ImageUtil;
 
@@ -10,9 +10,9 @@ import java.awt.image.BufferedImage;
 /**
  * Using java natives Graphics2d with best possible renderhints
  */
-public class NaiveGraphics2dScaler implements IBufferedImageScaler {
+public class NaiveGraphics2dScaler extends ABufferedImageScaler {
     @Override
-	public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, EScalingAlgorithm algorithm, Color background, boolean antiAlias) {
+    public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, EScalingQuality algorithm, Color background, boolean antiAlias) {
 		BufferedImage scaledImage = null;
 		if (imageToScale != null) {
 			int imageType = imageToScale.getType();
@@ -27,7 +27,6 @@ public class NaiveGraphics2dScaler implements IBufferedImageScaler {
 			graphics2D.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
 			graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 			graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
 
 			if (compression == ImageType.ECompression.JPG) {
 				graphics2D.drawImage(imageToScale, 0, 0, dWidth, dHeight, null);
@@ -44,15 +43,14 @@ public class NaiveGraphics2dScaler implements IBufferedImageScaler {
 		return scaledImage;
     }
 
-    private Object translate(EScalingAlgorithm algorithm) {
-        switch (algorithm) {
+	private Object translate(EScalingQuality algorithm) {
+		switch (algorithm) {
             default:
-            case BICUBIC:
-            case AUTO:
-                return RenderingHints.VALUE_INTERPOLATION_BICUBIC;
-            case BILINEAR:
-                return RenderingHints.VALUE_INTERPOLATION_BICUBIC;
-            case NEAREST_NEIGHBOR:
+	        case HIGH_QUALITY:
+		        return RenderingHints.VALUE_INTERPOLATION_BICUBIC;
+	        case BALANCE:
+		        return RenderingHints.VALUE_INTERPOLATION_BILINEAR;
+			case SPEED:
                 return RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR;
         }
     }

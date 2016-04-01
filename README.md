@@ -191,17 +191,33 @@ Out-compression has the following modes:
 If an image will be re-compressed with a file type that does not support alpha, alpha will be replaced with white (e.g. when converting png -> jpeg)
 
 ## Quality Comparison
-One of the main features of this converter is downscaling. Unfortunately without using specific algorithms, down scaled
- images may look jagged. Density converter uses the algorithms of [Thumbnailator](https://github.com/coobird/thumbnailator) which
- provide fairly good quality, comparable to Photoshop output. Thumbnailator turned out to generater better results than the other popular open source resizer lib [imgscalr](https://github.com/thebuzzmedia/imgscalr) which was used in previous versions. The following diagram is to compare the expected quality when using this tool in comparison to Java's native Graphics2D and Photoshop.
+One of the main features of this converter is downscaling. Unfortunately without using specialized algorithms, down scaled
+ images may look jagged or too blurred.
+ I tested the algorithms of [Thumbnailator](https://github.com/coobird/thumbnailator) and [imgscalr](https://github.com/thebuzzmedia/imgscalr) which basically use [Chris Cambell's proposed progressive scaling](https://community.oracle.com/docs/DOC-983611) algorithm. Upon further analysis [Lanczos3 filtering](https://en.wikipedia.org/wiki/Lanczos_resampling) seems to be recommended which produces results preserving more detail without being too jagged. The downside is, it is considerably slower then the former. This tool uses the implementation of [Morten Nobel](https://github.com/mortennobel/java-image-scaling).
+
+The tool provides 3 quality profiles:
+
+ * **High Quality**: uses `Lanczos3` filtering (8 times slower than **Balanced**)
+ * **Balanced**: uses progressive bilinear algorithm for downscaling and bicubic filtering for upscaling (6 times slower than speed)
+ * **Speed**: uses nearest neighbor algorithm
+
+In most cases `Lanczos3` creates best results, although in some cases progressive bilinear scaling may be superior for very sharp edges of e.g. simple icons. Here are some example to see the difference yourself:
+
+![comparison](src/main/resources/img/comparison_icon_48.png)
+![comparison](src/main/resources/img/comparison_photo_48.png)
+![comparison](src/main/resources/img/comparison_icon_72.png)
+![comparison](src/main/resources/img/comparison_photo_72.png)
+
+
+As reference here are results of other methods:
 
 ![comparison-ldpi](src/main/resources/img/ldpi_comparison.png)
 ![comparison-ldpi](src/main/resources/img/mdpi_comparison.png)
 
-1. Density Converter using Thumbnailator with default settings
+1. Thumbnailator with default settings (progressive bilinear (2))
 2. Photoshop CS5 with bicubic algorithm
-3. imgscalr with ULTRA_QUALITY setting
-4. Graphics2d with render hints VALUE_INTERPOLATION_BICUBIC, VALUE_RENDER_QUALITY, VALUE_ANTIALIAS_ON
+3. imgscalr with ULTRA_QUALITY setting (progressive bilinear (7))
+4. simple Graphics2d with render hints VALUE_INTERPOLATION_BICUBIC, VALUE_RENDER_QUALITY, VALUE_ANTIALIAS_ON
 
 ## Post Processors
 
@@ -239,8 +255,6 @@ Java 1.8, JavaFx and Apache CLI
 
 For support of various image types TwelveMonkey lib is used which claims to have wider support of even basic file types (jpeg, etc.)
 
-Rescaling happens with imgscalr which includes some sophisticated algorithms for correct resizing using ULTRA_QUALITY setting.
-
 For parallel execution, every source file spawns his own thread for each platform converter e.g. 3 files 2 converters -> 6 threads needed.
 
 The tool can easily be extended by using the `IPlatformConvert` and `PostProcessor` interfaces.
@@ -270,7 +284,7 @@ The .jar file will be in the generated `/target` folder
 ## Credits
 
 * TIFF, PSD, SVG image type support [TwelveMonkeys](https://github.com/haraldk/TwelveMonkeys)
-* HQ image resizing with [Thumbnailator](https://github.com/coobird/thumbnailator)
+* HQ image resizing with [Morten Nobel's Lib](https://github.com/mortennobel/java-image-scaling)
 * JavaFx theme based on Flatter by [hendrikebbers](https://github.com/guigarage/javafx-collection/tree/master/flatter)
 * Image file icon: Icon made by [Freepik](http://www.freepik.com/)
 * 9-patch resizing routine from [Redwarp](https://github.com/redwarp/9-Patch-Resizer)

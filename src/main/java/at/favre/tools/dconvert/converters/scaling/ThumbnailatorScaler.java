@@ -1,6 +1,6 @@
 package at.favre.tools.dconvert.converters.scaling;
 
-import at.favre.tools.dconvert.arg.EScalingAlgorithm;
+import at.favre.tools.dconvert.arg.EScalingQuality;
 import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.util.ImageUtil;
 import net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker;
@@ -16,9 +16,9 @@ import java.util.Map;
 /**
  * Using https://github.com/coobird/thumbnailator to scale
  */
-public class ThumbnailatorScaler implements IBufferedImageScaler {
+public class ThumbnailatorScaler extends ABufferedImageScaler {
     @Override
-    public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, EScalingAlgorithm algorithm, Color background, boolean antiAlias) {
+    public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, EScalingQuality algorithm, Color background, boolean antiAlias) {
         BufferedImage scaledImage = null;
         if (imageToScale != null) {
 
@@ -40,16 +40,14 @@ public class ThumbnailatorScaler implements IBufferedImageScaler {
         return scaledImage;
     }
 
-    private Resizer translate(EScalingAlgorithm algorithm, Dimension image, Dimension target) {
+    private Resizer translate(EScalingQuality algorithm, Dimension image, Dimension target) {
         switch (algorithm) {
             default:
-            case AUTO:
+            case HIGH_QUALITY:
                 return DefaultResizerFactory.getInstance().getResizer(image, target);
-            case BILINEAR:
+            case BALANCE:
                 return new ProgressiveResizer(RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            case BICUBIC:
-                return new ProgressiveResizer(RenderingHints.VALUE_INTERPOLATION_BICUBIC);
-            case NEAREST_NEIGHBOR:
+            case SPEED:
                 return new NearestNeighborResizer();
         }
     }

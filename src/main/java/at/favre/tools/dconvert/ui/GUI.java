@@ -33,7 +33,7 @@ import java.util.ResourceBundle;
  * Main GUI Class
  */
 public class GUI extends Application {
-	public static int MIN_HEIGHT = 820;
+	public static int MIN_HEIGHT = 860;
 
 	public void launchApp(String[] args) {
 		launch(args);

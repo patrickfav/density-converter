@@ -55,529 +55,536 @@ import java.util.List;
  * JavaFx main controller for GUI
  */
 public class GUIController {
-	public VBox vboxOptionsCheckboxes;
-	public VBox vboxPostProcessors;
-	public Label labelRounding;
-	public Label labelThreads;
-	public HBox hboxWhy;
-	public VBox vboxFillFreeSpace;
-	public CheckBox cbCleanBeforeConvert;
-	private IPreferenceStore preferenceStore;
-	private final FileChooser srcFileChooser = new FileChooser();
-	private final DirectoryChooser srcDirectoryChooser = new DirectoryChooser();
-	private ResourceBundle bundle;
-	public Label labelPostProcessor;
-	public TextField textFieldSrcPath;
-	public Button btnSrcFile;
-	public Button btnSrcFolder;
-	public ProgressBar progressBar;
-	public Button btnConvert;
-	public TextField textFieldDstPath;
-	public Button btnDstFolder;
-	public ChoiceBox choiceCompression;
-	public ChoiceBox choiceCompressionQuality;
-	public ChoiceBox choiceRounding;
-	public ChoiceBox choiceThreads;
-	public CheckBox cbSkipExisting;
-	public CheckBox cbSkipUpscaling;
-	public CheckBox cbAndroidIncludeLdpiTvdpi;
-	public CheckBox cbHaltOnError;
-	public CheckBox cbEnablePngCrush;
-	public CheckBox cbEnableMozJpeg;
-	public CheckBox cbKeepUnoptimized;
-	public Slider scaleSlider;
-	public Label labelScale;
-	public Label labelResult;
-	public TextArea textFieldConsole;
-	public CheckBox cbPostConvertWebp;
-	public CheckBox cbMipmapInsteadDrawable;
-	public Label labelVersion;
-	public GridPane gridPaneChoiceBoxes;
-	public GridPane gridPanePostProcessors;
-	public GridPane gridPaneOptionsCheckboxes;
-	public Label labelScaleSubtitle;
-	public CheckBox cbAntiAliasing;
-	public Button btnReset;
-	public TextField textFieldDp;
-	public Label labelDpWidth;
-	public Label labelDpHeight;
-	public ToggleGroup scaleTypeToggleGroup;
-	public RadioButton rbFactor;
-	public RadioButton rbDpWidth;
-	public RadioButton rbDpHeight;
-	public GridPane gridPaneScaleFactorLabel;
-	public Label labelDpPostFix;
-	public CheckBox cbDryRun;
-	public GridPane rootGridPane;
-	public Label labelWhyPP;
-	public Button btnDstFolderOpen;
-	public CheckBox cbIosCreateImageset;
-	public GridPane gridPaneToggleGroup;
-	public ToggleButton tgAndroid;
-	public ToggleButton tgIos;
-	public ToggleButton tgWindows;
-	public ToggleButton tgWeb;
-	public RadioButton rbOptSimple;
-	public RadioButton rbOptAdvanced;
-	public ToggleGroup optionTypeToggleGroup;
+    public VBox vboxOptionsCheckboxes;
+    public VBox vboxPostProcessors;
+    public Label labelRounding;
+    public Label labelThreads;
+    public HBox hboxWhy;
+    public VBox vboxFillFreeSpace;
+    public CheckBox cbCleanBeforeConvert;
+    public Label labelScaleQ;
+    public ChoiceBox choiceScaleQ;
+    private IPreferenceStore preferenceStore;
+    private final FileChooser srcFileChooser = new FileChooser();
+    private final DirectoryChooser srcDirectoryChooser = new DirectoryChooser();
+    private ResourceBundle bundle;
+    public Label labelPostProcessor;
+    public TextField textFieldSrcPath;
+    public Button btnSrcFile;
+    public Button btnSrcFolder;
+    public ProgressBar progressBar;
+    public Button btnConvert;
+    public TextField textFieldDstPath;
+    public Button btnDstFolder;
+    public ChoiceBox choiceCompression;
+    public ChoiceBox choiceCompressionQuality;
+    public ChoiceBox choiceRounding;
+    public ChoiceBox choiceThreads;
+    public CheckBox cbSkipExisting;
+    public CheckBox cbSkipUpscaling;
+    public CheckBox cbAndroidIncludeLdpiTvdpi;
+    public CheckBox cbHaltOnError;
+    public CheckBox cbEnablePngCrush;
+    public CheckBox cbEnableMozJpeg;
+    public CheckBox cbKeepUnoptimized;
+    public Slider scaleSlider;
+    public Label labelScale;
+    public Label labelResult;
+    public TextArea textFieldConsole;
+    public CheckBox cbPostConvertWebp;
+    public CheckBox cbMipmapInsteadDrawable;
+    public Label labelVersion;
+    public GridPane gridPaneChoiceBoxes;
+    public GridPane gridPanePostProcessors;
+    public GridPane gridPaneOptionsCheckboxes;
+    public Label labelScaleSubtitle;
+    public CheckBox cbAntiAliasing;
+    public Button btnReset;
+    public TextField textFieldDp;
+    public Label labelDpWidth;
+    public Label labelDpHeight;
+    public ToggleGroup scaleTypeToggleGroup;
+    public RadioButton rbFactor;
+    public RadioButton rbDpWidth;
+    public RadioButton rbDpHeight;
+    public GridPane gridPaneScaleFactorLabel;
+    public Label labelDpPostFix;
+    public CheckBox cbDryRun;
+    public GridPane rootGridPane;
+    public Label labelWhyPP;
+    public Button btnDstFolderOpen;
+    public CheckBox cbIosCreateImageset;
+    public GridPane gridPaneToggleGroup;
+    public ToggleButton tgAndroid;
+    public ToggleButton tgIos;
+    public ToggleButton tgWindows;
+    public ToggleButton tgWeb;
+    public RadioButton rbOptSimple;
+    public RadioButton rbOptAdvanced;
+    public ToggleGroup optionTypeToggleGroup;
 
-	public void onCreate(final Stage stage, IPreferenceStore store, ResourceBundle bundle) {
-		this.bundle = bundle;
-		this.preferenceStore = store;
+    public void onCreate(final Stage stage, IPreferenceStore store, ResourceBundle bundle) {
+        this.bundle = bundle;
+        this.preferenceStore = store;
 
-		setupLayout();
+        setupLayout();
 
-		btnSrcFile.setOnAction(event -> {
-			srcFileChooser.setTitle(bundle.getString("main.filechooser.titel"));
-			File file = new File(textFieldSrcPath.getText());
-			if (file != null && file.isFile()) {
-				file = file.getParentFile();
-			}
+        btnSrcFile.setOnAction(event -> {
+            srcFileChooser.setTitle(bundle.getString("main.filechooser.titel"));
+            File file = new File(textFieldSrcPath.getText());
+            if (file != null && file.isFile()) {
+                file = file.getParentFile();
+            }
 
-			if (file == null || textFieldSrcPath.getText().isEmpty() || !file.exists() || !file.isDirectory()) {
-				srcFileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-			} else {
-				srcFileChooser.setInitialDirectory(file);
-			}
-			srcFileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.gif", "*.psd", "*.svg"));
-			File srcFile = srcFileChooser.showOpenDialog(btnSrcFile.getScene().getWindow());
-			if (srcFile != null) {
-				textFieldSrcPath.setText(srcFile.getAbsolutePath());
-				if ((textFieldDstPath.getText() == null || textFieldDstPath.getText().trim().isEmpty())) {
-					textFieldDstPath.setText(srcFile.getParentFile().getAbsolutePath());
-				}
-			}
-		});
+            if (file == null || textFieldSrcPath.getText().isEmpty() || !file.exists() || !file.isDirectory()) {
+                srcFileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            } else {
+                srcFileChooser.setInitialDirectory(file);
+            }
+            srcFileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Images", "*.jpg", "*.jpeg", "*.png", "*.gif", "*.psd", "*.svg"));
+            File srcFile = srcFileChooser.showOpenDialog(btnSrcFile.getScene().getWindow());
+            if (srcFile != null) {
+                textFieldSrcPath.setText(srcFile.getAbsolutePath());
+                if ((textFieldDstPath.getText() == null || textFieldDstPath.getText().trim().isEmpty())) {
+                    textFieldDstPath.setText(srcFile.getParentFile().getAbsolutePath());
+                }
+            }
+        });
 
-		btnSrcFolder.setOnAction(new FolderPicker(srcDirectoryChooser, textFieldSrcPath, textFieldDstPath, bundle));
-		btnDstFolder.setOnAction(new FolderPicker(srcDirectoryChooser, textFieldDstPath, null, bundle));
-		btnConvert.setOnAction(event -> {
+        btnSrcFolder.setOnAction(new FolderPicker(srcDirectoryChooser, textFieldSrcPath, textFieldDstPath, bundle));
+        btnDstFolder.setOnAction(new FolderPicker(srcDirectoryChooser, textFieldDstPath, null, bundle));
+        btnConvert.setOnAction(event -> {
 
-			try {
-				Arguments arg = getFromUI(false);
-				saveToPrefs(arg);
-				btnConvert.setDisable(true);
-				labelResult.setText("");
-				textFieldConsole.setText("");
-				textFieldConsole.setDisable(true);
-				progressBar.setProgress(0);
-				btnConvert.setText("");
+            try {
+                Arguments arg = getFromUI(false);
+                saveToPrefs(arg);
+                btnConvert.setDisable(true);
+                labelResult.setText("");
+                textFieldConsole.setText("");
+                textFieldConsole.setDisable(true);
+                progressBar.setProgress(0);
+                btnConvert.setText("");
 
-				new DConvert().execute(arg, false, new DConvert.HandlerCallback() {
-					@Override
-					public void onProgress(float progress) {
-						Platform.runLater(() -> progressBar.setProgress(progress));
-					}
+                new DConvert().execute(arg, false, new DConvert.HandlerCallback() {
+                    @Override
+                    public void onProgress(float progress) {
+                        Platform.runLater(() -> progressBar.setProgress(progress));
+                    }
 
-					@Override
-					public void onFinished(int finishedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
-						Platform.runLater(() -> {
-							resetUIAfterExecution();
-							labelResult.setText(
-									MessageFormat.format(bundle.getString("main.label.finish"), finishedJobs, exceptions.size(), MiscUtil.duration(time)));
-							textFieldConsole.setText(log);
-							textFieldConsole.appendText("");
+                    @Override
+                    public void onFinished(int finishedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
+                        Platform.runLater(() -> {
+                            resetUIAfterExecution();
+                            labelResult.setText(
+                                    MessageFormat.format(bundle.getString("main.label.finish"), finishedJobs, exceptions.size(), MiscUtil.duration(time)));
+                            textFieldConsole.setText(log);
+                            textFieldConsole.appendText("");
 
-							if (!exceptions.isEmpty()) {
-								Alert alert = new Alert(Alert.AlertType.WARNING);
-								alert.setTitle(bundle.getString("main.alert.title"));
-								alert.setHeaderText(null);
-								alert.setContentText(MessageFormat.format(bundle.getString("main.alert.content"), exceptions.size()));
-								alert.showAndWait();
-							}
-						});
+                            if (!exceptions.isEmpty()) {
+                                Alert alert = new Alert(Alert.AlertType.WARNING);
+                                alert.setTitle(bundle.getString("main.alert.title"));
+                                alert.setHeaderText(null);
+                                alert.setContentText(MessageFormat.format(bundle.getString("main.alert.content"), exceptions.size()));
+                                alert.showAndWait();
+                            }
+                        });
 
-					}
-				});
-			} catch (Exception e) {
-				resetUIAfterExecution();
-				String stacktrace = MiscUtil.getStackTrace(e);
-				labelResult.setText("Error: " + e.getClass().getSimpleName());
-				Alert alert = new Alert(Alert.AlertType.WARNING);
-				alert.setTitle(e.getClass().getSimpleName());
-				alert.setHeaderText(e.getMessage());
-				alert.setContentText(stacktrace.length() > 600 ? stacktrace.substring(0, 600) + "..." : stacktrace);
-				alert.showAndWait();
-			}
-		});
+                    }
+                });
+            } catch (Exception e) {
+                resetUIAfterExecution();
+                String stacktrace = MiscUtil.getStackTrace(e);
+                labelResult.setText("Error: " + e.getClass().getSimpleName());
+                Alert alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle(e.getClass().getSimpleName());
+                alert.setHeaderText(e.getMessage());
+                alert.setContentText(stacktrace.length() > 600 ? stacktrace.substring(0, 600) + "..." : stacktrace);
+                alert.showAndWait();
+            }
+        });
 
-		btnDstFolder.setGraphic(new ImageView(new Image("img/folder-symbol.png")));
-		btnSrcFolder.setGraphic(new ImageView(new Image("img/folder-symbol.png")));
-		btnSrcFile.setGraphic(new ImageView(new Image("img/file-symbol.png")));
-		btnDstFolderOpen.setGraphic(new ImageView(new Image("img/eye.png")));
+        btnDstFolder.setGraphic(new ImageView(new Image("img/folder-symbol.png")));
+        btnSrcFolder.setGraphic(new ImageView(new Image("img/folder-symbol.png")));
+        btnSrcFile.setGraphic(new ImageView(new Image("img/file-symbol.png")));
+        btnDstFolderOpen.setGraphic(new ImageView(new Image("img/eye.png")));
 
 
-		btnReset.setOnAction(event -> {
-			saveToPrefs(new Arguments());
-			loadPrefs();
-		});
+        btnReset.setOnAction(event -> {
+            saveToPrefs(new Arguments());
+            loadPrefs();
+        });
 
-		scaleTypeToggleGroup.selectedToggleProperty().addListener((ov, old_toggle, new_toggle) -> {
-			scaleSlider.setVisible(!rbDpWidth.isSelected() && !rbDpHeight.isSelected());
-			gridPaneScaleFactorLabel.setVisible(!rbDpWidth.isSelected() && !rbDpHeight.isSelected());
-			textFieldDp.setVisible(rbDpWidth.isSelected() || rbDpHeight.isSelected());
-			labelDpPostFix.setVisible(rbDpWidth.isSelected() || rbDpHeight.isSelected());
-			labelDpWidth.setVisible(rbDpWidth.isSelected());
-			labelDpHeight.setVisible(rbDpHeight.isSelected());
-		});
+        scaleTypeToggleGroup.selectedToggleProperty().addListener((ov, old_toggle, new_toggle) -> {
+            scaleSlider.setVisible(!rbDpWidth.isSelected() && !rbDpHeight.isSelected());
+            gridPaneScaleFactorLabel.setVisible(!rbDpWidth.isSelected() && !rbDpHeight.isSelected());
+            textFieldDp.setVisible(rbDpWidth.isSelected() || rbDpHeight.isSelected());
+            labelDpPostFix.setVisible(rbDpWidth.isSelected() || rbDpHeight.isSelected());
+            labelDpWidth.setVisible(rbDpWidth.isSelected());
+            labelDpHeight.setVisible(rbDpHeight.isSelected());
+        });
 
-		optionTypeToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
-			if (rbOptAdvanced.isSelected()) {
-				if (stage.getHeight() < GUI.MIN_HEIGHT) {
-					stage.setHeight(GUI.MIN_HEIGHT);
-				}
-			}
-		});
+        optionTypeToggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            if (rbOptAdvanced.isSelected()) {
+                if (stage.getHeight() < GUI.MIN_HEIGHT) {
+                    stage.setHeight(GUI.MIN_HEIGHT);
+                }
+            }
+        });
 
-		gridPaneOptionsCheckboxes.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		gridPaneOptionsCheckboxes.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		gridPanePostProcessors.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		gridPanePostProcessors.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		labelPostProcessor.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		labelPostProcessor.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		hboxWhy.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		hboxWhy.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		vboxOptionsCheckboxes.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		vboxOptionsCheckboxes.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		vboxPostProcessors.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		vboxPostProcessors.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		gridPaneChoiceBoxes.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		gridPaneChoiceBoxes.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		textFieldConsole.managedProperty().bind(rbOptAdvanced.selectedProperty());
-		textFieldConsole.visibleProperty().bind(rbOptAdvanced.selectedProperty());
-		vboxFillFreeSpace.managedProperty().bind(rbOptSimple.selectedProperty());
-		vboxFillFreeSpace.visibleProperty().bind(rbOptSimple.selectedProperty());
+        gridPaneOptionsCheckboxes.managedProperty().bind(rbOptAdvanced.selectedProperty());
+        gridPaneOptionsCheckboxes.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+        gridPanePostProcessors.managedProperty().bind(rbOptAdvanced.selectedProperty());
+        gridPanePostProcessors.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+        labelPostProcessor.managedProperty().bind(rbOptAdvanced.selectedProperty());
+        labelPostProcessor.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+        hboxWhy.managedProperty().bind(rbOptAdvanced.selectedProperty());
+        hboxWhy.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+        vboxOptionsCheckboxes.managedProperty().bind(rbOptAdvanced.selectedProperty());
+        vboxOptionsCheckboxes.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+        vboxPostProcessors.managedProperty().bind(rbOptAdvanced.selectedProperty());
+        vboxPostProcessors.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+        gridPaneChoiceBoxes.managedProperty().bind(rbOptAdvanced.selectedProperty());
+        gridPaneChoiceBoxes.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+        textFieldConsole.managedProperty().bind(rbOptAdvanced.selectedProperty());
+        textFieldConsole.visibleProperty().bind(rbOptAdvanced.selectedProperty());
+        vboxFillFreeSpace.managedProperty().bind(rbOptSimple.selectedProperty());
+        vboxFillFreeSpace.visibleProperty().bind(rbOptSimple.selectedProperty());
 
-		scaleSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
-			labelScale.setText(
-					MessageFormat.format(bundle.getString("main.label.factor"), String.format(Locale.US, "%.2f", Math.round(scaleSlider.getValue() * 4f) / 4f)));
-			labelScaleSubtitle.setText(getNameForScale((float) scaleSlider.getValue()));
-		});
-		scaleSlider.setValue(Arguments.DEFAULT_SCALE);
+        scaleSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            labelScale.setText(
+                    MessageFormat.format(bundle.getString("main.label.factor"), String.format(Locale.US, "%.2f", Math.round(scaleSlider.getValue() * 4f) / 4f)));
+            labelScaleSubtitle.setText(getNameForScale((float) scaleSlider.getValue()));
+        });
+        scaleSlider.setValue(Arguments.DEFAULT_SCALE);
 
-		setPlatformToogles(Arguments.DEFAULT_PLATFORM);
-		choiceCompression.setConverter(new StringConverter() {
-			@Override
-			public String toString(Object object) {
-				return bundle.getString(((EOutputCompressionMode) object).rbKey);
-			}
+        setPlatformToogles(Arguments.DEFAULT_PLATFORM);
+        choiceCompression.setConverter(new StringConverter() {
+            @Override
+            public String toString(Object object) {
+                return bundle.getString(((EOutputCompressionMode) object).rbKey);
+            }
 
-			@Override
-			public Object fromString(String string) {
-				return EOutputCompressionMode.getFromString(string, bundle);
-			}
-		});
-		choiceCompression.setItems(FXCollections.observableArrayList(
-				EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, EOutputCompressionMode.SAME_AS_INPUT_STRICT, new Separator(), EOutputCompressionMode.AS_JPG,
-				EOutputCompressionMode.AS_PNG, EOutputCompressionMode.AS_GIF, EOutputCompressionMode.AS_BMP, EOutputCompressionMode.AS_JPG_AND_PNG));
-		choiceCompression.getSelectionModel().select(Arguments.DEFAULT_OUT_COMPRESSION);
+            @Override
+            public Object fromString(String string) {
+                return EOutputCompressionMode.getFromString(string, bundle);
+            }
+        });
+        choiceCompression.setItems(FXCollections.observableArrayList(
+                EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, EOutputCompressionMode.SAME_AS_INPUT_STRICT, new Separator(), EOutputCompressionMode.AS_JPG,
+                EOutputCompressionMode.AS_PNG, EOutputCompressionMode.AS_GIF, EOutputCompressionMode.AS_BMP, EOutputCompressionMode.AS_JPG_AND_PNG));
+        choiceCompression.getSelectionModel().select(Arguments.DEFAULT_OUT_COMPRESSION);
 
-		choiceCompressionQuality.setItems(FXCollections.observableArrayList(
-				toJpgQ(0f), toJpgQ(0.1f), toJpgQ(0.2f), toJpgQ(0.3f), toJpgQ(0.4f), toJpgQ(0.5f), toJpgQ(0.6f), toJpgQ(0.7f), toJpgQ(0.75f), toJpgQ(0.8f), toJpgQ(0.85f), toJpgQ(0.9f), toJpgQ(0.95f), toJpgQ(1.0f)));
-		choiceCompressionQuality.getSelectionModel().select(toJpgQ(Float.valueOf(Arguments.DEFAULT_COMPRESSION_QUALITY)));
+        choiceCompressionQuality.setItems(FXCollections.observableArrayList(
+                toJpgQ(0f), toJpgQ(0.1f), toJpgQ(0.2f), toJpgQ(0.3f), toJpgQ(0.4f), toJpgQ(0.5f), toJpgQ(0.6f), toJpgQ(0.7f), toJpgQ(0.75f), toJpgQ(0.8f), toJpgQ(0.85f), toJpgQ(0.9f), toJpgQ(0.95f), toJpgQ(1.0f)));
+        choiceCompressionQuality.getSelectionModel().select(toJpgQ(Float.valueOf(Arguments.DEFAULT_COMPRESSION_QUALITY)));
 
-		choiceRounding.setItems(FXCollections.observableArrayList(
-				RoundingHandler.Strategy.ROUND_HALF_UP, RoundingHandler.Strategy.CEIL, RoundingHandler.Strategy.FLOOR));
-		choiceRounding.getSelectionModel().select(Arguments.DEFAULT_ROUNDING_STRATEGY);
+        choiceRounding.setItems(FXCollections.observableArrayList(
+                RoundingHandler.Strategy.ROUND_HALF_UP, RoundingHandler.Strategy.CEIL, RoundingHandler.Strategy.FLOOR));
+        choiceRounding.getSelectionModel().select(Arguments.DEFAULT_ROUNDING_STRATEGY);
 
-		choiceThreads.setItems(FXCollections.observableArrayList(
-				1, 2, 3, 4, 5, 6, 7, 8));
-		choiceThreads.getSelectionModel().select(Arguments.DEFAULT_THREAD_COUNT - 1);
+        choiceThreads.setItems(FXCollections.observableArrayList(
+                1, 2, 3, 4, 5, 6, 7, 8));
+        choiceThreads.getSelectionModel().select(Arguments.DEFAULT_THREAD_COUNT - 1);
 
-		labelVersion.setText("v" + GUIController.class.getPackage().getImplementationVersion());
+        choiceScaleQ.setItems(FXCollections.observableArrayList(EScalingQuality.HIGH_QUALITY, EScalingQuality.BALANCE, EScalingQuality.SPEED));
+        choiceScaleQ.getSelectionModel().select(Arguments.DEFAULT_SCALING_QUALITY);
 
-		textFieldDp.textProperty().addListener((observable, oldValue, newValue) -> {
-			if (!newValue.matches("\\d*")) {
-				textFieldDp.setText(newValue.replaceAll("[^\\d]", ""));
-			}
-			if (textFieldDp.getText().length() > 10) {
-				String s = textFieldDp.getText().substring(0, 10);
-				textFieldDp.setText(s);
-			}
-		});
+        labelVersion.setText("v" + GUIController.class.getPackage().getImplementationVersion());
 
-		labelWhyPP.setOnMouseClicked(event -> {
-			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setTitle("Info");
-			alert.setHeaderText(bundle.getString("alert.whypp.title"));
-			alert.setContentText(bundle.getString("alert.whypp.text"));
-			alert.showAndWait();
-		});
+        textFieldDp.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                textFieldDp.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+            if (textFieldDp.getText().length() > 10) {
+                String s = textFieldDp.getText().substring(0, 10);
+                textFieldDp.setText(s);
+            }
+        });
 
-		btnDstFolderOpen.setOnAction(event -> {
-			try {
-				Desktop.getDesktop().open(new File(textFieldDstPath.getText()));
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		});
+        labelWhyPP.setOnMouseClicked(event -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Info");
+            alert.setHeaderText(bundle.getString("alert.whypp.title"));
+            alert.setContentText(bundle.getString("alert.whypp.text"));
+            alert.showAndWait();
+        });
 
-		textFieldDstPath.textProperty().addListener(observable -> {
-			if (textFieldDstPath != null) {
-				File dstFolder = new File(textFieldDstPath.getText());
-				if (dstFolder.exists() && dstFolder.isDirectory()) {
-					btnDstFolderOpen.setDisable(false);
-					return;
-				}
-			}
-			btnDstFolderOpen.setDisable(true);
-		});
+        btnDstFolderOpen.setOnAction(event -> {
+            try {
+                Desktop.getDesktop().open(new File(textFieldDstPath.getText()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
-		loadPrefs();
-		new Thread(new PostProcessorChecker()).start();
-	}
+        textFieldDstPath.textProperty().addListener(observable -> {
+            if (textFieldDstPath != null) {
+                File dstFolder = new File(textFieldDstPath.getText());
+                if (dstFolder.exists() && dstFolder.isDirectory()) {
+                    btnDstFolderOpen.setDisable(false);
+                    return;
+                }
+            }
+            btnDstFolderOpen.setDisable(true);
+        });
 
-	public static String toJpgQ(Float floatQuality) {
-		return String.format(Locale.US, "%.0f", floatQuality * 100f) + "%";
-	}
+        loadPrefs();
+        new Thread(new PostProcessorChecker()).start();
+    }
 
-	private void setPlatformToogles(Set<EPlatform> platformSet) {
-		tgAndroid.setSelected(platformSet.contains(EPlatform.ANDROID));
-		tgIos.setSelected(platformSet.contains(EPlatform.IOS));
-		tgWindows.setSelected(platformSet.contains(EPlatform.WINDOWS));
-		tgWeb.setSelected(platformSet.contains(EPlatform.WEB));
-	}
+    public static String toJpgQ(Float floatQuality) {
+        return String.format(Locale.US, "%.0f", floatQuality * 100f) + "%";
+    }
 
-	private void setupLayout() {
-		ColumnConstraints column1M = new ColumnConstraints();
-		column1M.setPercentWidth(20);
-		ColumnConstraints column2M = new ColumnConstraints();
-		column2M.setPercentWidth(56);
-		ColumnConstraints column3M = new ColumnConstraints();
-		column3M.setPercentWidth(12);
-		ColumnConstraints column4M = new ColumnConstraints();
-		column4M.setPercentWidth(12);
-		rootGridPane.getColumnConstraints().addAll(column1M, column2M, column3M, column4M);
+    private void setPlatformToogles(Set<EPlatform> platformSet) {
+        tgAndroid.setSelected(platformSet.contains(EPlatform.ANDROID));
+        tgIos.setSelected(platformSet.contains(EPlatform.IOS));
+        tgWindows.setSelected(platformSet.contains(EPlatform.WINDOWS));
+        tgWeb.setSelected(platformSet.contains(EPlatform.WEB));
+    }
 
-		ColumnConstraints column1 = new ColumnConstraints();
-		column1.setPercentWidth(20);
-		ColumnConstraints column2 = new ColumnConstraints();
-		column2.setPercentWidth(30);
-		ColumnConstraints column3 = new ColumnConstraints();
-		column3.setPercentWidth(20);
-		ColumnConstraints column4 = new ColumnConstraints();
-		column4.setPercentWidth(30);
-		gridPaneChoiceBoxes.getColumnConstraints().addAll(column1, column2, column3, column4);
+    private void setupLayout() {
+        ColumnConstraints column1M = new ColumnConstraints();
+        column1M.setPercentWidth(20);
+        ColumnConstraints column2M = new ColumnConstraints();
+        column2M.setPercentWidth(56);
+        ColumnConstraints column3M = new ColumnConstraints();
+        column3M.setPercentWidth(12);
+        ColumnConstraints column4M = new ColumnConstraints();
+        column4M.setPercentWidth(12);
+        rootGridPane.getColumnConstraints().addAll(column1M, column2M, column3M, column4M);
 
-		ColumnConstraints column1C = new ColumnConstraints();
-		column1C.setPercentWidth(50);
-		ColumnConstraints column2C = new ColumnConstraints();
-		column2C.setPercentWidth(50);
-		gridPaneOptionsCheckboxes.getColumnConstraints().addAll(column1C, column2C);
-		gridPanePostProcessors.getColumnConstraints().addAll(column1C, column2C);
+        ColumnConstraints column1 = new ColumnConstraints();
+        column1.setPercentWidth(20);
+        ColumnConstraints column2 = new ColumnConstraints();
+        column2.setPercentWidth(30);
+        ColumnConstraints column3 = new ColumnConstraints();
+        column3.setPercentWidth(20);
+        ColumnConstraints column4 = new ColumnConstraints();
+        column4.setPercentWidth(30);
+        gridPaneChoiceBoxes.getColumnConstraints().addAll(column1, column2, column3, column4);
 
-		ColumnConstraints column1D = new ColumnConstraints();
-		column1D.setPercentWidth(25);
-		ColumnConstraints column2D = new ColumnConstraints();
-		column2D.setPercentWidth(25);
-		ColumnConstraints column3D = new ColumnConstraints();
-		column3D.setPercentWidth(25);
-		ColumnConstraints column4D = new ColumnConstraints();
-		column4D.setPercentWidth(25);
-		gridPaneToggleGroup.getColumnConstraints().addAll(column1D, column2D, column3D, column4D);
-	}
+        ColumnConstraints column1C = new ColumnConstraints();
+        column1C.setPercentWidth(50);
+        ColumnConstraints column2C = new ColumnConstraints();
+        column2C.setPercentWidth(50);
+        gridPaneOptionsCheckboxes.getColumnConstraints().addAll(column1C, column2C);
+        gridPanePostProcessors.getColumnConstraints().addAll(column1C, column2C);
 
-	private void saveToPrefs(Arguments arg) {
-		preferenceStore.save(arg);
-	}
+        ColumnConstraints column1D = new ColumnConstraints();
+        column1D.setPercentWidth(25);
+        ColumnConstraints column2D = new ColumnConstraints();
+        column2D.setPercentWidth(25);
+        ColumnConstraints column3D = new ColumnConstraints();
+        column3D.setPercentWidth(25);
+        ColumnConstraints column4D = new ColumnConstraints();
+        column4D.setPercentWidth(25);
+        gridPaneToggleGroup.getColumnConstraints().addAll(column1D, column2D, column3D, column4D);
+    }
 
-	private void loadPrefs() {
-		Arguments args = preferenceStore.get();
-		if (args != null) {
-			textFieldSrcPath.setText(args.src != null ? args.src.getAbsolutePath() : "");
-			textFieldDstPath.setText(args.dst != null ? args.dst.getAbsolutePath() : "");
+    private void saveToPrefs(Arguments arg) {
+        preferenceStore.save(arg);
+    }
 
-			scaleSlider.setValue(Arguments.DEFAULT_SCALE);
-			textFieldDp.setText(String.valueOf((int) args.scale));
+    private void loadPrefs() {
+        Arguments args = preferenceStore.get();
+        if (args != null) {
+            textFieldSrcPath.setText(args.src != null ? args.src.getAbsolutePath() : "");
+            textFieldDstPath.setText(args.dst != null ? args.dst.getAbsolutePath() : "");
 
-			if (args.scaleMode == EScaleMode.FACTOR) {
-				rbFactor.setSelected(true);
-				scaleSlider.setValue(args.scale);
-				textFieldDp.setText("");
-			} else if (args.scaleMode == EScaleMode.DP_WIDTH) {
-				rbDpWidth.setSelected(true);
-			} else if (args.scaleMode == EScaleMode.DP_HEIGHT) {
-				rbDpHeight.setSelected(true);
-			}
+            scaleSlider.setValue(Arguments.DEFAULT_SCALE);
+            textFieldDp.setText(String.valueOf((int) args.scale));
 
-			setPlatformToogles(args.platform);
-			choiceCompression.getSelectionModel().select(args.outputCompressionMode);
-			choiceCompressionQuality.getSelectionModel().select(toJpgQ(args.compressionQuality));
-			choiceRounding.getSelectionModel().select(args.roundingHandler);
-			choiceThreads.getSelectionModel().select(Integer.valueOf(args.threadCount));
+            if (args.scaleMode == EScaleMode.FACTOR) {
+                rbFactor.setSelected(true);
+                scaleSlider.setValue(args.scale);
+                textFieldDp.setText("");
+            } else if (args.scaleMode == EScaleMode.DP_WIDTH) {
+                rbDpWidth.setSelected(true);
+            } else if (args.scaleMode == EScaleMode.DP_HEIGHT) {
+                rbDpHeight.setSelected(true);
+            }
 
-			cbSkipExisting.setSelected(args.skipExistingFiles);
-			cbSkipUpscaling.setSelected(args.skipUpscaling);
-			cbAndroidIncludeLdpiTvdpi.setSelected(args.includeAndroidLdpiTvdpi);
-			cbAntiAliasing.setSelected(args.enableAntiAliasing);
-			cbMipmapInsteadDrawable.setSelected(args.createMipMapInsteadOfDrawableDir);
-			cbHaltOnError.setSelected(args.haltOnError);
-			cbDryRun.setSelected(args.dryRun);
-			cbEnablePngCrush.setSelected(args.enablePngCrush);
-			cbPostConvertWebp.setSelected(args.postConvertWebp);
-			cbEnableMozJpeg.setSelected(args.enableMozJpeg);
-			cbKeepUnoptimized.setSelected(args.keepUnoptimizedFilesPostProcessor);
-			cbIosCreateImageset.setSelected(args.iosCreateImagesetFolders);
-			cbCleanBeforeConvert.setSelected(args.clearDirBeforeConvert);
-			rbOptAdvanced.setSelected(args.guiAdvancedOptions);
-			rbOptSimple.setSelected(!args.guiAdvancedOptions);
+            setPlatformToogles(args.platform);
+            choiceCompression.getSelectionModel().select(args.outputCompressionMode);
+            choiceCompressionQuality.getSelectionModel().select(toJpgQ(args.compressionQuality));
+            choiceRounding.getSelectionModel().select(args.roundingHandler);
+            choiceThreads.getSelectionModel().select(Integer.valueOf(args.threadCount));
+            choiceScaleQ.getSelectionModel().select(args.scaleQuality);
 
-		}
-	}
+            cbSkipExisting.setSelected(args.skipExistingFiles);
+            cbSkipUpscaling.setSelected(args.skipUpscaling);
+            cbAndroidIncludeLdpiTvdpi.setSelected(args.includeAndroidLdpiTvdpi);
+            cbAntiAliasing.setSelected(args.enableAntiAliasing);
+            cbMipmapInsteadDrawable.setSelected(args.createMipMapInsteadOfDrawableDir);
+            cbHaltOnError.setSelected(args.haltOnError);
+            cbDryRun.setSelected(args.dryRun);
+            cbEnablePngCrush.setSelected(args.enablePngCrush);
+            cbPostConvertWebp.setSelected(args.postConvertWebp);
+            cbEnableMozJpeg.setSelected(args.enableMozJpeg);
+            cbKeepUnoptimized.setSelected(args.keepUnoptimizedFilesPostProcessor);
+            cbIosCreateImageset.setSelected(args.iosCreateImagesetFolders);
+            cbCleanBeforeConvert.setSelected(args.clearDirBeforeConvert);
+            rbOptAdvanced.setSelected(args.guiAdvancedOptions);
+            rbOptSimple.setSelected(!args.guiAdvancedOptions);
 
-	public Arguments getFromUI(boolean skipValidation) throws InvalidArgumentException {
-		float scale = Arguments.DEFAULT_SCALE;
+        }
+    }
 
-		try {
-			scale = rbFactor.isSelected() ? (float) scaleSlider.getValue() : Float.valueOf(textFieldDp.getText());
-		} catch (NumberFormatException e) {
-			if (!skipValidation) {
-				throw new InvalidArgumentException(
-						MessageFormat.format(bundle.getString("error.parse.dp"), textFieldDp.getText()));
-			}
-		}
+    public Arguments getFromUI(boolean skipValidation) throws InvalidArgumentException {
+        float scale = Arguments.DEFAULT_SCALE;
 
-		Set<EPlatform> platformSet = new HashSet<>();
-		if (tgAndroid.isSelected()) {
-			platformSet.add(EPlatform.ANDROID);
-		}
-		if (tgIos.isSelected()) {
-			platformSet.add(EPlatform.IOS);
-		}
-		if (tgWindows.isSelected()) {
-			platformSet.add(EPlatform.WINDOWS);
-		}
-		if (tgWeb.isSelected()) {
-			platformSet.add(EPlatform.WEB);
-		}
+        try {
+            scale = rbFactor.isSelected() ? (float) scaleSlider.getValue() : Float.valueOf(textFieldDp.getText());
+        } catch (NumberFormatException e) {
+            if (!skipValidation) {
+                throw new InvalidArgumentException(
+                        MessageFormat.format(bundle.getString("error.parse.dp"), textFieldDp.getText()));
+            }
+        }
 
-		Arguments.Builder builder = new Arguments.Builder(new File(textFieldSrcPath.getText()), scale);
-		builder.dstFolder(textFieldDstPath.getText() != null && !textFieldDstPath.getText().trim().isEmpty() ? new File(textFieldDstPath.getText()) : null);
-		builder.scaleMode(rbFactor.isSelected() ? EScaleMode.FACTOR : rbDpWidth.isSelected() ? EScaleMode.DP_WIDTH : EScaleMode.DP_HEIGHT);
-		builder.platform(platformSet);
-		builder.compression((EOutputCompressionMode) choiceCompression.getSelectionModel().getSelectedItem(), toJpgQFloat(choiceCompressionQuality.getSelectionModel().getSelectedItem()));
-		builder.scaleRoundingStragy((RoundingHandler.Strategy) choiceRounding.getSelectionModel().getSelectedItem());
-		builder.threadCount((Integer) choiceThreads.getSelectionModel().getSelectedItem());
+        Set<EPlatform> platformSet = new HashSet<>();
+        if (tgAndroid.isSelected()) {
+            platformSet.add(EPlatform.ANDROID);
+        }
+        if (tgIos.isSelected()) {
+            platformSet.add(EPlatform.IOS);
+        }
+        if (tgWindows.isSelected()) {
+            platformSet.add(EPlatform.WINDOWS);
+        }
+        if (tgWeb.isSelected()) {
+            platformSet.add(EPlatform.WEB);
+        }
 
-		builder.skipExistingFiles(cbSkipExisting.isSelected());
-		builder.skipUpscaling(cbSkipUpscaling.isSelected());
-		builder.verboseLog(true);
-		builder.includeAndroidLdpiTvdpi(cbAndroidIncludeLdpiTvdpi.isSelected());
-		builder.haltOnError(cbHaltOnError.isSelected());
-		builder.createMipMapInsteadOfDrawableDir(cbMipmapInsteadDrawable.isSelected());
-		builder.antiAliasing(cbAntiAliasing.isSelected());
-		builder.dryRun(cbDryRun.isSelected());
-		builder.enablePngCrush(cbEnablePngCrush.isSelected());
-		builder.postConvertWebp(cbPostConvertWebp.isSelected());
-		builder.enableMozJpeg(cbEnableMozJpeg.isSelected());
-		builder.keepUnoptimizedFilesPostProcessor(cbKeepUnoptimized.isSelected());
-		builder.iosCreateImagesetFolders(cbIosCreateImageset.isSelected());
-		builder.guiAdvancedOptions(rbOptAdvanced.isSelected());
-		builder.clearDirBeforeConvert(cbCleanBeforeConvert.isSelected());
+        Arguments.Builder builder = new Arguments.Builder(new File(textFieldSrcPath.getText()), scale);
+        builder.dstFolder(textFieldDstPath.getText() != null && !textFieldDstPath.getText().trim().isEmpty() ? new File(textFieldDstPath.getText()) : null);
+        builder.scaleMode(rbFactor.isSelected() ? EScaleMode.FACTOR : rbDpWidth.isSelected() ? EScaleMode.DP_WIDTH : EScaleMode.DP_HEIGHT);
+        builder.platform(platformSet);
+        builder.compression((EOutputCompressionMode) choiceCompression.getSelectionModel().getSelectedItem(), toJpgQFloat(choiceCompressionQuality.getSelectionModel().getSelectedItem()));
+        builder.scaleRoundingStragy((RoundingHandler.Strategy) choiceRounding.getSelectionModel().getSelectedItem());
+        builder.threadCount((Integer) choiceThreads.getSelectionModel().getSelectedItem());
+        builder.scaleQuality((EScalingQuality) choiceScaleQ.getSelectionModel().getSelectedItem());
 
-		return builder.skipParamValidation(skipValidation).build();
-	}
+        builder.skipExistingFiles(cbSkipExisting.isSelected());
+        builder.skipUpscaling(cbSkipUpscaling.isSelected());
+        builder.verboseLog(true);
+        builder.includeAndroidLdpiTvdpi(cbAndroidIncludeLdpiTvdpi.isSelected());
+        builder.haltOnError(cbHaltOnError.isSelected());
+        builder.createMipMapInsteadOfDrawableDir(cbMipmapInsteadDrawable.isSelected());
+        builder.antiAliasing(cbAntiAliasing.isSelected());
+        builder.dryRun(cbDryRun.isSelected());
+        builder.enablePngCrush(cbEnablePngCrush.isSelected());
+        builder.postConvertWebp(cbPostConvertWebp.isSelected());
+        builder.enableMozJpeg(cbEnableMozJpeg.isSelected());
+        builder.keepUnoptimizedFilesPostProcessor(cbKeepUnoptimized.isSelected());
+        builder.iosCreateImagesetFolders(cbIosCreateImageset.isSelected());
+        builder.guiAdvancedOptions(rbOptAdvanced.isSelected());
+        builder.clearDirBeforeConvert(cbCleanBeforeConvert.isSelected());
 
-	private float toJpgQFloat(Object selectedItem) {
-		String raw = selectedItem.toString();
-		raw = raw.replace("%", "");
-		int rawInt = Integer.parseInt(raw);
-		return (float) rawInt / 100f;
-	}
+        return builder.skipParamValidation(skipValidation).build();
+    }
 
-	private void resetUIAfterExecution() {
-		progressBar.setProgress(0);
-		btnConvert.setDisable(false);
-		textFieldConsole.setDisable(false);
-		btnConvert.setText(bundle.getString("main.btn.convert"));
-	}
+    private float toJpgQFloat(Object selectedItem) {
+        String raw = selectedItem.toString();
+        raw = raw.replace("%", "");
+        int rawInt = Integer.parseInt(raw);
+        return (float) rawInt / 100f;
+    }
 
-	public void setSrcForTest(File srcFile) {
-		if (srcFile != null) {
-			textFieldSrcPath.setText(srcFile.getAbsolutePath());
-			if (textFieldDstPath != null && (textFieldDstPath.getText() == null || textFieldDstPath.getText().trim().isEmpty())) {
-				textFieldDstPath.setText(srcFile.getAbsolutePath());
-			}
-		}
-	}
+    private void resetUIAfterExecution() {
+        progressBar.setProgress(0);
+        btnConvert.setDisable(false);
+        textFieldConsole.setDisable(false);
+        btnConvert.setText(bundle.getString("main.btn.convert"));
+    }
 
-	private static String getNameForScale(float scale) {
-		String scaleString = String.format(Locale.US, "%.2f", Math.round(scale * 4f) / 4f);
-		switch (scaleString) {
-			case "0.75":
-				return "ldpi";
-			case "1.00":
-				return "mdpi / 1x";
-			case "1.50":
-				return "hdpi";
-			case "2.00":
-				return "xhdpi / 2x";
-			case "3.00":
-				return "xxhdpi / 3x";
-			case "4.00":
-				return "xxxhdpi";
-		}
-		return "";
-	}
+    public void setSrcForTest(File srcFile) {
+        if (srcFile != null) {
+            textFieldSrcPath.setText(srcFile.getAbsolutePath());
+            if (textFieldDstPath != null && (textFieldDstPath.getText() == null || textFieldDstPath.getText().trim().isEmpty())) {
+                textFieldDstPath.setText(srcFile.getAbsolutePath());
+            }
+        }
+    }
 
-	private static class FolderPicker implements EventHandler<ActionEvent> {
-		private final DirectoryChooser directoryChooser;
-		private final TextField textFieldPath;
-		private final TextField dstTextFieldPath;
-		private final ResourceBundle bundle;
+    private static String getNameForScale(float scale) {
+        String scaleString = String.format(Locale.US, "%.2f", Math.round(scale * 4f) / 4f);
+        switch (scaleString) {
+            case "0.75":
+                return "ldpi";
+            case "1.00":
+                return "mdpi / 1x";
+            case "1.50":
+                return "hdpi";
+            case "2.00":
+                return "xhdpi / 2x";
+            case "3.00":
+                return "xxhdpi / 3x";
+            case "4.00":
+                return "xxxhdpi";
+        }
+        return "";
+    }
 
-		public FolderPicker(DirectoryChooser directoryChooser, TextField textFieldPath, TextField dstTextFieldPath, ResourceBundle bundle) {
-			this.directoryChooser = directoryChooser;
-			this.textFieldPath = textFieldPath;
-			this.dstTextFieldPath = dstTextFieldPath;
-			this.bundle = bundle;
-		}
+    private static class FolderPicker implements EventHandler<ActionEvent> {
+        private final DirectoryChooser directoryChooser;
+        private final TextField textFieldPath;
+        private final TextField dstTextFieldPath;
+        private final ResourceBundle bundle;
 
-		@Override
-		public void handle(ActionEvent event) {
-			directoryChooser.setTitle(bundle.getString("main.dirchooser.titel"));
-			File dir = new File(textFieldPath.getText());
+        public FolderPicker(DirectoryChooser directoryChooser, TextField textFieldPath, TextField dstTextFieldPath, ResourceBundle bundle) {
+            this.directoryChooser = directoryChooser;
+            this.textFieldPath = textFieldPath;
+            this.dstTextFieldPath = dstTextFieldPath;
+            this.bundle = bundle;
+        }
 
-			if (dir != null && dir.isFile()) {
-				dir = dir.getParentFile();
-			}
+        @Override
+        public void handle(ActionEvent event) {
+            directoryChooser.setTitle(bundle.getString("main.dirchooser.titel"));
+            File dir = new File(textFieldPath.getText());
 
-			while (true) {
-				if (dir == null || dir.isDirectory()) break;
-				if (!dir.exists()) {
-					dir = dir.getParentFile();
-				}
-			}
+            if (dir != null && dir.isFile()) {
+                dir = dir.getParentFile();
+            }
 
-			if (textFieldPath.getText().isEmpty() || !dir.exists() || !dir.isDirectory()) {
-				directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
-			} else {
-				directoryChooser.setInitialDirectory(dir);
-			}
-			File srcFile = directoryChooser.showDialog(textFieldPath.getScene().getWindow());
-			if (srcFile != null) {
-				textFieldPath.setText(srcFile.getAbsolutePath());
-				if (dstTextFieldPath != null && (dstTextFieldPath.getText() == null || dstTextFieldPath.getText().trim().isEmpty())) {
-					dstTextFieldPath.setText(srcFile.getAbsolutePath());
-				}
-			}
-		}
-	}
+            while (true) {
+                if (dir == null || dir.isDirectory()) break;
+                if (!dir.exists()) {
+                    dir = dir.getParentFile();
+                }
+            }
 
-	private class PostProcessorChecker implements Runnable {
-		@Override
-		public void run() {
-			boolean pngcrushSupported = new PngCrushProcessor().isSupported();
-			boolean mozJpegSupported = new MozJpegProcessor().isSupported();
-			boolean webpSupported = new WebpProcessor().isSupported();
+            if (textFieldPath.getText().isEmpty() || !dir.exists() || !dir.isDirectory()) {
+                directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+            } else {
+                directoryChooser.setInitialDirectory(dir);
+            }
+            File srcFile = directoryChooser.showDialog(textFieldPath.getScene().getWindow());
+            if (srcFile != null) {
+                textFieldPath.setText(srcFile.getAbsolutePath());
+                if (dstTextFieldPath != null && (dstTextFieldPath.getText() == null || dstTextFieldPath.getText().trim().isEmpty())) {
+                    dstTextFieldPath.setText(srcFile.getAbsolutePath());
+                }
+            }
+        }
+    }
 
-			Platform.runLater(() -> {
-				cbEnablePngCrush.setDisable(!pngcrushSupported);
-				cbEnableMozJpeg.setDisable(!mozJpegSupported);
-				cbPostConvertWebp.setDisable(!webpSupported);
-				labelWhyPP.setVisible(!pngcrushSupported || !mozJpegSupported || !webpSupported);
-			});
-		}
-	}
+    private class PostProcessorChecker implements Runnable {
+        @Override
+        public void run() {
+            boolean pngcrushSupported = new PngCrushProcessor().isSupported();
+            boolean mozJpegSupported = new MozJpegProcessor().isSupported();
+            boolean webpSupported = new WebpProcessor().isSupported();
+
+            Platform.runLater(() -> {
+                cbEnablePngCrush.setDisable(!pngcrushSupported);
+                cbEnableMozJpeg.setDisable(!mozJpegSupported);
+                cbPostConvertWebp.setDisable(!webpSupported);
+                labelWhyPP.setVisible(!pngcrushSupported || !mozJpegSupported || !webpSupported);
+            });
+        }
+    }
 
 }

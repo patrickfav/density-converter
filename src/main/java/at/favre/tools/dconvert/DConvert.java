@@ -19,11 +19,14 @@ package at.favre.tools.dconvert;
 
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EPlatform;
+import at.favre.tools.dconvert.arg.EScalingQuality;
 import at.favre.tools.dconvert.converters.IPlatformConverter;
 import at.favre.tools.dconvert.converters.postprocessing.IPostProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
+import at.favre.tools.dconvert.converters.scaling.IBufferedImageScaler;
+import at.favre.tools.dconvert.util.ImageUtil;
 import at.favre.tools.dconvert.util.MiscUtil;
 
 import javax.imageio.ImageIO;
@@ -166,6 +169,7 @@ public class DConvert {
 
 	private void informFinished(int finishedJobs, List<Exception> exceptions, boolean haltedDuringProcess) {
 		System.gc();
+		printTrace();
 		if (handlerCallback != null) {
 			if (mainLatch != null) {
 				mainLatch.countDown();
@@ -184,7 +188,7 @@ public class DConvert {
 		void onFinished(int finishedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log);
 	}
 
-	public String getRegisteredImageReadersAndWriters() {
+	private String getRegisteredImageReadersAndWriters() {
 		String[] formats = new String[]{"JPEG", "PNG", "TIFF", "PSD", "SVG", "BMP"};
 
 		StringBuilder sb = new StringBuilder();
@@ -201,5 +205,13 @@ public class DConvert {
 			}
 		}
 		return sb.toString();
+	}
+
+	private void printTrace() {
+		for (Map.Entry<IBufferedImageScaler, Map<EScalingQuality, Long>> e1 : ImageUtil.traceMap.entrySet()) {
+			for (Map.Entry<EScalingQuality, Long> e2 : e1.getValue().entrySet()) {
+				System.out.println(e1.getKey().getClass().getSimpleName() + ": [" + e2.getKey() + "]: " + String.format(Locale.US, "%.2f", (double) e2.getValue() / 1000000.0));
+			}
+		}
 	}
 }
