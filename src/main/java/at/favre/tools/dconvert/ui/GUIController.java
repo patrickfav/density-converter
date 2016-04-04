@@ -286,7 +286,7 @@ public class GUIController {
                 1, 2, 3, 4, 5, 6, 7, 8));
         choiceThreads.getSelectionModel().select(Arguments.DEFAULT_THREAD_COUNT - 1);
 
-        choiceScaleQ.setItems(FXCollections.observableArrayList(EScalingQuality.HIGH_QUALITY, EScalingQuality.BALANCE, EScalingQuality.SPEED));
+        choiceScaleQ.setItems(FXCollections.observableArrayList(EScalingQuality.HIGH_QUALITY, EScalingQuality.QUALITY, EScalingQuality.BALANCE, EScalingQuality.SPEED));
         choiceScaleQ.getSelectionModel().select(Arguments.DEFAULT_SCALING_QUALITY);
 
         labelVersion.setText("v" + GUIController.class.getPackage().getImplementationVersion());
@@ -512,19 +512,24 @@ public class GUIController {
         String scaleString = String.format(Locale.US, "%.2f", Math.round(scale * 4f) / 4f);
         switch (scaleString) {
             case "0.75":
-                return "ldpi";
+                return "ldpi / " + getDpi(scaleString);
             case "1.00":
-                return "mdpi / 1x";
+                return "mdpi / 1x / " + getDpi(scaleString);
             case "1.50":
-                return "hdpi";
+                return "hdpi / " + getDpi(scaleString);
             case "2.00":
-                return "xhdpi / 2x";
+                return "xhdpi / 2x / " + getDpi(scaleString);
             case "3.00":
-                return "xxhdpi / 3x";
+                return "xxhdpi / 3x / " + getDpi(scaleString);
             case "4.00":
-                return "xxxhdpi";
+                return "xxxhdpi / " + getDpi(scaleString);
+            default:
+                return getDpi(scaleString);
         }
-        return "";
+    }
+
+    private static String getDpi(String scaleString) {
+        return String.format(Locale.US, "%.0f", Float.valueOf(scaleString) * 160) + "dpi";
     }
 
     private static class FolderPicker implements EventHandler<ActionEvent> {

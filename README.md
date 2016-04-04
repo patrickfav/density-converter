@@ -191,9 +191,7 @@ Out-compression has the following modes:
 If an image will be re-compressed with a file type that does not support alpha, alpha will be replaced with white (e.g. when converting png -> jpeg)
 
 ## Quality Comparison
-One of the main features of this converter is downscaling. Unfortunately without using specialized algorithms, down scaled
- images may look jagged or too blurred.
- I tested the algorithms of [Thumbnailator](https://github.com/coobird/thumbnailator) and [imgscalr](https://github.com/thebuzzmedia/imgscalr) which basically use [Chris Cambell's proposed progressive scaling](https://community.oracle.com/docs/DOC-983611) algorithm. Upon further analysis [Lanczos3 filtering](https://en.wikipedia.org/wiki/Lanczos_resampling) seems to be recommended which produces results preserving more detail without being too jagged. The downside is, it is considerably slower then the former. This tool uses the implementation of [Morten Nobel](https://github.com/mortennobel/java-image-scaling).
+One of the main features of this converter is downscaling. Unfortunately without using specialized algorithms, down scaled images may look jagged or too blurred. I tested the algorithms of [Thumbnailator](https://github.com/coobird/thumbnailator) and [imgscalr](https://github.com/thebuzzmedia/imgscalr) which basically use [ Chris Campbell's proposed progressive scaling](https://community.oracle.com/docs/DOC-983611) algorithm. Upon further analysis [Lanczos3 filtering](https://en.wikipedia.org/wiki/Lanczos_resampling) seems to be recommended which produces results preserving more detail without being too jagged. The downside is, it is considerably slower then the former. This tool uses the implementation of [Morten Nobel](https://github.com/mortennobel/java-image-scaling).
 
 The tool provides 3 quality profiles:
 
@@ -201,7 +199,7 @@ The tool provides 3 quality profiles:
  * **Balanced**: uses progressive bilinear algorithm for downscaling and bicubic filtering for upscaling (6 times slower than speed)
  * **Speed**: uses nearest neighbor algorithm
 
-In most cases `Lanczos3` creates best results, although in some cases progressive bilinear scaling may be superior for very sharp edges of e.g. simple icons. Here are some example to see the difference yourself:
+In most cases `Lanczos3` creates best results, although in some cases progressive bilinear scaling may be superior for very sharp edges of e.g. simple icons where the former creates some softness. Here are some example to see the difference yourself. The icons are down-scaled from 96x96 to 72x72 and 48x48, the photos from different source from 500 to 2000 px.
 
 ![comparison](src/main/resources/img/comparison_icons_72.png)
 ![comparison](src/main/resources/img/comparison_icons_48.png)
@@ -213,10 +211,10 @@ As reference here are results of other methods:
 
 ![comparison-ldpi](src/main/resources/img/mdpi_comparison.png)
 
-1. Thumbnailator with default settings (progressive bilinear (2))
+1. Thumbnailator with default settings (_progressive bilinear_)
 2. Photoshop CS5 with bicubic algorithm
-3. imgscalr with ULTRA_QUALITY setting (progressive bilinear (7))
-4. simple Graphics2d with render hints VALUE_INTERPOLATION_BICUBIC, VALUE_RENDER_QUALITY, VALUE_ANTIALIAS_ON
+3. imgscalr with ULTRA_QUALITY setting (_progressive bilinear_)
+4. simple Graphics2d with render hints `VALUE_INTERPOLATION_BICUBIC`, `VALUE_RENDER_QUALITY`, `VALUE_ANTIALIAS_ON`
 
 ## Post Processors
 

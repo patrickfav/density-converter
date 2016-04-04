@@ -89,7 +89,7 @@
         <Label text="Factor (x3.00)" styleClass="label, label_main" alignment="CENTER_RIGHT"
                maxWidth="Infinity"
                fx:id="labelScale" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-        <Label text="xxhdpi / 3x" styleClass="label, footnote" alignment="CENTER_RIGHT"
+        <Label text="xxhdpi / 3x / 480dpi" styleClass="label, footnote" alignment="CENTER_RIGHT"
                maxWidth="Infinity"
                fx:id="labelScaleSubtitle" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
     </GridPane>

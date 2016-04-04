@@ -1,12 +1,7 @@
 package at.favre.tools.dconvert.converters.scaling;
 
-import at.favre.tools.dconvert.arg.EScalingQuality;
-import at.favre.tools.dconvert.arg.ImageType;
-import at.favre.tools.dconvert.util.ImageUtil;
 import net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker;
 import net.coobird.thumbnailator.resizers.AbstractResizer;
-import net.coobird.thumbnailator.resizers.DefaultResizerFactory;
-import net.coobird.thumbnailator.resizers.Resizer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,58 +9,20 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * Using https://github.com/coobird/thumbnailator to scale
+ * Created by PatrickF on 03.04.2016.
  */
-public class ThumbnailatorScaler extends ABufferedImageScaler {
+public class ThumbnailnatorProgressiveAlgorithm implements ScaleAlgorithm {
+
+    private Object interpolationValue;
+
+    public ThumbnailnatorProgressiveAlgorithm(Object interpolationValue) {
+        this.interpolationValue = interpolationValue;
+    }
+
     @Override
-    public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight, ImageType.ECompression compression, EScalingQuality algorithm, Color background, boolean antiAlias) {
-        BufferedImage scaledImage = null;
-        if (imageToScale != null) {
-
-            Resizer resizer = translate(algorithm, new Dimension(imageToScale.getWidth(), imageToScale.getHeight()), new Dimension(dWidth, dHeight));
-
-            scaledImage = new FixedSizeThumbnailMaker(dWidth, dHeight, false, true)
-                    .resizer(resizer).make(imageToScale);
-
-            if (antiAlias) {
-                scaledImage = ImageUtil.OP_ANTIALIAS.filter(scaledImage, null);
-            }
-
-            if (!compression.hasTransparency) {
-                BufferedImage convertedImg = new BufferedImage(scaledImage.getWidth(), scaledImage.getHeight(), BufferedImage.TYPE_INT_RGB);
-                convertedImg.getGraphics().drawImage(scaledImage, 0, 0, background, null);
-                scaledImage = convertedImg;
-            }
-        }
-        return scaledImage;
-    }
-
-    private Resizer translate(EScalingQuality algorithm, Dimension image, Dimension target) {
-        switch (algorithm) {
-            default:
-            case HIGH_QUALITY:
-                return DefaultResizerFactory.getInstance().getResizer(image, target);
-            case BALANCE:
-                return new ProgressiveResizer(RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-            case SPEED:
-                return new NearestNeighborResizer();
-        }
-    }
-
-    public static class NearestNeighborResizer extends AbstractResizer {
-        public NearestNeighborResizer() {
-            this(Collections.<RenderingHints.Key, Object>emptyMap());
-        }
-
-        public NearestNeighborResizer(Map<RenderingHints.Key, Object> hints) {
-            super(RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR, hints);
-        }
-
-
-        @Override
-        public void resize(BufferedImage srcImage, BufferedImage destImage) throws NullPointerException {
-            super.resize(srcImage, destImage);
-        }
+    public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight) {
+        return new FixedSizeThumbnailMaker(dWidth, dHeight, false, true)
+                .resizer(new ProgressiveResizer(interpolationValue)).make(imageToScale);
     }
 
     public static class ProgressiveResizer extends AbstractResizer {

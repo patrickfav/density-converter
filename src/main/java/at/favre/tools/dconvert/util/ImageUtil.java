@@ -129,61 +129,62 @@ public class ImageUtil {
                 break;
             }
 
-//            Set<IBufferedImageScaler> scalers = new HashSet<>();
-//            scalers.add(new DConvertScaler());
-////            scalers.add(new MortennobelScaler());
-////            scalers.add(new ThumbnailatorScaler());
-////            scalers.add(new NaiveGraphics2dScaler());
-////            scalers.add(new ImgscalrScaler());
-//            for (IBufferedImageScaler scaler : scalers) {
-//                if(!traceMap.containsKey(scaler)) {
-//                    traceMap.put(scaler,new HashMap<>());
-//                }
-//
-//                Set<EScalingQuality> set = new HashSet<>();
-//                set.add(EScalingQuality.BALANCE);
-//                set.add(EScalingQuality.HIGH_QUALITY);
-//                set.add(EScalingQuality.SPEED);
-//                for (EScalingQuality sAlgo : set) {
-//                    if(!traceMap.get(scaler).containsKey(sAlgo)) {
-//                        traceMap.get(scaler).put(sAlgo,0L);
-//                    }
-//
-//                    BufferedImage scaledImage;
-//                    if (isNinePatch && compression == ImageType.ECompression.PNG) {
-//                        scaledImage = new NinePatchScaler().scale(imageData.getImage(), targetDimension, sAlgo);
-//                    } else {
-//                        long startNanos = System.nanoTime();
-//                        scaledImage = scaler.scale(imageData.getImage(), targetDimension.width, targetDimension.height, compression, sAlgo, Color.white, antiAlias);
-//                        traceMap.get(scaler).put(sAlgo,traceMap.get(scaler).get(sAlgo)+(System.nanoTime()-startNanos));
-//                    }
-//
-//                    File f = new File(imageFile.getParentFile(), MiscUtil.getFileNameWithoutExtension(imageFile) + "."+ scaler.getClass().getSimpleName() +"." + sAlgo +"."  + MiscUtil.getFileExtension(imageFile));
-//
-//                    if (compression == ImageType.ECompression.JPG) {
-//                        compressJpeg(scaledImage, null, compressionQuality, f);
-//                    } else {
-//                        ImageIO.write(scaledImage, compression.name().toLowerCase(), f);
-//                    }
-//                    scaledImage.flush();
-//                    files.add(imageFile);
-//                }
+            Set<IBufferedImageScaler> scalers = new HashSet<>();
+            scalers.add(new DConvertScaler());
+//            scalers.add(new MortennobelScaler());
+//            scalers.add(new ThumbnailatorScaler());
+//            scalers.add(new NaiveGraphics2dScaler());
+//            scalers.add(new ImgscalrScaler());
+            for (IBufferedImageScaler scaler : scalers) {
+                if (!traceMap.containsKey(scaler)) {
+                    traceMap.put(scaler, new HashMap<>());
+                }
+
+                Set<EScalingQuality> set = new HashSet<>();
+                set.add(EScalingQuality.BALANCE);
+                set.add(EScalingQuality.QUALITY);
+                set.add(EScalingQuality.HIGH_QUALITY);
+                set.add(EScalingQuality.SPEED);
+                for (EScalingQuality sAlgo : set) {
+                    if (!traceMap.get(scaler).containsKey(sAlgo)) {
+                        traceMap.get(scaler).put(sAlgo, 0L);
+                    }
+
+                    BufferedImage scaledImage;
+                    if (isNinePatch && compression == ImageType.ECompression.PNG) {
+                        scaledImage = new NinePatchScaler().scale(imageData.getImage(), targetDimension, sAlgo);
+                    } else {
+                        long startNanos = System.nanoTime();
+                        scaledImage = scaler.scale(imageData.getImage(), targetDimension.width, targetDimension.height, compression, sAlgo, Color.white, antiAlias);
+                        traceMap.get(scaler).put(sAlgo, traceMap.get(scaler).get(sAlgo) + (System.nanoTime() - startNanos));
+                    }
+
+                    File f = new File(imageFile.getParentFile(), MiscUtil.getFileNameWithoutExtension(imageFile) + "." + scaler.getClass().getSimpleName() + "." + sAlgo + "." + MiscUtil.getFileExtension(imageFile));
+
+                    if (compression == ImageType.ECompression.JPG) {
+                        compressJpeg(scaledImage, null, compressionQuality, f);
+                    } else {
+                        ImageIO.write(scaledImage, compression.name().toLowerCase(), f);
+                    }
+                    scaledImage.flush();
+                    files.add(imageFile);
+                }
+            }
+
+//            BufferedImage scaledImage;
+//            if (isNinePatch && compression == ImageType.ECompression.PNG) {
+//                scaledImage = new NinePatchScaler().scale(imageData.getImage(), targetDimension, algo);
+//            } else {
+//                scaledImage = getDefaultScaler().scale(imageData.getImage(), targetDimension.width, targetDimension.height, compression, algo, Color.white, antiAlias);
 //            }
-
-            BufferedImage scaledImage;
-            if (isNinePatch && compression == ImageType.ECompression.PNG) {
-                scaledImage = new NinePatchScaler().scale(imageData.getImage(), targetDimension, algo);
-            } else {
-                scaledImage = getDefaultScaler().scale(imageData.getImage(), targetDimension.width, targetDimension.height, compression, algo, Color.white, antiAlias);
-            }
-
-            if (compression == ImageType.ECompression.JPG) {
-                compressJpeg(scaledImage, null, compressionQuality, imageFile);
-            } else {
-                ImageIO.write(scaledImage, compression.name().toLowerCase(), imageFile);
-            }
-            scaledImage.flush();
-            files.add(imageFile);
+//
+//            if (compression == ImageType.ECompression.JPG) {
+//                compressJpeg(scaledImage, null, compressionQuality, imageFile);
+//            } else {
+//                ImageIO.write(scaledImage, compression.name().toLowerCase(), imageFile);
+//            }
+//            scaledImage.flush();
+//            files.add(imageFile);
         }
         return files;
     }
