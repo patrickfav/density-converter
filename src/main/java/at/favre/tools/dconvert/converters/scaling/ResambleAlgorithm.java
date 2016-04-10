@@ -22,9 +22,46 @@ public class ResambleAlgorithm implements ScaleAlgorithm {
         return resizeOp.filter(imageToScale, null);
     }
 
+    public static class LanczosFilter implements ResampleFilter {
+        private final static float PI_FLOAT = (float) Math.PI;
+        private final float radius;
+
+        public LanczosFilter(float radius) {
+            this.radius = radius;
+        }
+
+        private float sincModified(float value) {
+            return ((float) Math.sin(value)) / value;
+        }
+
+        public final float apply(float value) {
+            if (value == 0) {
+                return 1.0f;
+            }
+            if (value < 0.0f) {
+                value = -value;
+            }
+
+            if (value < radius) {
+                value *= PI_FLOAT;
+                return sincModified(value) * sincModified(value / 3F);
+            } else {
+                return 0.0f;
+            }
+        }
+
+        public float getSamplingRadius() {
+            return radius;
+        }
+
+        public String getName() {
+            return "Lanczos" + (int) radius;
+        }
+    }
+
     @Override
     public String toString() {
-        return "ResambleAlgorithm[" + filter.getClass().getSimpleName() + ']';
+        return "ResambleAlgorithm[" + filter.getName() + ']';
     }
 
     @Override
