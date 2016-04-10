@@ -62,8 +62,10 @@ public class GUIController {
     public HBox hboxWhy;
     public VBox vboxFillFreeSpace;
     public CheckBox cbCleanBeforeConvert;
-    public Label labelScaleQ;
-    public ChoiceBox choiceScaleQ;
+    public Label labelDownScale;
+    public ChoiceBox choiceDownScale;
+    public Label labelUpScale;
+    public ChoiceBox choiceUpScale;
     private IPreferenceStore preferenceStore;
     private final FileChooser srcFileChooser = new FileChooser();
     private final DirectoryChooser srcDirectoryChooser = new DirectoryChooser();
@@ -286,8 +288,11 @@ public class GUIController {
                 1, 2, 3, 4, 5, 6, 7, 8));
         choiceThreads.getSelectionModel().select(Arguments.DEFAULT_THREAD_COUNT - 1);
 
-        choiceScaleQ.setItems(FXCollections.observableArrayList(EScalingQuality.HIGH_QUALITY, EScalingQuality.QUALITY, EScalingQuality.BALANCE, EScalingQuality.SPEED));
-        choiceScaleQ.getSelectionModel().select(Arguments.DEFAULT_SCALING_QUALITY);
+        choiceDownScale.setItems(FXCollections.observableArrayList(EScalingAlgorithm.getForType(EScalingAlgorithm.Type.DOWNSCALING)));
+        choiceDownScale.getSelectionModel().select(Arguments.DEFAULT_DOWNSCALING_QUALITY);
+
+        choiceUpScale.setItems(FXCollections.observableArrayList(EScalingAlgorithm.getForType(EScalingAlgorithm.Type.UPSCALING)));
+        choiceUpScale.getSelectionModel().select(Arguments.DEFAULT_UPSCALING_QUALITY);
 
         labelVersion.setText("v" + GUIController.class.getPackage().getImplementationVersion());
 
@@ -410,7 +415,8 @@ public class GUIController {
             choiceCompressionQuality.getSelectionModel().select(toJpgQ(args.compressionQuality));
             choiceRounding.getSelectionModel().select(args.roundingHandler);
             choiceThreads.getSelectionModel().select(Integer.valueOf(args.threadCount));
-            choiceScaleQ.getSelectionModel().select(args.scaleQuality);
+            choiceDownScale.getSelectionModel().select(args.downScalingAlgorithm);
+            choiceUpScale.getSelectionModel().select(args.upScalingAlgorithm);
 
             cbSkipExisting.setSelected(args.skipExistingFiles);
             cbSkipUpscaling.setSelected(args.skipUpscaling);
@@ -464,7 +470,8 @@ public class GUIController {
         builder.compression((EOutputCompressionMode) choiceCompression.getSelectionModel().getSelectedItem(), toJpgQFloat(choiceCompressionQuality.getSelectionModel().getSelectedItem()));
         builder.scaleRoundingStragy((RoundingHandler.Strategy) choiceRounding.getSelectionModel().getSelectedItem());
         builder.threadCount((Integer) choiceThreads.getSelectionModel().getSelectedItem());
-        builder.scaleQuality((EScalingQuality) choiceScaleQ.getSelectionModel().getSelectedItem());
+        builder.downScaleAlgorithm((EScalingAlgorithm) choiceDownScale.getSelectionModel().getSelectedItem());
+        builder.upScaleAlgorithm((EScalingAlgorithm) choiceUpScale.getSelectionModel().getSelectedItem());
 
         builder.skipExistingFiles(cbSkipExisting.isSelected());
         builder.skipUpscaling(cbSkipUpscaling.isSelected());

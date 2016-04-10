@@ -21,6 +21,7 @@ import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EScaleMode;
 import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.converters.descriptors.DensityDescriptor;
+import at.favre.tools.dconvert.converters.scaling.ImageHandler;
 import at.favre.tools.dconvert.util.DensityBucketUtil;
 import at.favre.tools.dconvert.util.ImageUtil;
 import at.favre.tools.dconvert.util.LoadedImage;
@@ -67,7 +68,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 							.append(entry.getKey().scale).append(") ").append(isNinePatch ? "(9-patch)" : "").append("\n");
 
 					if (!args.dryRun) {
-						List<File> files = ImageUtil.compressToFile(imageFile, Arguments.getOutCompressionForType(args.outputCompressionMode, imageType), imageData, entry.getValue(), args.compressionQuality, args.skipExistingFiles, args.enableAntiAliasing, isNinePatch, args.scaleQuality);
+						List<File> files = new ImageHandler(args).saveToFile(imageFile, imageData, entry.getValue(), isNinePatch);
 
 						allResultingFiles.addAll(files);
 

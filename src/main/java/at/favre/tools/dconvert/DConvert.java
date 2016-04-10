@@ -19,14 +19,13 @@ package at.favre.tools.dconvert;
 
 import at.favre.tools.dconvert.arg.Arguments;
 import at.favre.tools.dconvert.arg.EPlatform;
-import at.favre.tools.dconvert.arg.EScalingQuality;
 import at.favre.tools.dconvert.converters.IPlatformConverter;
 import at.favre.tools.dconvert.converters.postprocessing.IPostProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
-import at.favre.tools.dconvert.converters.scaling.IBufferedImageScaler;
-import at.favre.tools.dconvert.util.ImageUtil;
+import at.favre.tools.dconvert.converters.scaling.ImageHandler;
+import at.favre.tools.dconvert.converters.scaling.ScaleAlgorithm;
 import at.favre.tools.dconvert.util.MiscUtil;
 
 import javax.imageio.ImageIO;
@@ -181,7 +180,6 @@ public class DConvert {
 		}
 	}
 
-
 	public interface HandlerCallback {
 		void onProgress(float progress);
 
@@ -208,9 +206,9 @@ public class DConvert {
 	}
 
 	private void printTrace() {
-		for (Map.Entry<IBufferedImageScaler, Map<EScalingQuality, Long>> e1 : ImageUtil.traceMap.entrySet()) {
-			for (Map.Entry<EScalingQuality, Long> e2 : e1.getValue().entrySet()) {
-				System.out.println(e1.getKey().getClass().getSimpleName() + ": [" + e2.getKey() + "]: " + String.format(Locale.US, "%.2f", (double) e2.getValue() / 1000000.0));
+		if (ImageHandler.TEST_MODE) {
+			for (Map.Entry<ScaleAlgorithm, Long> entry : ImageHandler.traceMap.entrySet()) {
+				System.out.println(entry.getKey() + ": " + String.format(Locale.US, "%.2f", (double) entry.getValue() / 1000000.0));
 			}
 		}
 	}

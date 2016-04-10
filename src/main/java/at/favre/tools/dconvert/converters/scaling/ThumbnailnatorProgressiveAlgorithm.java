@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * Created by PatrickF on 03.04.2016.
+ * Algorithms from Thumbnailnator
  */
 public class ThumbnailnatorProgressiveAlgorithm implements ScaleAlgorithm {
 
@@ -119,5 +119,28 @@ public class ThumbnailnatorProgressiveAlgorithm implements ScaleAlgorithm {
             destg.drawImage(tempImage, 0, 0, targetWidth, targetHeight, 0, 0, currentWidth, currentHeight, null);
             destg.dispose();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ThumbnailnatorProgressiveAlgorithm{" +
+                "interpolationValue=" + interpolationValue +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ThumbnailnatorProgressiveAlgorithm that = (ThumbnailnatorProgressiveAlgorithm) o;
+
+        return interpolationValue != null ? interpolationValue.equals(that.interpolationValue) : that.interpolationValue == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return interpolationValue != null ? interpolationValue.hashCode() : 0;
     }
 }

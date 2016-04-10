@@ -40,10 +40,11 @@ public class Arguments implements Serializable {
 	public static final Set<EPlatform> DEFAULT_PLATFORM = new HashSet<>(Arrays.asList(EPlatform.ANDROID, EPlatform.IOS));
 	public static final EOutputCompressionMode DEFAULT_OUT_COMPRESSION = EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG;
 	public static final EScaleMode DEFAULT_SCALE_TYPE = EScaleMode.FACTOR;
-	public static final EScalingQuality DEFAULT_SCALING_QUALITY = EScalingQuality.HIGH_QUALITY;
+	public static final EScalingAlgorithm DEFAULT_UPSCALING_QUALITY = EScalingAlgorithm.LANCZOS3;
+	public static final EScalingAlgorithm DEFAULT_DOWNSCALING_QUALITY = EScalingAlgorithm.LANCZOS3;
 
 
-	public final static Arguments START_GUI = new Arguments(null, null, 0.27346f, null, null, null, null, 0.9362f, 996254, false,
+	public final static Arguments START_GUI = new Arguments(null, null, 0.27346f, null, null, null, null, null, 0.9362f, 996254, false,
 			false, false, false, false, false, false, false, false, false, false, false, false, null, false, false);
 
 	public final File src;
@@ -52,7 +53,8 @@ public class Arguments implements Serializable {
 	public final Set<EPlatform> platform;
 	public final EOutputCompressionMode outputCompressionMode;
 	public final EScaleMode scaleMode;
-	public final EScalingQuality scaleQuality;
+	public final EScalingAlgorithm downScalingAlgorithm;
+	public final EScalingAlgorithm upScalingAlgorithm;
 	public final float compressionQuality;
 	public final int threadCount;
 	public final boolean skipExistingFiles;
@@ -75,7 +77,7 @@ public class Arguments implements Serializable {
 
 
 	public Arguments(File src, File dst, float scale, Set<EPlatform> platform, EOutputCompressionMode outputCompressionMode,
-	                 EScaleMode scaleMode, EScalingQuality scaleQuality, float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
+	                 EScaleMode scaleMode, EScalingAlgorithm downScalingAlgorithm, EScalingAlgorithm upScalingAlgorithm, float compressionQuality, int threadCount, boolean skipExistingFiles, boolean skipUpscaling,
 	                 boolean verboseLog, boolean includeAndroidLdpiTvdpi, boolean haltOnError, boolean createMipMapInsteadOfDrawableDir,
 	                 boolean iosCreateImagesetFolders, boolean enablePngCrush, boolean enableMozJpeg, boolean postConvertWebp, boolean enableAntiAliasing, boolean dryRun, boolean keepUnoptimizedFilesPostProcessor, RoundingHandler.Strategy roundingHandler, boolean guiAdvancedOptions, boolean clearDirBeforeConvert) {
 		this.dst = dst;
@@ -84,7 +86,8 @@ public class Arguments implements Serializable {
 		this.platform = platform;
 		this.outputCompressionMode = outputCompressionMode;
 		this.scaleMode = scaleMode;
-		this.scaleQuality = scaleQuality;
+		this.downScalingAlgorithm = downScalingAlgorithm;
+		this.upScalingAlgorithm = upScalingAlgorithm;
 		this.compressionQuality = compressionQuality;
 		this.threadCount = threadCount;
 		this.skipExistingFiles = skipExistingFiles;
@@ -123,7 +126,7 @@ public class Arguments implements Serializable {
 	}
 
 	public Arguments() {
-		this(null, null, DEFAULT_SCALE, DEFAULT_PLATFORM, DEFAULT_OUT_COMPRESSION, DEFAULT_SCALE_TYPE, DEFAULT_SCALING_QUALITY, DEFAULT_COMPRESSION_QUALITY, DEFAULT_THREAD_COUNT,
+		this(null, null, DEFAULT_SCALE, DEFAULT_PLATFORM, DEFAULT_OUT_COMPRESSION, DEFAULT_SCALE_TYPE, DEFAULT_DOWNSCALING_QUALITY, DEFAULT_UPSCALING_QUALITY, DEFAULT_COMPRESSION_QUALITY, DEFAULT_THREAD_COUNT,
 				false, false, true, false, false, false, false, false, false, false, false, false, false, DEFAULT_ROUNDING_STRATEGY, false, false);
 	}
 
@@ -140,7 +143,8 @@ public class Arguments implements Serializable {
 				", platform=" + platform +
 				", outputCompressionMode=" + outputCompressionMode +
 				", scaleMode=" + scaleMode +
-				", scaleQuality=" + scaleQuality +
+				", downScalingAlgorithm=" + downScalingAlgorithm +
+				", upScalingAlgorithm=" + upScalingAlgorithm +
 				", compressionQuality=" + compressionQuality +
 				", threadCount=" + threadCount +
 				", skipExistingFiles=" + skipExistingFiles +
@@ -193,7 +197,8 @@ public class Arguments implements Serializable {
 		if (platform != null ? !platform.equals(arguments.platform) : arguments.platform != null) return false;
 		if (outputCompressionMode != arguments.outputCompressionMode) return false;
 		if (scaleMode != arguments.scaleMode) return false;
-		if (scaleQuality != arguments.scaleQuality) return false;
+		if (downScalingAlgorithm != arguments.downScalingAlgorithm) return false;
+		if (upScalingAlgorithm != arguments.upScalingAlgorithm) return false;
 		if (roundingHandler != arguments.roundingHandler) return false;
 		return filesToProcess != null ? filesToProcess.equals(arguments.filesToProcess) : arguments.filesToProcess == null;
 
@@ -207,7 +212,8 @@ public class Arguments implements Serializable {
 		result = 31 * result + (platform != null ? platform.hashCode() : 0);
 		result = 31 * result + (outputCompressionMode != null ? outputCompressionMode.hashCode() : 0);
 		result = 31 * result + (scaleMode != null ? scaleMode.hashCode() : 0);
-		result = 31 * result + (scaleQuality != null ? scaleQuality.hashCode() : 0);
+		result = 31 * result + (downScalingAlgorithm != null ? downScalingAlgorithm.hashCode() : 0);
+		result = 31 * result + (upScalingAlgorithm != null ? upScalingAlgorithm.hashCode() : 0);
 		result = 31 * result + (compressionQuality != +0.0f ? Float.floatToIntBits(compressionQuality) : 0);
 		result = 31 * result + threadCount;
 		result = 31 * result + (skipExistingFiles ? 1 : 0);
@@ -251,7 +257,8 @@ public class Arguments implements Serializable {
 		private float compressionQuality = DEFAULT_COMPRESSION_QUALITY;
 		private int threadCount = DEFAULT_THREAD_COUNT;
 		private RoundingHandler.Strategy roundingStrategy = DEFAULT_ROUNDING_STRATEGY;
-		private EScalingQuality scalingQuality = DEFAULT_SCALING_QUALITY;
+		private EScalingAlgorithm downScalingAlgorithm = DEFAULT_DOWNSCALING_QUALITY;
+		private EScalingAlgorithm upScalingAlgorithm = DEFAULT_UPSCALING_QUALITY;
 		private boolean skipExistingFiles = false;
 		private boolean skipUpscaling = false;
 		private boolean verboseLog = false;
@@ -279,8 +286,13 @@ public class Arguments implements Serializable {
 			return this;
 		}
 
-		public Builder scaleQuality(EScalingQuality scalingAlgorithm) {
-			this.scalingQuality = scalingAlgorithm;
+		public Builder upScaleAlgorithm(EScalingAlgorithm scalingAlgorithm) {
+			this.upScalingAlgorithm = scalingAlgorithm;
+			return this;
+		}
+
+		public Builder downScaleAlgorithm(EScalingAlgorithm scalingAlgorithm) {
+			this.downScalingAlgorithm = scalingAlgorithm;
 			return this;
 		}
 
@@ -436,8 +448,12 @@ public class Arguments implements Serializable {
 						}
 						break;
 				}
+
+				if (downScalingAlgorithm == null || upScalingAlgorithm == null) {
+					throw new InvalidArgumentException(bundle.getString("error.missing.scalealgorithm"));
+				}
 			}
-			return new Arguments(src, dst, srcScale, platform, outputCompressionMode, scaleType, scalingQuality, compressionQuality, threadCount,
+			return new Arguments(src, dst, srcScale, platform, outputCompressionMode, scaleType, downScalingAlgorithm, upScalingAlgorithm, compressionQuality, threadCount,
 					skipExistingFiles, skipUpscaling, verboseLog, includeAndroidLdpiTvdpi, haltOnError, createMipMapInsteadOfDrawableDir,
 					iosCreateImagesetFolders, enablePngCrush, enableMozJpeg, postConvertWebp, enableAntiAliasing, dryRun, keepUnoptimizedFilesPostProcessor, roundingStrategy, guiAdvancedOptions, clearDirBeforeConvert);
 		}

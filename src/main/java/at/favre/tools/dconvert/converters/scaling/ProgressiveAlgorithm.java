@@ -1,6 +1,6 @@
 package at.favre.tools.dconvert.converters.scaling;
 
-import com.mortennobel.imagescaling.MultiStepRescaleOp;
+import com.mortennobel.imagescaling.*;
 import org.imgscalr.Scalr;
 
 import java.awt.*;
@@ -14,7 +14,7 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
         /**
          * Algorithms from https://github.com/mortennobel/java-image-scaling
          */
-        NOBEL_BILINEAR, NOBEL_BICUBUC, NOBEL_NEAREST_NEIGHBOR,
+        NOBEL_BILINEAR, NOBEL_BICUBUC, NOBEL_NEAREST_NEIGHBOR, NOBEL_LANCZOS3,
         /**
          * Algorithms from https://github.com/coobird/thumbnailator
          */
@@ -22,7 +22,11 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
         /**
          * Algorithms from https://github.com/thebuzzmedia/imgscalr
          */
-        IMGSCALR_SEVENTH_STEP, IMGSCALR_HALF_STEP
+        IMGSCALR_SEVENTH_STEP, IMGSCALR_HALF_STEP,
+        /**
+         * Combination of bilinear with lanczos3, uses bilinear if target is at least half of src
+         */
+        PROGRESSIVE_BILINEAR_AND_LANCZOS3
     }
 
     public Type type;
@@ -43,6 +47,10 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
             case NOBEL_NEAREST_NEIGHBOR:
                 return new MultiStepRescaleOp(dWidth, dHeight, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
                         .filter(imageToScale, null);
+            case NOBEL_LANCZOS3:
+                return new MultiStepLanczos3RescaleOp(dWidth, dHeight).filter(imageToScale, null);
+            case PROGRESSIVE_BILINEAR_AND_LANCZOS3:
+                return scaleProgressiveLanczos3(imageToScale, dWidth, dHeight);
             case THUMBNAILATOR_BILINEAR:
                 return new ThumbnailnatorProgressiveAlgorithm(RenderingHints.VALUE_INTERPOLATION_BILINEAR).scale(imageToScale, dWidth, dHeight);
             case THUMBNAILATOR_BICUBUC:
@@ -54,5 +62,74 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
             default:
                 throw new IllegalArgumentException("unknown algorithm");
         }
+    }
+
+    private BufferedImage scaleProgressiveLanczos3(BufferedImage imageToScale, int dstWidth, int dstHeight) {
+        if (dstWidth < (imageToScale.getWidth() / 2) && dstHeight < (imageToScale.getHeight() / 2)) {
+            return new ThumbnailnatorProgressiveAlgorithm(RenderingHints.VALUE_INTERPOLATION_BILINEAR).scale(imageToScale, dstWidth, dstHeight);
+        } else {
+            return new ResambleAlgorithm(ResampleFilters.getLanczos3Filter()).scale(imageToScale, dstWidth, dstHeight);
+        }
+    }
+
+    private class MultiStepLanczos3RescaleOp extends AdvancedResizeOp {
+        private MultiStepLanczos3RescaleOp(int dstWidth, int dstHeight) {
+            super(DimensionConstrain.createAbsolutionDimension(dstWidth, dstHeight));
+        }
+
+        public BufferedImage doFilter(BufferedImage img, BufferedImage dest, int dstWidth, int dstHeight) {
+            BufferedImage ret = img;
+            int w, h;
+
+            w = img.getWidth();
+            h = img.getHeight();
+
+            do {
+                if (w > dstWidth) {
+                    w /= 2;
+                    if (w < dstWidth) {
+                        w = dstWidth;
+                    }
+                } else {
+                    w = dstWidth;
+                }
+
+                if (h > dstHeight) {
+                    h /= 2;
+                    if (h < dstHeight) {
+                        h = dstHeight;
+                    }
+                } else {
+                    h = dstHeight;
+                }
+
+                ResampleOp resizeOp = new ResampleOp(w, h);
+                resizeOp.setFilter(ResampleFilters.getLanczos3Filter());
+                ret = resizeOp.filter(ret, null);
+            } while (w != dstWidth || h != dstHeight);
+
+            return ret;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ProgressiveAlgorithm[" + type + ']';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ProgressiveAlgorithm that = (ProgressiveAlgorithm) o;
+
+        return type == that.type;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return type != null ? type.hashCode() : 0;
     }
 }

@@ -18,39 +18,32 @@
 package at.favre.tools.dconvert.util;
 
 import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EScalingQuality;
 import at.favre.tools.dconvert.arg.ImageType;
-import at.favre.tools.dconvert.converters.scaling.DConvertScaler;
-import at.favre.tools.dconvert.converters.scaling.IBufferedImageScaler;
 import com.twelvemonkeys.imageio.metadata.CompoundDirectory;
 import com.twelvemonkeys.imageio.metadata.exif.EXIFReader;
 import com.twelvemonkeys.imageio.metadata.jpeg.JPEG;
 import com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegment;
 import com.twelvemonkeys.imageio.metadata.jpeg.JPEGSegmentUtil;
 
-import javax.imageio.*;
+import javax.imageio.IIOException;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.FileImageInputStream;
-import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageInputStream;
-import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.*;
+import java.util.Iterator;
 import java.util.List;
 
 /**
  * Main Util class containing all
  */
 public class ImageUtil {
-    public static final ConvolveOp OP_ANTIALIAS = new ConvolveOp(
-            new Kernel(3, 3, new float[]{.0f, .08f, .0f, .08f, .68f, .08f,
-                    .0f, .08f, .0f}), ConvolveOp.EDGE_NO_OP, null);
 
     public static LoadedImage loadImage(File input) throws Exception {
         if (input == null) {
@@ -115,109 +108,6 @@ public class ImageUtil {
         }
 
         return new LoadedImage(null, bi, metadata, null);
-    }
-
-    public static Map<IBufferedImageScaler, Map<EScalingQuality, Long>> traceMap = new HashMap<>();
-
-    public static List<File> compressToFile(File targetFile, List<ImageType.ECompression> compressionList, LoadedImage imageData, Dimension targetDimension,
-                                            float compressionQuality, boolean skipIfExists, boolean antiAlias, boolean isNinePatch, EScalingQuality algo) throws Exception {
-        List<File> files = new ArrayList<>(2);
-        for (ImageType.ECompression compression : compressionList) {
-            File imageFile = new File(targetFile.getAbsolutePath() + "." + compression.extension);
-
-            if (imageFile.exists() && skipIfExists) {
-                break;
-            }
-
-            Set<IBufferedImageScaler> scalers = new HashSet<>();
-            scalers.add(new DConvertScaler());
-//            scalers.add(new MortennobelScaler());
-//            scalers.add(new ThumbnailatorScaler());
-//            scalers.add(new NaiveGraphics2dScaler());
-//            scalers.add(new ImgscalrScaler());
-            for (IBufferedImageScaler scaler : scalers) {
-                if (!traceMap.containsKey(scaler)) {
-                    traceMap.put(scaler, new HashMap<>());
-                }
-
-                Set<EScalingQuality> set = new HashSet<>();
-                set.add(EScalingQuality.BALANCE);
-                set.add(EScalingQuality.QUALITY);
-                set.add(EScalingQuality.HIGH_QUALITY);
-                set.add(EScalingQuality.SPEED);
-                for (EScalingQuality sAlgo : set) {
-                    if (!traceMap.get(scaler).containsKey(sAlgo)) {
-                        traceMap.get(scaler).put(sAlgo, 0L);
-                    }
-
-                    BufferedImage scaledImage;
-                    if (isNinePatch && compression == ImageType.ECompression.PNG) {
-                        scaledImage = new NinePatchScaler().scale(imageData.getImage(), targetDimension, sAlgo);
-                    } else {
-                        long startNanos = System.nanoTime();
-                        scaledImage = scaler.scale(imageData.getImage(), targetDimension.width, targetDimension.height, compression, sAlgo, Color.white, antiAlias);
-                        traceMap.get(scaler).put(sAlgo, traceMap.get(scaler).get(sAlgo) + (System.nanoTime() - startNanos));
-                    }
-
-                    File f = new File(imageFile.getParentFile(), MiscUtil.getFileNameWithoutExtension(imageFile) + "." + scaler.getClass().getSimpleName() + "." + sAlgo + "." + MiscUtil.getFileExtension(imageFile));
-
-                    if (compression == ImageType.ECompression.JPG) {
-                        compressJpeg(scaledImage, null, compressionQuality, f);
-                    } else {
-                        ImageIO.write(scaledImage, compression.name().toLowerCase(), f);
-                    }
-                    scaledImage.flush();
-                    files.add(imageFile);
-                }
-            }
-
-//            BufferedImage scaledImage;
-//            if (isNinePatch && compression == ImageType.ECompression.PNG) {
-//                scaledImage = new NinePatchScaler().scale(imageData.getImage(), targetDimension, algo);
-//            } else {
-//                scaledImage = getDefaultScaler().scale(imageData.getImage(), targetDimension.width, targetDimension.height, compression, algo, Color.white, antiAlias);
-//            }
-//
-//            if (compression == ImageType.ECompression.JPG) {
-//                compressJpeg(scaledImage, null, compressionQuality, imageFile);
-//            } else {
-//                ImageIO.write(scaledImage, compression.name().toLowerCase(), imageFile);
-//            }
-//            scaledImage.flush();
-//            files.add(imageFile);
-        }
-        return files;
-    }
-
-    public static void compressJpeg(BufferedImage bufferedImage, CompoundDirectory exif, float quality, File targetFile) throws IOException {
-        ImageWriter jpgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
-        ImageWriteParam jpgWriteParam = jpgWriter.getDefaultWriteParam();
-        jpgWriteParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
-        jpgWriteParam.setCompressionQuality(quality);
-
-        ImageWriter writer = null;
-        try (ImageOutputStream outputStream = new FileImageOutputStream(targetFile)) {
-            //if (false && exif != null) {
-            //  EXIFWriter exifWriter = new EXIFWriter();
-            //List<Entry> entryList = new ArrayList<>();
-            //for (int i = 0; i < exif.directoryCount(); i++) {
-            //  for (Entry entry : exif.getDirectory(i)) {
-            //    entryList.add(entry);
-            //}
-            //}
-            //TODO: fix exif writing
-            //exifWriter.write(exif, outputStream);
-            //}
-            writer = ImageIO.getImageWritersByFormatName("jpg").next();
-            writer.setOutput(outputStream);
-            writer.write(null, new IIOImage(bufferedImage, null, null), jpgWriteParam);
-        } finally {
-            if (writer != null) writer.dispose();
-        }
-    }
-
-    public static IBufferedImageScaler getDefaultScaler() {
-        return new DConvertScaler();
     }
 
     @Deprecated

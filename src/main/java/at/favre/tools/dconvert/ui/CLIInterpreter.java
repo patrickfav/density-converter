@@ -36,7 +36,8 @@ public class CLIInterpreter {
 	public final static String SOURCE_ARG = "src";
 	public final static String SCALE_ARG = "scale";
 	public final static String PLATFORM_ARG = "platform";
-	public final static String SCALING_ALGO_ARG = "algorithm";
+	public final static String UPSCALING_ALGO_ARG = "algorithmUpscaling";
+	public final static String DOWNSCALING_ALGO_ARG = "algorithmDownscaling";
 	public static final String OUT_COMPRESSION_ARG = "outCompression";
 	public static final String ROUNDING_MODE_ARG = "roundingMode";
 	public static final String DST_ARG = "dst";
@@ -144,20 +145,12 @@ public class CLIInterpreter {
 				builder.platform(platformSet);
 			}
 
-			if (commandLine.hasOption(SCALING_ALGO_ARG)) {
-				switch (commandLine.getOptionValue(SCALING_ALGO_ARG)) {
-					case "balance":
-						builder.scaleQuality(EScalingQuality.BALANCE);
-						break;
-					case "high-quality":
-						builder.scaleQuality(EScalingQuality.HIGH_QUALITY);
-						break;
-					case "speed":
-						builder.scaleQuality(EScalingQuality.SPEED);
-						break;
-					default:
-						System.err.println("unknown algorithm: " + commandLine.getOptionValue(SCALING_ALGO_ARG));
-				}
+			if (commandLine.hasOption(UPSCALING_ALGO_ARG)) {
+				builder.upScaleAlgorithm(EScalingAlgorithm.getByName(commandLine.getOptionValue(UPSCALING_ALGO_ARG)));
+			}
+
+			if (commandLine.hasOption(DOWNSCALING_ALGO_ARG)) {
+				builder.upScaleAlgorithm(EScalingAlgorithm.getByName(commandLine.getOptionValue(DOWNSCALING_ALGO_ARG)));
 			}
 
 			if (commandLine.hasOption(ROUNDING_MODE_ARG)) {
@@ -221,7 +214,8 @@ public class CLIInterpreter {
 		Option roundingHandler = Option.builder(ROUNDING_MODE_ARG).argName("round|ceil|floor").hasArg(true).desc(MessageFormat.format(bundle.getString("arg.descr.cmd.rounding"), Arguments.DEFAULT_ROUNDING_STRATEGY)).build();
 		Option compression = Option.builder(OUT_COMPRESSION_ARG).hasArg(true).argName("png|jpg|gif|bmp").desc(bundle.getString("arg.descr.cmd.outcompression")).build();
 		Option compressionQuality = Option.builder(COMPRESSION_QUALITY_ARG).hasArg(true).argName("0.0-1.0").desc(MessageFormat.format(bundle.getString("arg.descr.cmd.compression"), String.valueOf(Arguments.DEFAULT_COMPRESSION_QUALITY))).build();
-		Option scalingAlgo = Option.builder(SCALING_ALGO_ARG).hasArg(true).argName("high-quality|balanced|speed").desc(MessageFormat.format(bundle.getString("arg.descr.scalingalgo"), Arguments.DEFAULT_PLATFORM)).build();
+		Option upScalingAlgo = Option.builder(UPSCALING_ALGO_ARG).hasArg(true).argName(EScalingAlgorithm.getCliArgString(EScalingAlgorithm.Type.UPSCALING)).desc(MessageFormat.format(bundle.getString("arg.descr.scalingalgo"), Arguments.DEFAULT_PLATFORM)).build();
+		Option downScalingAlgo = Option.builder(DOWNSCALING_ALGO_ARG).hasArg(true).argName(EScalingAlgorithm.getCliArgString(EScalingAlgorithm.Type.DOWNSCALING)).desc(MessageFormat.format(bundle.getString("arg.descr.scalingalgo"), Arguments.DEFAULT_PLATFORM)).build();
 
 		Option skipExistingFiles = Option.builder(SKIP_EXISTING_ARG).desc(bundle.getString("arg.descr.skipexisting")).build();
 		Option androidIncludeLdpiTvdpi = Option.builder("androidIncludeLdpiTvdpi").desc(bundle.getString("arg.descr.androidmipmap")).build();
@@ -249,7 +243,7 @@ public class CLIInterpreter {
 
 		options.addOption(srcScaleOpt).addOption(dstOpt);
 		options.addOption(platform).addOption(compression).addOption(compressionQuality).addOption(threadCount).addOption(roundingHandler)
-				.addOption(scalingAlgo);
+				.addOption(upScalingAlgo).addOption(downScalingAlgo);
 		options.addOption(skipExistingFiles).addOption(skipUpscaling).addOption(androidIncludeLdpiTvdpi).addOption(verboseLog)
 				.addOption(antiAliasing).addOption(dryRun).addOption(haltOnError).addOption(mipmapInsteadOfDrawable)
 				.addOption(enablePngCrush).addOption(postWebpConvert).addOption(dpScaleIsHeight).addOption(enableMozJpeg)

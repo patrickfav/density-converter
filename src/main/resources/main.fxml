@@ -172,25 +172,25 @@
             </tooltip>
         </ChoiceBox>
 
-        <Label fx:id="labelScaleQ" maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT"
-               text="%main.label.scaleQ"
+        <Label fx:id="labelDownScale" maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT"
+               text="%main.label.downscale"
                GridPane.columnIndex="0"
                GridPane.rowIndex="3" GridPane.hgrow="always"/>
-        <ChoiceBox fx:id="choiceScaleQ" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3"
+        <ChoiceBox fx:id="choiceDownScale" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="3"
                    GridPane.hgrow="always" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.scalingalgo"/>
             </tooltip>
         </ChoiceBox>
 
-        <Label fx:id="labelThreads" maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT"
-               text="%main.label.threads"
+        <Label fx:id="labelUpScale" maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT"
+               text="%main.label.upscale"
                GridPane.columnIndex="2"
                GridPane.rowIndex="3" GridPane.hgrow="always"/>
-        <ChoiceBox fx:id="choiceThreads" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="3"
+        <ChoiceBox fx:id="choiceUpScale" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="3"
                    GridPane.hgrow="always" styleClass="choice-box">
             <tooltip>
-                <Tooltip text="%arg.descr.threads"/>
+                <Tooltip text="%arg.descr.scalingalgo"/>
             </tooltip>
         </ChoiceBox>
 
@@ -202,6 +202,17 @@
                    GridPane.hgrow="always" styleClass="choice-box">
             <tooltip>
                 <Tooltip text="%arg.descr.rounding"/>
+            </tooltip>
+        </ChoiceBox>
+
+        <Label fx:id="labelThreads" maxWidth="Infinity" styleClass="label" alignment="CENTER_RIGHT"
+               text="%main.label.threads"
+               GridPane.columnIndex="2"
+               GridPane.rowIndex="4" GridPane.hgrow="always"/>
+        <ChoiceBox fx:id="choiceThreads" maxWidth="Infinity" GridPane.columnIndex="3" GridPane.rowIndex="4"
+                   GridPane.hgrow="always" styleClass="choice-box">
+            <tooltip>
+                <Tooltip text="%arg.descr.threads"/>
             </tooltip>
         </ChoiceBox>
     </GridPane>
