@@ -26,7 +26,7 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
         /**
          * Combination of bilinear with lanczos3, uses bilinear if target is at least half of src
          */
-        PROGRESSIVE_BILINEAR_AND_LANCZOS3
+        PROGRESSIVE_BILINEAR_AND_LANCZOS2, PROGRESSIVE_BILINEAR_AND_LANCZOS3;
     }
 
     public Type type;
@@ -49,8 +49,10 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
                         .filter(imageToScale, null);
             case NOBEL_LANCZOS3:
                 return new MultiStepLanczos3RescaleOp(dWidth, dHeight).filter(imageToScale, null);
+            case PROGRESSIVE_BILINEAR_AND_LANCZOS2:
+                return scaleProgressiveLanczos(imageToScale, dWidth, dHeight, 2);
             case PROGRESSIVE_BILINEAR_AND_LANCZOS3:
-                return scaleProgressiveLanczos3(imageToScale, dWidth, dHeight);
+                return scaleProgressiveLanczos(imageToScale, dWidth, dHeight, 3);
             case THUMBNAILATOR_BILINEAR:
                 return new ThumbnailnatorProgressiveAlgorithm(RenderingHints.VALUE_INTERPOLATION_BILINEAR).scale(imageToScale, dWidth, dHeight);
             case THUMBNAILATOR_BICUBUC:
@@ -64,11 +66,11 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
         }
     }
 
-    private BufferedImage scaleProgressiveLanczos3(BufferedImage imageToScale, int dstWidth, int dstHeight) {
+    private BufferedImage scaleProgressiveLanczos(BufferedImage imageToScale, int dstWidth, int dstHeight, float radius) {
         if (dstWidth < (imageToScale.getWidth() / 2) && dstHeight < (imageToScale.getHeight() / 2)) {
             return new ThumbnailnatorProgressiveAlgorithm(RenderingHints.VALUE_INTERPOLATION_BILINEAR).scale(imageToScale, dstWidth, dstHeight);
         } else {
-            return new ResambleAlgorithm(ResampleFilters.getLanczos3Filter()).scale(imageToScale, dstWidth, dstHeight);
+            return new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(radius)).scale(imageToScale, dstWidth, dstHeight);
         }
     }
 

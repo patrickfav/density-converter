@@ -153,7 +153,7 @@ public class CLIParserTest {
 
     @Test
     public void testScalingAlgorithms() throws Exception {
-        for (EScalingAlgorithm algorithm : EScalingAlgorithm.values()) {
+        for (EScalingAlgorithm algorithm : EScalingAlgorithm.getAllEnabled()) {
             if (algorithm.getSupportedForType().contains(EScalingAlgorithm.Type.DOWNSCALING)) {
                 check(defaultCmd + " -" + CLIInterpreter.DOWNSCALING_ALGO_ARG + " " + algorithm.getName(), new Arguments.Builder(defaultSrc, DEFAULT_SCALE).downScaleAlgorithm(algorithm).build());
             }

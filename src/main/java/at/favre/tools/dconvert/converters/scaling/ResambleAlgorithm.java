@@ -44,7 +44,7 @@ public class ResambleAlgorithm implements ScaleAlgorithm {
 
             if (value < radius) {
                 value *= PI_FLOAT;
-                return sincModified(value) * sincModified(value / 3F);
+                return sincModified(value) * sincModified(value / radius);
             } else {
                 return 0.0f;
             }

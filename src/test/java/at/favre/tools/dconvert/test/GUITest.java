@@ -159,7 +159,7 @@ public class GUITest extends ApplicationTest {
 
     @Test
     public void testDownScalingQuality() throws Exception {
-        for (EScalingAlgorithm algo : EScalingAlgorithm.values()) {
+        for (EScalingAlgorithm algo : EScalingAlgorithm.getAllEnabled()) {
             if (algo.getSupportedForType().contains(EScalingAlgorithm.Type.DOWNSCALING)) {
                 clickOn("#choiceDownScale").clickOn(algo.toString());
                 assertEquals("arguments should match", defaultBuilder.downScaleAlgorithm(algo).build(), controller.getFromUI(false));
@@ -169,7 +169,7 @@ public class GUITest extends ApplicationTest {
 
     @Test
     public void testUpScalingQuality() throws Exception {
-        for (EScalingAlgorithm algo : EScalingAlgorithm.values()) {
+        for (EScalingAlgorithm algo : EScalingAlgorithm.getAllEnabled()) {
             if (algo.getSupportedForType().contains(EScalingAlgorithm.Type.UPSCALING)) {
                 clickOn("#choiceUpScale").clickOn(algo.toString());
                 assertEquals("arguments should match", defaultBuilder.upScaleAlgorithm(algo).build(), controller.getFromUI(false));

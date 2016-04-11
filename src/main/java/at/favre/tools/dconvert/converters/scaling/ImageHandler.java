@@ -22,13 +22,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Handles scaling and writing/compression images to disk
  */
 public class ImageHandler {
     private static final Color DEFAULT_COLOR = Color.white;
-    public static final boolean TEST_MODE = true;
+    public static final boolean TEST_MODE = false;
     public static final ConvolveOp OP_ANTIALIAS = new ConvolveOp(new Kernel(3, 3, new float[]{.0f, .08f, .0f, .08f, .68f, .08f, .0f, .08f, .0f}), ConvolveOp.EDGE_NO_OP, null);
     public static Map<ScaleAlgorithm, Long> traceMap = new HashMap<>();
     private Arguments args;
@@ -111,13 +112,7 @@ public class ImageHandler {
 
     private List<ScaleAlgorithm> getScaleAlgorithm(EScalingAlgorithm algorithm, EScalingAlgorithm.Type type) {
         if (TEST_MODE) {
-            List<ScaleAlgorithm> scaleAlgorithms = new ArrayList<>();
-            for (EScalingAlgorithm eScalingAlgorithm : EScalingAlgorithm.values()) {
-                if (eScalingAlgorithm.getSupportedForType().contains(type)) {
-                    scaleAlgorithms.add(eScalingAlgorithm.getImplementation());
-                }
-            }
-            return scaleAlgorithms;
+            return EScalingAlgorithm.getAllEnabled().stream().filter(eScalingAlgorithm -> eScalingAlgorithm.getSupportedForType().contains(type)).map(EScalingAlgorithm::getImplementation).collect(Collectors.toList());
         } else {
             return Collections.singletonList(algorithm.getImplementation());
         }
