@@ -1,10 +1,8 @@
 package at.favre.tools.dconvert.arg;
 
-import at.favre.tools.dconvert.converters.scaling.NaiveGraphics2dAlgorithm;
-import at.favre.tools.dconvert.converters.scaling.ProgressiveAlgorithm;
-import at.favre.tools.dconvert.converters.scaling.ResambleAlgorithm;
-import at.favre.tools.dconvert.converters.scaling.ScaleAlgorithm;
+import at.favre.tools.dconvert.converters.scaling.*;
 import com.mortennobel.imagescaling.ResampleFilters;
+import com.twelvemonkeys.image.ResampleOp;
 
 import java.awt.*;
 import java.util.*;
@@ -16,21 +14,20 @@ import java.util.stream.Collectors;
  */
 public enum EScalingAlgorithm {
 
-    LANCZOS1(new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(1)), "lanczos1", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), false),
-    LANCZOS2(new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(2)), "lanczos2", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), true),
-    LANCZOS3(new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(3)), "lanczos3", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), true),
-    LANCZOS4(new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(4)), "lanczos4", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), false),
-    LANCZOS5(new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(5)), "lanczos5", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), false),
-    MITCHELL(new ResambleAlgorithm(ResampleFilters.getMitchellFilter()), "mitchell", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), true),
-    BSPLINE(new ResambleAlgorithm(ResampleFilters.getBSplineFilter()), "bspline", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), false),
-    HERMITE(new ResambleAlgorithm(ResampleFilters.getHermiteFilter()), "hermite", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), false),
-    NEAREST_NEIGHBOR(new NaiveGraphics2dAlgorithm(RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR), "nearestNeighbor", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), true),
-    BILINEAR_PROGRESSIVE(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.NOBEL_BILINEAR), "bilinearProgressive", Collections.singletonList(Type.DOWNSCALING), true),
-    BICUBIC_PROGRESSIVE(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.NOBEL_BICUBUC), "bicubicProgressive", Collections.singletonList(Type.DOWNSCALING), true),
+    LANCZOS2_NOBEL(new NobelResampleAlgorithm(new NobelResampleAlgorithm.LanczosFilter(2)), "lanczos2-nobel", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), true),
+    LANCZOS3_NOBEL(new NobelResampleAlgorithm(new NobelResampleAlgorithm.LanczosFilter(3)), "lanczos3-nobel", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), false),
+    LANCZOS2(new ResampleAlgorithm(ResampleOp.FILTER_LANCZOS), "lanczos3", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), true),
+    MITCHELL(new ResampleAlgorithm(ResampleOp.FILTER_MITCHELL), "mitchell", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), true),
+    MITCHELL_NOBEL(new NobelResampleAlgorithm(ResampleFilters.getMitchellFilter()), "mitchell-nobel", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), false),
+    BSPLINE(new NobelResampleAlgorithm(ResampleFilters.getBSplineFilter()), "bspline", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), false),
+    HERMITE(new NobelResampleAlgorithm(ResampleFilters.getHermiteFilter()), "hermite", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), false),
+    NEAREST_NEIGHBOR(new NaiveGraphics2dAlgorithm(RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR), "nearestNeighbor", Arrays.asList(Type.DOWNSCALING, Type.UPSCALING), false),
+    BILINEAR_PROGRESSIVE(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.NOBEL_BILINEAR), "bilinearProgressive", Collections.singletonList(Type.DOWNSCALING), false),
+    BICUBIC_PROGRESSIVE(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.NOBEL_BICUBUC), "bicubicProgressive", Collections.singletonList(Type.DOWNSCALING), false),
     NEAREST_NEIGHBOR_PROGRESSIVE(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.NOBEL_NEAREST_NEIGHBOR), "nearestNeighborProgressive", Collections.singletonList(Type.DOWNSCALING), false),
-    BILINEAR_PROGRESSIVE2(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.THUMBNAILATOR_BILINEAR), "bilinearProgressive2", Collections.singletonList(Type.DOWNSCALING), false),
+    BILINEAR_PROGRESSIVE2(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.THUMBNAILATOR_BILINEAR), "bilinearProgressive2", Collections.singletonList(Type.DOWNSCALING), true),
     BICUBIC_PROGRESSIVE_SMOOTH(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.IMGSCALR_SEVENTH_STEP), "bicubicProgressiveSmooth", Collections.singletonList(Type.DOWNSCALING), false),
-    BILINEAR_LANCZOS2(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.PROGRESSIVE_BILINEAR_AND_LANCZOS3), "bilinearLanczos2", Collections.singletonList(Type.DOWNSCALING), true),
+    BILINEAR_LANCZOS2(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.PROGRESSIVE_BILINEAR_AND_LANCZOS2), "bilinearLanczos2", Collections.singletonList(Type.DOWNSCALING), false),
     BILINEAR_LANCZOS3(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.PROGRESSIVE_BILINEAR_AND_LANCZOS3), "bilinearLanczos3", Collections.singletonList(Type.DOWNSCALING), false),
     BICUBIC(new NaiveGraphics2dAlgorithm(RenderingHints.VALUE_INTERPOLATION_BICUBIC), "bicubic", Collections.singletonList(Type.UPSCALING), true),
     BILINEAR(new NaiveGraphics2dAlgorithm(RenderingHints.VALUE_INTERPOLATION_BILINEAR), "bilinear", Collections.singletonList(Type.UPSCALING), true);

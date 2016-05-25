@@ -70,7 +70,7 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
         if (dstWidth < (imageToScale.getWidth() / 2) && dstHeight < (imageToScale.getHeight() / 2)) {
             return new ThumbnailnatorProgressiveAlgorithm(RenderingHints.VALUE_INTERPOLATION_BILINEAR).scale(imageToScale, dstWidth, dstHeight);
         } else {
-            return new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(radius)).scale(imageToScale, dstWidth, dstHeight);
+            return new NobelResampleAlgorithm(new NobelResampleAlgorithm.LanczosFilter(radius)).scale(imageToScale, dstWidth, dstHeight);
         }
     }
 

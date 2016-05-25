@@ -15,9 +15,8 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
+import java.awt.color.ColorSpace;
+import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -29,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public class ImageHandler {
     private static final Color DEFAULT_COLOR = Color.white;
-    public static final boolean TEST_MODE = false;
+    public static final boolean TEST_MODE = true;
     public static final ConvolveOp OP_ANTIALIAS = new ConvolveOp(new Kernel(3, 3, new float[]{.0f, .08f, .0f, .08f, .68f, .08f, .0f, .08f, .0f}), ConvolveOp.EDGE_NO_OP, null);
     public static Map<ScaleAlgorithm, Long> traceMap = new HashMap<>();
     private Arguments args;
@@ -125,7 +124,22 @@ public class ImageHandler {
         if (dWidth == imageToScale.getWidth() && dHeight == imageToScale.getHeight()) {
             scaledImage = imageToScale;
         } else {
-            scaledImage = scaleAlgorithm.scale(imageToScale, dWidth, dHeight);
+            BufferedImage copy = deepCopy(imageToScale);
+//            BufferedImage bufferedImage = GraphicsUtil.makeLinearBufferedImage(imageToScale.getWidth(),imageToScale.getHeight(),imageToScale.getColorModel().isAlphaPremultiplied());
+//            bufferedImage.getGraphics().drawImage(imageToScale,0,0,background,null);
+//
+//            for (int i = 0; i < imageToScale.getWidth(); i++) {
+//                for (int j = 0; j < imageToScale.getHeight(); j++) {
+//                    imageToScale.getRaster().getDataBuffer().ge;
+//
+//                }
+//            }
+            ColorModel ccm = new ComponentColorModel(ColorSpace.getInstance(ColorSpace.CS_LINEAR_RGB), true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
+            copy = new ColorConvertOp(imageToScale.getColorModel().getColorSpace(),ccm.getColorSpace(), null).filter(copy, null);
+
+            scaledImage = scaleAlgorithm.scale(copy, dWidth, dHeight);
+
+            scaledImage = new ColorConvertOp(scaledImage.getColorModel().getColorSpace(),ColorSpace.getInstance(ColorSpace.CS_sRGB), null).filter(scaledImage, null);
         }
 
         if (!compression.hasTransparency) {
@@ -144,4 +158,79 @@ public class ImageHandler {
     private ScaleAlgorithm getAsScalingAlgorithm(final ScaleAlgorithm algorithm, ImageType.ECompression compression) {
         return (imageToScale, dWidth, dHeight) -> ImageHandler.this.scale(algorithm, imageToScale, dWidth, dHeight, compression, DEFAULT_COLOR);
     }
+
+    static BufferedImage deepCopy(BufferedImage bi) {
+        ColorModel cm = bi.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = bi.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
+    private static int[][] convertTo2DWithoutUsingGetRGB(BufferedImage image) {
+
+        final byte[] pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
+        final int width = image.getWidth();
+        final int height = image.getHeight();
+        final boolean hasAlphaChannel = image.getAlphaRaster() != null;
+
+        int[][] result = new int[height][width];
+        if (hasAlphaChannel) {
+            final int pixelLength = 4;
+            for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += pixelLength) {
+                int argb = 0;
+                argb += (((int) pixels[pixel] & 0xff) << 24); // alpha
+                argb += ((int) pixels[pixel + 1] & 0xff); // blue
+                argb += (((int) pixels[pixel + 2] & 0xff) << 8); // green
+                argb += (((int) pixels[pixel + 3] & 0xff) << 16); // red
+                result[row][col] = argb;
+                col++;
+                if (col == width) {
+                    col = 0;
+                    row++;
+                }
+            }
+        } else {
+            final int pixelLength = 3;
+            for (int pixel = 0, row = 0, col = 0; pixel < pixels.length; pixel += pixelLength) {
+                int argb = 0;
+                argb += -16777216; // 255 alpha
+                argb += ((int) pixels[pixel] & 0xff); // blue
+                argb += (((int) pixels[pixel + 1] & 0xff) << 8); // green
+                argb += (((int) pixels[pixel + 2] & 0xff) << 16); // red
+                result[row][col] = argb;
+                col++;
+                if (col == width) {
+                    col = 0;
+                    row++;
+                }
+            }
+        }
+
+        return result;
+    }
+
+//    public float[] fromsRGB(int argb) {
+//        int alpha = (argb >> 24) & 0x000000FF;
+//        int red = (argb >> 16) & 0x000000FF;
+//        int green = (argb >>8 ) & 0x000000FF;
+//        int blue = (argb) & 0x000000FF;
+//
+//        Color.getColor("",argb);
+//        float[] out = new float[3];
+//
+//        // Convert non-linear RGB coordinates to linear ones,
+//        //  numbers from the w3 spec.
+//        for (int i = 0; i < 3; i++) {
+//            float n = in[i];
+//            if (n < 0)
+//                n = 0f;
+//            if (n > 1)
+//                n = 1f;
+//            if (n <= 0.03928f)
+//                out[i] = (float) (n / 12.92);
+//            else
+//                out[i] = (float) (Math.exp(2.4 * Math.log((n + 0.055) / 1.055)));
+//        }
+//        return out;
+//    }
 }

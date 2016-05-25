@@ -1,23 +1,23 @@
 package at.favre.tools.dconvert.converters.scaling;
 
+import at.favre.tools.dconvert.util.ResampleOp2;
 import com.mortennobel.imagescaling.ResampleFilter;
-import com.mortennobel.imagescaling.ResampleOp;
 
 import java.awt.image.BufferedImage;
 
 /**
  * Wrapper for Resamble Algos from Nobel's Lib
  */
-public class ResambleAlgorithm implements ScaleAlgorithm {
+public class NobelResampleAlgorithm implements ScaleAlgorithm {
     private ResampleFilter filter;
 
-    public ResambleAlgorithm(ResampleFilter filter) {
+    public NobelResampleAlgorithm(ResampleFilter filter) {
         this.filter = filter;
     }
 
     @Override
     public BufferedImage scale(BufferedImage imageToScale, int dWidth, int dHeight) {
-        ResampleOp resizeOp = new ResampleOp(dWidth, dHeight);
+        ResampleOp2 resizeOp = new ResampleOp2(dWidth, dHeight);
         resizeOp.setFilter(filter);
         return resizeOp.filter(imageToScale, null);
     }
@@ -69,7 +69,7 @@ public class ResambleAlgorithm implements ScaleAlgorithm {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ResambleAlgorithm that = (ResambleAlgorithm) o;
+        NobelResampleAlgorithm that = (NobelResampleAlgorithm) o;
 
         return filter != null ? filter.equals(that.filter) : that.filter == null;
 

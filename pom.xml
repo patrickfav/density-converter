@@ -25,8 +25,11 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>imagej.public</id>
+            <url>http://maven.imagej.net/content/groups/public</url>
+        </repository>
     </repositories>
-
     <build>
         <plugins>
             <plugin>
@@ -112,8 +115,11 @@
             <artifactId>bridj</artifactId>
             <version>0.7.0</version>
         </dependency>
-
-
+        <dependency>
+            <groupId>net.imagej</groupId>
+            <artifactId>ij</artifactId>
+            <version>1.50i</version>
+        </dependency>
         <!-- supported reading/writing image types -->
         <dependency>
             <groupId>com.twelvemonkeys.imageio</groupId>
