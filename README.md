@@ -20,10 +20,13 @@ java -jar ./dconvert.jar
 
 will start the UI (_or double click the jar file_).
 
-**[Download here](https://github.com/patrickfav/density-converter/releases/)**
-<sup><sub>Requires Java 8 to run</sub></sup>
-
 _To use the post processor ([pngcrush](http://pmt.sourceforge.net/pngcrush/), [mozJpeg](http://mozjpeg.codelove.de/binaries.html) and [webp](https://developers.google.com/speed/webp/download)) the respective cmd tool must be set in PATH._
+
+## Download
+
+[Grab jar from latest Release](https://github.com/patrickfav/density-converter/releases/latest)
+
+<sup><sub>Requires Java 8 to run</sub></sup>
 
 # Usage
 
