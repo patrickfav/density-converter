@@ -1,4 +1,3 @@
-
 # ![logo](src/main/resources/img/density_converter_icon_24.png) Density Image Converter Tool for Android, iOS, Windows and CSS
 
 This is a powerful little tool that helps **converting single or batches of images** to **Android**, **iOS**, **Windows** and **CSS** specific formats and density
@@ -27,7 +26,7 @@ _To use the post processor ([pngcrush](http://pmt.sourceforge.net/pngcrush/), [m
 
 [Grab jar from latest Release](https://github.com/patrickfav/density-converter/releases/latest)
 
-Requires Java 8 to run
+<sup><sub>Requires Java 8 to run</sub></sup>
 
 # Usage
 
@@ -64,11 +63,11 @@ Full list of arguments:
                                           3x3 convolve matrix is used; useful for very small images
     -clean                                Deletes all file and folders in out dir that would be used in
                                           current configuration before converting.
-    -compressionQuality          Only used with compression 'jpg' sets the quality [0-1.0] where 1.0
+    -compressionQuality <0.0-1.0>         Only used with compression 'jpg' sets the quality [0-1.0] where 1.0
                                           is the highest quality. Default is 0.9
     -dryRun                               Will not create any images or folder. Useful as fast preview in log
                                           what images in what resolutions would be created.
-    -dst                            The directory in which the converted files will be written. Will use
+    -dst <path>                           The directory in which the converted files will be written. Will use
                                           the source folder if this argument is omitted.
     -gui                                  Starts graphical user interface
     -h,--help                             This help page
@@ -79,10 +78,11 @@ Full list of arguments:
     -keepOriginalPostProcessedFiles       If a post processor is run on a file, this flag will ensure that the
                                           original will be kept (renamed _orig), otherwise only the optimized
                                           image will be kept
-    -outCompression      Sets the compression of the converted images. Can be 'png', 'jpg',
-                                          'gif', 'bmp', 'png+jpg' or 'strict' which tries to use same compression as source. By default will convert to png except if
+    -outCompression <png|jpg|gif|bmp>     Sets the compression of the converted images. Can be 'png', 'jpg',
+                                          'gif', 'bmp', 'png+jpg' or 'strict' which tries to use same
+                                          compression as source. By default will convert to png except if
                                           source compression is jpeg.
-    -platform    Can be 'all', 'android', 'ios', 'win' or 'web'. Sets what formats
+    -platform <all|android|ios|win|web>   Can be 'all', 'android', 'ios', 'win' or 'web'. Sets what formats
                                           the converted images will be generated for. E.g. set 'android' if
                                           you only want to convert to android format. Default is [IOS,
                                           ANDROID]
@@ -98,17 +98,17 @@ Full list of arguments:
                                           to lossy webp with cwebp. Does not delete source files. The
                                           executable must be set in the system path as 'cwebp' i.e executable
                                           from every path. cwebp is the official converter from Google.
-    -roundingMode       Defines the rounding mode when scaling the dimensions. Possible
+    -roundingMode <round|ceil|floor>      Defines the rounding mode when scaling the dimensions. Possible
                                           options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and
                                           'ceil' (rounds up). Default is ROUND_HALF_UP
-    -scale               The source. Can be an image file or a folder containing image files
+    -scale <[float]|[int]dp>              The source. Can be an image file or a folder containing image files
                                           to be converted. This argument is mandatory.
     -scaleIsHeightDp                      If set and scale is in dp it will be interpreted as fixed height not
                                           width
     -skipExisting                         If set will not overwrite a already existing file
     -skipUpscaling                        If set will only scale down, but not up to prevent image quality
                                           loss
-    -src          The source scale. This can either be a factor (1,1.5,2,3,4,etc.)
+    -src <path to file or folder>         The source scale. This can either be a factor (1,1.5,2,3,4,etc.)
                                           used if the images already have the correct resolution for one scale
                                           factor and up- and downscaling for all other densities are needed.
                                           Ie. if you have the src file in density xxxhdpi you pass '4'. You
@@ -116,7 +116,7 @@ Full list of arguments:
                                           denotes the output pixel width (or height if the flag is set) in
                                           mdpi/x1. In this mode all output images will have the same width
                                           (height). This argument is mandatory.
-    -threads                         Sets the count of max parallel threads (more is faster but uses more
+    -threads <1-8>                        Sets the count of max parallel threads (more is faster but uses more
                                           memory). Possible values are 1-8. Default is 4
     -v,--version                          Gets current version
     -verbose                              If set will log to console more verbose
@@ -148,7 +148,7 @@ The tool will generate the following images in the following resolutions:
 This mode is suitable if the source image is in an arbitrary resolution (but usually greater resolution than needed) and
 the needed density independent pixel (dp) dimensions are known to the developer. Either the width or height can be fixed
 with a dp value, while calculating the other dimension accordingly (keeping aspect ratio). In this mode all images will
-have the same pixel width (or height) for the same density bucket. Here is a practical example, with fixed width:
+have the same pixel width (or height) for the same density bucket. Here is a practical example with fixed width:
 
 You get an icon in 512x512 and want to display it in 48x48dp. The tool will generate the following resolutions:
 
@@ -194,7 +194,7 @@ Out-compression has the following modes:
 If an image will be re-compressed with a file type that does not support alpha, alpha will be replaced with white (e.g. when converting png -> jpeg)
 
 ## Quality Comparison
-One of the main features of this converter is downscaling. Unfortunately without using specialized algorithms, down scaled images may look jagged or too blurred. I tested the algorithms of [Thumbnailator](https://github.com/coobird/thumbnailator) and [imgscalr](https://github.com/thebuzzmedia/imgscalr) which basically uses [ Chris Campbell's proposed progressive scaling](https://community.oracle.com/docs/DOC-983611) algorithm. Upon further analysis [Lanczos3 filtering](https://en.wikipedia.org/wiki/Lanczos_resampling) seems to be recommended which produces results preserving more detail without being too jagged. The downside is, it is considerably slower than the former. This tool uses the implementation of [Morten Nobel](https://github.com/mortennobel/java-image-scaling).
+One of the main features of this converter is downscaling. Unfortunately without using specialized algorithms, down scaled images may look jagged or too blurred. I tested the algorithms of [Thumbnailator](https://github.com/coobird/thumbnailator) and [imgscalr](https://github.com/thebuzzmedia/imgscalr) which basically uses [Chris Campbell's proposed progressive scaling](https://community.oracle.com/docs/DOC-983611) algorithm. Upon further analysis [Lanczos3 filtering](https://en.wikipedia.org/wiki/Lanczos_resampling) seems to be recommended which produces results preserving more detail without being too jagged. The downside is, it is considerably slower than the former. This tool uses the implementation of [Morten Nobel](https://github.com/mortennobel/java-image-scaling).
 
 The tool provides 3 quality profiles:
 
