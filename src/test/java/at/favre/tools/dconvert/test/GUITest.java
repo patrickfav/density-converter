@@ -8,6 +8,7 @@ import at.favre.tools.dconvert.test.helper.TestPreferenceStore;
 import at.favre.tools.dconvert.ui.GUI;
 import at.favre.tools.dconvert.ui.GUIController;
 import javafx.scene.Scene;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.*;
@@ -179,6 +180,14 @@ public class GUITest extends ApplicationTest {
     public void testUpScalingQuality() throws Exception {
         for (EScalingAlgorithm algo : EScalingAlgorithm.getAllEnabled()) {
             if (algo.getSupportedForType().contains(EScalingAlgorithm.Type.UPSCALING)) {
+
+                ChoiceBox choiceBox = (ChoiceBox) scene.lookup("#choiceUpScale");
+                //choiceBox.getSelectionModel().
+                for (Object o : choiceBox.getItems()) {
+                    if (o.toString().equals(algo.toString())) {
+
+                    }
+                }
                 clickOn("#choiceUpScale").clickOn(algo.toString());
                 assertEquals("arguments should match", defaultBuilder.upScaleAlgorithm(algo).build(), controller.getFromUI(false));
             }
@@ -260,7 +269,7 @@ public class GUITest extends ApplicationTest {
         clickOn("#rbDpHeight").clickOn("#textFieldDp").write("64");
         clickOn(getIdForPlatform(EPlatform.ANDROID));
         clickOn("#cbSkipUpscaling");
-        clickOn("#cbEnablePngCrush");
+        clickOn("#cbSkipExisting");
         clickOn("#choiceThreads").clickOn(String.valueOf(2));
         assertEquals("arguments should match", new Arguments.Builder(defaultSrcFolder, 64).guiAdvancedOptions(true).verboseLog(true)
                 .scaleMode(EScaleMode.DP_HEIGHT).platform(Collections.singleton(EPlatform.ANDROID)).skipUpscaling(true).threadCount(2).enablePngCrush(true)

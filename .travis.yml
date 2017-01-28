@@ -6,7 +6,7 @@ sudo: false
 addons:
   apt:
     packages:
-      - oracle-java8-installer
+      - oracle-java8-installer #needs updated jdk for javafx
 
 script:
     - mvn clean package
