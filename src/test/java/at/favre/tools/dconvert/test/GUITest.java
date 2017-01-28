@@ -7,6 +7,7 @@ import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
 import at.favre.tools.dconvert.test.helper.TestPreferenceStore;
 import at.favre.tools.dconvert.ui.GUI;
 import at.favre.tools.dconvert.ui.GUIController;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
 import org.junit.*;
@@ -25,16 +26,19 @@ import static org.junit.Assert.assertEquals;
  * Tests GUI
  */
 public class GUITest extends ApplicationTest {
+    public static final boolean HEADLESS = true;
+
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
     private GUIController controller;
     private Arguments.Builder defaultBuilder;
     private File defaultSrcFolder;
     private ResourceBundle bundle = ResourceBundle.getBundle("bundles.strings", Locale.getDefault());
+    private Scene scene;
 
     @BeforeClass
     public static void setupSpec() throws Exception {
-        if (true) {
+        if (HEADLESS) {
             System.setProperty("testfx.robot", "glass");
             System.setProperty("testfx.headless", "true");
             System.setProperty("prism.order", "sw");
@@ -47,6 +51,7 @@ public class GUITest extends ApplicationTest {
     public void start(Stage stage) throws Exception {
         controller = GUI.setup(stage, new TestPreferenceStore(), new Dimension(1920, 1080));
         stage.show();
+        scene = stage.getScene();
     }
 
     @Before
@@ -157,8 +162,10 @@ public class GUITest extends ApplicationTest {
         }
     }
 
-    @Test
+    //this test needs fixing: bug is that click on algo name is not distinct - sometimes it picks the correct choicebox, sometimes the other (up <> downsclaing have the same values
+    @Ignore
     public void testDownScalingQuality() throws Exception {
+        Assume.assumeFalse("this only seems to work in non-headless test", HEADLESS);
         for (EScalingAlgorithm algo : EScalingAlgorithm.getAllEnabled()) {
             if (algo.getSupportedForType().contains(EScalingAlgorithm.Type.DOWNSCALING)) {
                 clickOn("#choiceDownScale").clickOn(algo.toString());
@@ -167,7 +174,8 @@ public class GUITest extends ApplicationTest {
         }
     }
 
-    @Test
+    //this test needs fixing: bug is that click on algo name is not distinct - sometimes it picks the correct choicebox, sometimes the other (up <> downsclaing have the same values
+    @Ignore
     public void testUpScalingQuality() throws Exception {
         for (EScalingAlgorithm algo : EScalingAlgorithm.getAllEnabled()) {
             if (algo.getSupportedForType().contains(EScalingAlgorithm.Type.UPSCALING)) {

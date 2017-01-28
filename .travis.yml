@@ -1,0 +1,22 @@
+language: java
+jdk:
+  - oraclejdk8
+
+script:
+    - mvn clean package
+
+deploy:
+  - provider: releases
+    api_key:
+      secure: "4yszsIyM8p44pUCuuj6ZAbBgYFBkCdODaO6jUMJFRP/rBFsEa1QvqYJgrhXtmr/fZqDpnV8MLR93747eLShAiAgolcGePKAN6bH6J5fCDCp4+vOTnOsAdUFbBAzXnNybCZvlsceyLYHJZijfBjAw3U4bBZO99OGRx1EGlOY3X01Ahug2RS2O+viYeTGCHvcv83ULartGlsRSACDx27iw62PZ5mnEL1nTUd48ULbDO2D2mHhWakDJo0D0WIzZeTDVFgOR97ZnX0hWT8thAwhXt7TZBmrrAYrJVuBIA3pg2Gk0r6o2PElnp2pcnY8yzBZOMhtgqtRdUIzNVmrhQCgZeD7o9OVqmFYLrwlotbBhoMj+Ol956QWHTvrvwcJqiMLlb5MhHBTwp0gu8xNS3YVarNaBGd9w9GDE+zZ6p2USMTAMNAEeo6drKZLcFLpDxDY19r16Co/tThADOrXdoqGDDvJgDZVAwAM1dF4I+9GbIhDgdAsBJLDA5rE7d0eiEpGPxGy22P7jbxpH8IQUc/GSWfzuU+3e7V0TYnq4rrdfctNjt655KMfXY++X+6xhvY5EyThKaNz31q/4Gb4Y7yrrxn3gcjBXkBNoDD0pxSELfRtnzpg4M7RZyf3E//yZVcrEsxx5M1aPNMvHcQzOFDhWJeZ3peWMXY99HHVuMfdp1Qw="
+    file_glob: true
+    file: "target/dconvert-*.jar"
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: true
+
+notifications:
+  slack:
+    secure: "d5t2dP5H63qfY0umICPN4Tghr/TJIvni2i6NGEoNnq7xDqg24VV9+KvTpZ5b5W2XvLWIREwhZX0z2A2sct264Esc+VU6VGeuSebRu05AFVSL2w9hHQzh/PciicCAsIhVVf5nD0io3U5+/pQtOvMyEoBFlWS9EiRl7Lo5Gj1Iu48747IS7zF56ieI0iBFCSeT7Xb9L0+Hk7sjSKKeINDNz1UpqXFjwjDUYrwmA55ZCJPWNlDTzKdtjal9OE38SRy78UYe0R1UfEdEunaWrra2OTjpBT4d7Wc6t1ylcLGa/v6o8v59MA7Xy/PzXSIfHoJnqkMtZpC+yNEMvDmXPdaWTi16g4dV1+PvNFgZZqDQW9AuROzuoCTxDWjIzrPUaSfaG58cHTwt4hVHcOoJCJpfTMrX8QCEdQl6m/fIU+OXetlOy89a7A+oUl8gsNpArW7ML4n5qaxa0mTfayOruTMPBejO6gZLeOCyt4Nx8wmqdyVNsyVkr24P1FOj1fmR8pMu9IEc3uzu5fAZEPb4kR1HmydJTWgeCUhf+GKCcAkK+a/O8MsP66MaGbM9es3xr2hWFA2iTZokiXfDrdKMymjlEXQx9NEviLWe/oqyupG6O3Ee2oo1I9F2uFyeLhS5RQk6WhhXmeBR3ZX9PUcqiAFaU56XFHEuGOXXam3cEj2zbok="
+  email: false

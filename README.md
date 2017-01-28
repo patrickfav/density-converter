@@ -6,6 +6,8 @@ It has a **graphical** and **command line** interface and supports a wide array 
 including PNG, JPEG, SVG, PSD and Android 9-patches. Using sophisticated scaling algorithms, it is designed to make conversion of images easy and
 fast while keeping the image quality high (comparable to PS). To further optimize the output post processors like **pngcrush** and **mozJpeg** can be used (see section below).
 
+[![Build Status](https://travis-ci.org/patrickfav/density-converter.svg?branch=master)](https://travis-ci.org/patrickfav/density-converter)
+
 Usage:
 
 ```
@@ -22,11 +24,15 @@ will start the UI (_or double click the jar file_).
 
 _To use the post processor ([pngcrush](http://pmt.sourceforge.net/pngcrush/), [mozJpeg](http://mozjpeg.codelove.de/binaries.html) and [webp](https://developers.google.com/speed/webp/download)) the respective cmd tool must be set in PATH._
 
+
+
 ## Download
 
-[Grab jar from latest Release](https://github.com/patrickfav/density-converter/releases/latest)
+**[Grab jar from latest release.](https://github.com/patrickfav/density-converter/releases/latest)**
 
-<sup><sub>Requires Java 8 to run</sub></sup>
+### Requirements
+
+* JDK 8
 
 # Usage
 
@@ -194,6 +200,8 @@ Out-compression has the following modes:
 If an image will be re-compressed with a file type that does not support alpha, alpha will be replaced with white (e.g. when converting png -> jpeg)
 
 ## Quality Comparison
+_Note this will be available in future versions._
+
 One of the main features of this converter is downscaling. Unfortunately without using specialized algorithms, down scaled images may look jagged or too blurred. I tested the algorithms of [Thumbnailator](https://github.com/coobird/thumbnailator) and [imgscalr](https://github.com/thebuzzmedia/imgscalr) which basically uses [Chris Campbell's proposed progressive scaling](https://community.oracle.com/docs/DOC-983611) algorithm. Upon further analysis [Lanczos3 filtering](https://en.wikipedia.org/wiki/Lanczos_resampling) seems to be recommended which produces results preserving more detail without being too jagged. The downside is, it is considerably slower than the former. This tool uses the implementation of [Morten Nobel](https://github.com/mortennobel/java-image-scaling).
 
 The tool provides 3 quality profiles:

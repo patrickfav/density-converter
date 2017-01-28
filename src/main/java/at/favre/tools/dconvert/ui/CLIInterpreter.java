@@ -150,7 +150,7 @@ public class CLIInterpreter {
 			}
 
 			if (commandLine.hasOption(DOWNSCALING_ALGO_ARG)) {
-				builder.upScaleAlgorithm(EScalingAlgorithm.getByName(commandLine.getOptionValue(DOWNSCALING_ALGO_ARG)));
+				builder.downScaleAlgorithm(EScalingAlgorithm.getByName(commandLine.getOptionValue(DOWNSCALING_ALGO_ARG)));
 			}
 
 			if (commandLine.hasOption(ROUNDING_MODE_ARG)) {
