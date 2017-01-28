@@ -272,7 +272,7 @@ public class GUITest extends ApplicationTest {
         clickOn("#cbSkipExisting");
         clickOn("#choiceThreads").clickOn(String.valueOf(2));
         assertEquals("arguments should match", new Arguments.Builder(defaultSrcFolder, 64).guiAdvancedOptions(true).verboseLog(true)
-                .scaleMode(EScaleMode.DP_HEIGHT).platform(Collections.singleton(EPlatform.ANDROID)).skipUpscaling(true).threadCount(2).enablePngCrush(true)
+                .scaleMode(EScaleMode.DP_HEIGHT).platform(Collections.singleton(EPlatform.ANDROID)).skipUpscaling(true).threadCount(2).skipExistingFiles(true)
                 .build(), controller.getFromUI(false));
     }
 
