@@ -49,7 +49,6 @@ public class Main {
 		System.out.println("start converting " + args.filesToProcess.size() + " files");
 
 		new DConvert().execute(args, true, new DConvert.HandlerCallback() {
-			int i = 0;
 			@Override
 			public void onProgress(float progress) {
 				try {
