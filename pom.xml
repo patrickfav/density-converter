@@ -119,8 +119,54 @@
                 <configuration>
                     <!-- Travis build workaround -->
                     <argLine>${argLine} -Xms1024m -Xmx2048m</argLine>
-                    <skipTests>false</skipTests>
+                    <skipTests>true</skipTests>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.akathist.maven.plugins.launch4j</groupId>
+                <artifactId>launch4j-maven-plugin</artifactId>
+                <version>1.7.15</version>
+                <executions>
+                    <execution>
+                        <id>l4j-clui</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>launch4j</goal>
+                        </goals>
+                        <configuration>
+                            <headerType>console</headerType>
+                            <outfile>target/dconvert.exe</outfile>
+                            <!--<icon>icon.ico</icon>-->
+                            <jar>target/${project.artifactId}-${project.version}.jar</jar>
+                            <errTitle>dconvert</errTitle>
+                            <icon>icon.ico</icon>
+                            <classPath>
+                                <mainClass>at.favre.tools.dconvert.Main</mainClass>
+                                <addDependencies>false</addDependencies>
+                                <preCp>anything</preCp>
+                            </classPath>
+                            <jre>
+                                <minVersion>1.8.0</minVersion>
+                                <opts>
+                                    <opt>-Djava.endorsed.dirs=./endorsed</opt>
+                                </opts>
+                            </jre>
+                            <versionInfo>
+                                <fileVersion>0.0.0.1</fileVersion>
+                                <txtFileVersion>0.0.0.1</txtFileVersion>
+                                <fileDescription>A tool that enables advanced features through adb
+                                </fileDescription>
+                                <copyright>Patrick Favre-Bulle, 2016</copyright>
+                                <productVersion>1.0.0.0</productVersion>
+                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <productName>Multi Platform Density Converter</productName>
+                                <internalName>${project.artifactId}</internalName>
+                                <originalFilename>dconvert.exe</originalFilename>
+                                <language>EN</language>
+                            </versionInfo>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
