@@ -6,6 +6,7 @@ It has a **graphical** and **command line** interface and supports a wide array 
 including PNG, JPEG, SVG, PSD and Android 9-patches. Using sophisticated scaling algorithms, it is designed to make conversion of images easy and
 fast while keeping the image quality high (comparable to PS). To further optimize the output post processors like **pngcrush** and **mozJpeg** can be used (see section below).
 
+[![GitHub release](https://img.shields.io/github/release/patrickfav/density-converter.svg)](https://github.com/patrickfav/density-converter/releases/latest)
 [![Build Status](https://travis-ci.org/patrickfav/density-converter.svg?branch=master)](https://travis-ci.org/patrickfav/density-converter)
 
 Usage:
