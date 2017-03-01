@@ -8,6 +8,7 @@ fast while keeping the image quality high (comparable to PS). To further optimiz
 
 [![GitHub release](https://img.shields.io/github/release/patrickfav/density-converter.svg)](https://github.com/patrickfav/density-converter/releases/latest)
 [![Build Status](https://travis-ci.org/patrickfav/density-converter.svg?branch=master)](https://travis-ci.org/patrickfav/density-converter)
+[![Coverage Status](https://coveralls.io/repos/github/patrickfav/density-converter/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/density-converter?branch=master)
 
 Usage:
 
