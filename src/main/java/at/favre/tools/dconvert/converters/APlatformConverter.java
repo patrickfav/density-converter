@@ -91,6 +91,7 @@ public abstract class APlatformConverter<T extends DensityDescriptor> implements
 
 			return new Result(log.toString(), allResultingFiles);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new Result(null, e, Collections.emptyList());
 		}
 	}

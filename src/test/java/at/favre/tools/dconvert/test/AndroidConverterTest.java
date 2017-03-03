@@ -23,7 +23,6 @@ import at.favre.tools.dconvert.arg.ImageType;
 import at.favre.tools.dconvert.converters.AndroidConverter;
 import at.favre.tools.dconvert.util.ImageUtil;
 import at.favre.tools.dconvert.util.MiscUtil;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.awt.*;
@@ -42,126 +41,127 @@ import static org.junit.Assert.*;
  */
 public class AndroidConverterTest extends AConverterTest {
 
-	@Test
-	public void testMipmapFolder() throws Exception {
-		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
-		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dstFolder(defaultDst).createMipMapInsteadOfDrawableDir(true).includeAndroidLdpiTvdpi(true).platform(Collections.singleton(getType())).build(), files);
-	}
+    @Test
+    public void testMipmapFolder() throws Exception {
+        List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
+        test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dstFolder(defaultDst).createMipMapInsteadOfDrawableDir(true).includeAndroidLdpiTvdpi(true).platform(Collections.singleton(getType())).build(), files);
+    }
 
-	@Test
-	public void testLdpiAndTvdpi() throws Exception {
-		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
-		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dstFolder(defaultDst).includeAndroidLdpiTvdpi(true).platform(Collections.singleton(getType())).build(), files);
-	}
+    @Test
+    public void testLdpiAndTvdpi() throws Exception {
+        List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
+        test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).dstFolder(defaultDst).includeAndroidLdpiTvdpi(true).platform(Collections.singleton(getType())).build(), files);
+    }
 
-	@Ignore
-	@Test
-	public void testSingleNinePatch() throws Exception {
-		List<File> files = copyToTestPath(defaultSrc, "ninepatch_bubble.9.png");
-		defaultTest(files);
-	}
+    @Test
+    public void testSingleNinePatch() throws Exception {
+        List<File> files = copyToTestPath(defaultSrc, "ninepatch_bubble.9.png");
+        defaultTest(files);
+    }
 
-	@Override
-	protected EPlatform getType() {
-		return EPlatform.ANDROID;
-	}
+    @Override
+    protected EPlatform getType() {
+        return EPlatform.ANDROID;
+    }
 
-	@Override
-	protected void checkOutDir(File dstDir, Arguments arguments, List<File> files, EPlatform type) throws IOException {
-		checkOutDirAndroid(dstDir, arguments, files);
-	}
+    @Override
+    protected void checkOutDir(File dstDir, Arguments arguments, List<File> files, EPlatform type) throws IOException {
+        checkOutDirAndroid(dstDir, arguments, files);
+    }
 
-	public static void checkOutDirAndroid(File dstDir, Arguments arguments, List<File> files) throws IOException {
-		Map<File, Dimension> dimensionMap = createDimensionMap(files);
+    public static void checkOutDirAndroid(File dstDir, Arguments arguments, List<File> files) throws IOException {
+        Map<File, Dimension> dimensionMap = createDimensionMap(files);
 
-		List<DensityFolder> expectedDirs = new ArrayList<>();
-
-
-		expectedDirs.addAll(AndroidConverter.getAndroidDensityDescriptors(arguments).stream().map(
-				androidDensityDescriptor -> new DensityFolder(androidDensityDescriptor.folderName, androidDensityDescriptor.scale)).collect(Collectors.toList()));
-
-		assertFalse("expected dirs should not be empty", expectedDirs.isEmpty());
-		if (!files.isEmpty()) {
-			assertFalse("output dir should not be empty", dstDir.list() == null && dstDir.list().length == 0);
+        List<DensityFolder> expectedDirs = new ArrayList<>();
 
 
-			System.out.println("Android-convert " + files);
+        expectedDirs.addAll(AndroidConverter.getAndroidDensityDescriptors(arguments).stream().map(
+                androidDensityDescriptor -> new DensityFolder(androidDensityDescriptor.folderName, androidDensityDescriptor.scale)).collect(Collectors.toList()));
 
-			for (String path : dstDir.list()) {
-				expectedDirs.stream().filter(expectedDir -> expectedDir.folderName.equals(path)).forEach(expectedDir -> {
-					try {
-						expectedDir.found = true;
+        assertFalse("expected dirs should not be empty", expectedDirs.isEmpty());
+        if (!files.isEmpty()) {
+            assertFalse("output dir should not be empty", dstDir.list() == null && dstDir.list().length == 0);
 
-						List<ImageCheck> expectedFiles = createExpectedFilesMap(arguments, new File(dstDir, path), files);
 
-						assertTrue("files count should match input", files.isEmpty() == expectedFiles.isEmpty());
+            System.out.println("Android-convert " + files);
 
-						for (ImageCheck expectedFile : expectedFiles) {
-							for (File imageFile : new File(dstDir, path).listFiles()) {
-								if (expectedFile.targetFile.equals(imageFile)) {
-									expectedFile.found = true;
-									Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedDir.scaleFactor);
-									assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(imageFile));
-								}
-							}
-						}
+            for (String path : dstDir.list()) {
+                expectedDirs.stream().filter(expectedDir -> expectedDir.folderName.equals(path)).forEach(expectedDir -> {
+                    try {
+                        expectedDir.found = true;
 
-						for (ImageCheck expectedFile : expectedFiles) {
-							assertTrue(expectedFile.targetFile + " file should be generated in path", expectedFile.found);
-						}
-						System.out.print("found " + expectedFiles.size() + " files in " + expectedDir.folderName + ", ");
-					} catch (Exception e) {
-						fail();
-						e.printStackTrace();
-					}
-				});
+                        List<ImageCheck> expectedFiles = createExpectedFilesMap(arguments, new File(dstDir, path), files);
 
-			}
+                        assertTrue("files count should match input", files.isEmpty() == expectedFiles.isEmpty());
 
-			for (DensityFolder expectedDir : expectedDirs) {
-				assertTrue(expectedDir.folderName + " should be generated in path", expectedDir.found);
-			}
+                        for (ImageCheck expectedFile : expectedFiles) {
+                            for (File imageFile : new File(dstDir, path).listFiles()) {
+                                if (expectedFile.targetFile.equals(imageFile)) {
+                                    expectedFile.found = true;
+                                    Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedDir.scaleFactor, expectedFile.isNinepatch);
+                                    Dimension actualDimensions = ImageUtil.getImageDimension(imageFile);
+                                    assertEquals("height should match", expectedDimension.getHeight(), actualDimensions.getHeight(), expectedFile.isNinepatch ? 15 : 0.1);
+                                    assertEquals("width should match", expectedDimension.getWidth(), actualDimensions.getWidth(), expectedFile.isNinepatch ? 15 : 0.1);
+                                }
+                            }
+                        }
 
-			System.out.println();
-		} else {
-			assertTrue(dstDir.list() == null || dstDir.list().length == 0);
-		}
-	}
+                        for (ImageCheck expectedFile : expectedFiles) {
+                            assertTrue(expectedFile.targetFile + " file should be generated in path", expectedFile.found);
+                        }
+                        System.out.print("found " + expectedFiles.size() + " files in " + expectedDir.folderName + ", ");
+                    } catch (Exception e) {
+                        fail();
+                        e.printStackTrace();
+                    }
+                });
 
-	private static List<ImageCheck> createExpectedFilesMap(Arguments arguments, File file, List<File> files) throws IOException {
-		List<ImageCheck> expectedFiles = new ArrayList<>();
+            }
 
-		for (File srcImageFile : files) {
-			for (ImageType.ECompression compression : Arguments.getOutCompressionForType(arguments.outputCompressionMode, Arguments.getImageType(srcImageFile))) {
-				expectedFiles.add(new ImageCheck(srcImageFile, new File(file, MiscUtil.getFileNameWithoutExtension(srcImageFile) + "." + compression.extension)));
-			}
-		}
+            for (DensityFolder expectedDir : expectedDirs) {
+                assertTrue(expectedDir.folderName + " should be generated in path", expectedDir.found);
+            }
 
-		return expectedFiles;
-	}
+            System.out.println();
+        } else {
+            assertTrue(dstDir.list() == null || dstDir.list().length == 0);
+        }
+    }
 
-	private static class ImageCheck {
-		public final File srcFile;
-		public final File targetFile;
-		public final boolean isNinepatch;
-		public boolean found;
+    private static List<ImageCheck> createExpectedFilesMap(Arguments arguments, File file, List<File> files) throws IOException {
+        List<ImageCheck> expectedFiles = new ArrayList<>();
 
-		public ImageCheck(File srcFile, File targetFile) throws IOException {
-			this.srcFile = srcFile;
-			this.targetFile = targetFile;
-			this.isNinepatch = AndroidConverter.isNinePatch(srcFile);
-		}
-	}
+        for (File srcImageFile : files) {
+            for (ImageType.ECompression compression : Arguments.getOutCompressionForType(arguments.outputCompressionMode, Arguments.getImageType(srcImageFile))) {
+                expectedFiles.add(new ImageCheck(srcImageFile, new File(file, MiscUtil.getFileNameWithoutExtension(srcImageFile) + "." + compression.extension)));
+            }
+        }
 
-	private static class DensityFolder {
-		public final String folderName;
-		public final float scaleFactor;
-		public boolean found;
+        return expectedFiles;
+    }
 
-		public DensityFolder(String folderName, float scaleFactor) {
-			this.folderName = folderName;
-			this.scaleFactor = scaleFactor;
-		}
-	}
+    private static class ImageCheck {
+        public final File srcFile;
+        public final File targetFile;
+        public final boolean isNinepatch;
+        public boolean found;
+
+        public ImageCheck(File srcFile, File targetFile) throws IOException {
+            this.srcFile = srcFile;
+            this.targetFile = targetFile;
+            this.isNinepatch = AndroidConverter.isNinePatch(srcFile);
+        }
+    }
+
+    private static class DensityFolder {
+        public final String folderName;
+        public final float scaleFactor;
+        public boolean found;
+
+        public DensityFolder(String folderName, float scaleFactor) {
+            this.folderName = folderName;
+            this.scaleFactor = scaleFactor;
+        }
+    }
 
 }

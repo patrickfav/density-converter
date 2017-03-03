@@ -2,7 +2,7 @@ package at.favre.tools.dconvert.arg;
 
 import at.favre.tools.dconvert.converters.scaling.NaiveGraphics2dAlgorithm;
 import at.favre.tools.dconvert.converters.scaling.ProgressiveAlgorithm;
-import at.favre.tools.dconvert.converters.scaling.ResambleAlgorithm;
+import at.favre.tools.dconvert.converters.scaling.ResampleAlgorithm;
 import at.favre.tools.dconvert.converters.scaling.ScaleAlgorithm;
 import com.mortennobel.imagescaling.ResampleFilters;
 
@@ -16,14 +16,14 @@ import java.util.stream.Collectors;
  */
 public enum EScalingAlgorithm {
 
-    LANCZOS1(new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(1)), "lanczos1", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, false),
-    LANCZOS2(new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(2)), "lanczos2", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, true),
-    LANCZOS3(new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(3)), "lanczos3", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, true),
-    LANCZOS4(new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(4)), "lanczos4", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, false),
-    LANCZOS5(new ResambleAlgorithm(new ResambleAlgorithm.LanczosFilter(5)), "lanczos5", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, false),
-    MITCHELL(new ResambleAlgorithm(ResampleFilters.getMitchellFilter()), "mitchell", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, true),
-    BSPLINE(new ResambleAlgorithm(ResampleFilters.getBSplineFilter()), "bspline", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, false),
-    HERMITE(new ResambleAlgorithm(ResampleFilters.getHermiteFilter()), "hermite", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, false),
+    LANCZOS1(new ResampleAlgorithm(new ResampleAlgorithm.LanczosFilter(1)), "lanczos1", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, false),
+    LANCZOS2(new ResampleAlgorithm(new ResampleAlgorithm.LanczosFilter(2)), "lanczos2", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, true),
+    LANCZOS3(new ResampleAlgorithm(new ResampleAlgorithm.LanczosFilter(3)), "lanczos3", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, true),
+    LANCZOS4(new ResampleAlgorithm(new ResampleAlgorithm.LanczosFilter(4)), "lanczos4", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, false),
+    LANCZOS5(new ResampleAlgorithm(new ResampleAlgorithm.LanczosFilter(5)), "lanczos5", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, false),
+    MITCHELL(new ResampleAlgorithm(ResampleFilters.getMitchellFilter()), "mitchell", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, true),
+    BSPLINE(new ResampleAlgorithm(ResampleFilters.getBSplineFilter()), "bspline", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, false),
+    HERMITE(new ResampleAlgorithm(ResampleFilters.getHermiteFilter()), "hermite", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, false),
     NEAREST_NEIGHBOR(new NaiveGraphics2dAlgorithm(RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR), "nearestNeighbor", new Type[]{Type.DOWNSCALING, Type.UPSCALING}, true),
     BILINEAR_PROGRESSIVE(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.NOBEL_BILINEAR), "bilinearProgressive", new Type[]{Type.DOWNSCALING}, true),
     BICUBIC_PROGRESSIVE(new ProgressiveAlgorithm(ProgressiveAlgorithm.Type.NOBEL_BICUBUC), "bicubicProgressive", new Type[]{Type.DOWNSCALING}, true),

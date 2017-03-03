@@ -6,12 +6,12 @@ import com.mortennobel.imagescaling.ResampleOp;
 import java.awt.image.BufferedImage;
 
 /**
- * Wrapper for Resamble Algos from Nobel's Lib
+ * Wrapper for Resample Algos from Nobel's Lib
  */
-public class ResambleAlgorithm implements ScaleAlgorithm {
+public class ResampleAlgorithm implements ScaleAlgorithm {
     private ResampleFilter filter;
 
-    public ResambleAlgorithm(ResampleFilter filter) {
+    public ResampleAlgorithm(ResampleFilter filter) {
         this.filter = filter;
     }
 
@@ -61,7 +61,7 @@ public class ResambleAlgorithm implements ScaleAlgorithm {
 
     @Override
     public String toString() {
-        return "ResambleAlgorithm[" + filter.getName() + ']';
+        return "ResampleAlgorithm[" + filter.getName() + ']';
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ResambleAlgorithm implements ScaleAlgorithm {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ResambleAlgorithm that = (ResambleAlgorithm) o;
+        ResampleAlgorithm that = (ResampleAlgorithm) o;
 
         return filter != null ? filter.equals(that.filter) : that.filter == null;
 

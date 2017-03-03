@@ -18,6 +18,7 @@
 package at.favre.tools.dconvert.util;
 
 import at.favre.tools.dconvert.converters.scaling.ScaleAlgorithm;
+import at.favre.tools.dconvert.converters.scaling.ThumbnailnatorProgressiveAlgorithm;
 import at.favre.tools.dconvert.exceptions.NinePatchException;
 
 import java.awt.*;
@@ -33,6 +34,7 @@ import java.awt.image.BufferedImage;
 public class NinePatchScaler {
 
 	private ScaleAlgorithm algorithm;
+	private ScaleAlgorithm borderScalerAlgorithm = new ThumbnailnatorProgressiveAlgorithm(RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
 	public BufferedImage scale(BufferedImage inputImage, Dimension dimensions, ScaleAlgorithm algorithm) throws NinePatchException {
 		this.algorithm = algorithm;
@@ -121,7 +123,7 @@ public class NinePatchScaler {
 	private BufferedImage resizeBorder(final BufferedImage border, int targetWidth, int targetHeight) {
 		if (targetWidth > border.getWidth()
 				|| targetHeight > border.getHeight()) {
-			BufferedImage endImage = algorithm.scale(border, targetWidth, targetHeight);
+			BufferedImage endImage = borderScalerAlgorithm.scale(border, targetWidth, targetHeight);
 			this.enforceBorderColors(endImage);
 			return endImage;
 		}
