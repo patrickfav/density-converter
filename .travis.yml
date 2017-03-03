@@ -27,9 +27,9 @@ deploy:
       secure: "4yszsIyM8p44pUCuuj6ZAbBgYFBkCdODaO6jUMJFRP/rBFsEa1QvqYJgrhXtmr/fZqDpnV8MLR93747eLShAiAgolcGePKAN6bH6J5fCDCp4+vOTnOsAdUFbBAzXnNybCZvlsceyLYHJZijfBjAw3U4bBZO99OGRx1EGlOY3X01Ahug2RS2O+viYeTGCHvcv83ULartGlsRSACDx27iw62PZ5mnEL1nTUd48ULbDO2D2mHhWakDJo0D0WIzZeTDVFgOR97ZnX0hWT8thAwhXt7TZBmrrAYrJVuBIA3pg2Gk0r6o2PElnp2pcnY8yzBZOMhtgqtRdUIzNVmrhQCgZeD7o9OVqmFYLrwlotbBhoMj+Ol956QWHTvrvwcJqiMLlb5MhHBTwp0gu8xNS3YVarNaBGd9w9GDE+zZ6p2USMTAMNAEeo6drKZLcFLpDxDY19r16Co/tThADOrXdoqGDDvJgDZVAwAM1dF4I+9GbIhDgdAsBJLDA5rE7d0eiEpGPxGy22P7jbxpH8IQUc/GSWfzuU+3e7V0TYnq4rrdfctNjt655KMfXY++X+6xhvY5EyThKaNz31q/4Gb4Y7yrrxn3gcjBXkBNoDD0pxSELfRtnzpg4M7RZyf3E//yZVcrEsxx5M1aPNMvHcQzOFDhWJeZ3peWMXY99HHVuMfdp1Qw="
     file_glob: true
     file:
-      - "target/dconvert-*.jar"
-      - "target/dconvert.exe"
-      - "target/dconvert-gui.exe"
+      - 'target/dconvert-*.jar'
+      - 'target/dconvert.exe'
+      - 'target/dconvert-gui.exe'
     skip_cleanup: true
     on:
       branch: master
