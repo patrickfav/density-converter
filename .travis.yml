@@ -29,6 +29,7 @@ deploy:
     file:
       - "target/dconvert-*.jar"
       - "target/dconvert.exe"
+      - "target/dconvert-gui.exe"
     skip_cleanup: true
     on:
       branch: master

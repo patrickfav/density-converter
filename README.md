@@ -27,7 +27,6 @@ will start the UI (_or double click the jar file_).
 _To use the post processor ([pngcrush](http://pmt.sourceforge.net/pngcrush/), [mozJpeg](http://mozjpeg.codelove.de/binaries.html) and [webp](https://developers.google.com/speed/webp/download)) the respective cmd tool must be set in PATH._
 
 
-
 ## Download
 
 **[Grab jar from latest release.](https://github.com/patrickfav/density-converter/releases/latest)**
@@ -50,7 +49,6 @@ provides the same features as the command line tool so see the help page of comm
 will save its settings persistently making it easier for power users.
 
 ![gui-screenshot](src/main/resources/img/screenshot1.jpg)
-
 
 ## Command Line
 
@@ -128,6 +126,11 @@ Full list of arguments:
                                           memory). Possible values are 1-8. Default is 4
     -v,--version                          Gets current version
     -verbose                              If set will log to console more verbose
+
+## Using the .exe Launcher
+
+[Launch4J](http://launch4j.sourceforge.net) is used to create Windows executables. Two types are available: `dconvert.exe` and `dconvert-gui.exe`. The former is for command line, the later
+as a simple GUI starter. Launch4J will automatically download the required JRE.
 
 # Details
 
