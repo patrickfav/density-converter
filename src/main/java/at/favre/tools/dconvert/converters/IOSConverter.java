@@ -79,7 +79,7 @@ public class IOSConverter extends APlatformConverter<PostfixDescriptor> {
 	@Override
 	public void onPreExecute(File dstFolder, String targetFileName, List<PostfixDescriptor> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception {
 		if (!arguments.dryRun && arguments.iosCreateImagesetFolders) {
-			writeContentJson(dstFolder, targetFileName, densityDescriptions, Arguments.getOutCompressionForType(arguments.outputCompressionMode, imageType));
+			writeContentsJson(dstFolder, targetFileName, densityDescriptions, Arguments.getOutCompressionForType(arguments.outputCompressionMode, imageType));
 		}
 	}
 
@@ -88,8 +88,8 @@ public class IOSConverter extends APlatformConverter<PostfixDescriptor> {
 
 	}
 
-	private void writeContentJson(File dstFolder, String targetFileName, List<PostfixDescriptor> iosDensityDescriptions, List<ImageType.ECompression> compressions) throws IOException {
-		File contentJson = new File(dstFolder, "Content.json");
+	private void writeContentsJson(File dstFolder, String targetFileName, List<PostfixDescriptor> iosDensityDescriptions, List<ImageType.ECompression> compressions) throws IOException {
+		File contentJson = new File(dstFolder, "Contents.json");
 
 		if (contentJson.exists()) {
 			contentJson.delete();
@@ -97,18 +97,18 @@ public class IOSConverter extends APlatformConverter<PostfixDescriptor> {
 		contentJson.createNewFile();
 
 		try (PrintWriter out = new PrintWriter(contentJson)) {
-			out.println(createContentJson(targetFileName, iosDensityDescriptions, compressions));
+			out.println(createContentsJson(targetFileName, iosDensityDescriptions, compressions));
 		}
 	}
 
-	private String createContentJson(String targetFileName, List<PostfixDescriptor> iosDensityDescriptions, List<ImageType.ECompression> compressions) {
+	private String createContentsJson(String targetFileName, List<PostfixDescriptor> iosDensityDescriptions, List<ImageType.ECompression> compressions) {
 		StringBuilder sb = new StringBuilder("{\n\t\"images\": [");
 		for (ImageType.ECompression compression : compressions) {
 			for (PostfixDescriptor densityDescription : iosDensityDescriptions) {
 				sb.append("\n\t\t{\n" +
 						"\t\t\t\"filename\": \"" + targetFileName + densityDescription.postFix + "." + compression.name().toLowerCase() + "\",\n" +
 						"\t\t\t\"idiom\": \"universal\",\n" +
-						"\t\t\t\"scrScale\": \"" + densityDescription.name + "\"\n" +
+						"\t\t\t\"scale\": \"" + densityDescription.name + "\"\n" +
 						"\t\t},");
 			}
 		}
