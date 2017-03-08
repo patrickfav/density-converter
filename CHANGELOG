@@ -1,4 +1,6 @@
 # Releases
+## v1.0.0-alpha4
+* fixes ios content json format
 
 ## v1.0.0-alpha3
 * fixes bug in ninepatch where lanczos3 would not scale due to min dimension restrictions

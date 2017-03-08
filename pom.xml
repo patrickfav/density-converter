@@ -6,13 +6,14 @@
 
     <groupId>at.favre.tools</groupId>
     <artifactId>dconvert</artifactId>
-    <version>1.0.0-alpha3</version>
+    <version>${raw.version}-alpha4</version>
 
     <prerequisites>
         <maven>3.1.0</maven>
     </prerequisites>
 
     <properties>
+        <raw.version>1.0.0</raw.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <imageiodep.version>3.3.1</imageiodep.version>
@@ -164,7 +165,7 @@
                                 </fileDescription>
                                 <copyright>Patrick Favre-Bulle, 2016</copyright>
                                 <productVersion>1.0.0.0</productVersion>
-                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <txtProductVersion>${raw.version}</txtProductVersion>
                                 <productName>Multi Platform Density Converter</productName>
                                 <internalName>${project.artifactId}</internalName>
                                 <originalFilename>dconvert-gui.exe</originalFilename>
@@ -203,7 +204,7 @@
                                 </fileDescription>
                                 <copyright>Patrick Favre-Bulle, 2016</copyright>
                                 <productVersion>1.0.0.0</productVersion>
-                                <txtProductVersion>${project.version}</txtProductVersion>
+                                <txtProductVersion>${raw.version}</txtProductVersion>
                                 <productName>Multi Platform Density Converter</productName>
                                 <internalName>${project.artifactId}</internalName>
                                 <originalFilename>dconvert.exe</originalFilename>
