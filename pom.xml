@@ -120,8 +120,42 @@
                 <configuration>
                     <!-- Travis build workaround -->
                     <argLine>${argLine} -Xms1024m -Xmx2048m</argLine>
-                    <skipTests>false</skipTests>
+                    <skipTests>true</skipTests>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.0.11</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>proguard</goal>
+                        </goals>
+                        <configuration>
+                            <includeDependency>false</includeDependency>
+                            <attachArtifactClassifier>proguard</attachArtifactClassifier>
+                            <attach>true</attach>
+                            <proguardVersion>5.3.3</proguardVersion>
+                            <obfuscate>true</obfuscate>
+                            <options>
+                                <option>-include ${project.basedir}/proguard-rules.pro</option>
+                            </options>
+                            <libs>
+                                <lib>${java.home}/lib/rt.jar</lib>
+                            </libs>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sf.proguard</groupId>
+                        <artifactId>proguard-base</artifactId>
+                        <version>5.3.3</version>
+                        <scope>runtime</scope>
+                    </dependency>
+                </dependencies>
             </plugin>
             <plugin>
                 <groupId>com.akathist.maven.plugins.launch4j</groupId>
@@ -138,7 +172,7 @@
                             <headerType>gui</headerType>
                             <outfile>target/dconvert-gui.exe</outfile>
                             <!--<icon>icon.ico</icon>-->
-                            <jar>target/${project.artifactId}-${project.version}.jar</jar>
+                            <jar>target/${project.artifactId}-${project.version}-proguard.jar</jar>
                             <errTitle>dconvert</errTitle>
                             <icon>misc/icon.ico</icon>
                             <classPath>
@@ -183,7 +217,7 @@
                             <headerType>console</headerType>
                             <outfile>target/dconvert.exe</outfile>
                             <!--<icon>icon.ico</icon>-->
-                            <jar>target/${project.artifactId}-${project.version}.jar</jar>
+                            <jar>target/${project.artifactId}-${project.version}-proguard.jar</jar>
                             <errTitle>dconvert</errTitle>
                             <icon>misc/icon_terminal.ico</icon>
                             <classPath>
