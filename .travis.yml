@@ -35,6 +35,10 @@ deploy:
       branch: master
       tags: true
 
+cache:
+  directories:
+    - $HOME/.m2
+
 notifications:
   slack:
     secure: "d5t2dP5H63qfY0umICPN4Tghr/TJIvni2i6NGEoNnq7xDqg24VV9+KvTpZ5b5W2XvLWIREwhZX0z2A2sct264Esc+VU6VGeuSebRu05AFVSL2w9hHQzh/PciicCAsIhVVf5nD0io3U5+/pQtOvMyEoBFlWS9EiRl7Lo5Gj1Iu48747IS7zF56ieI0iBFCSeT7Xb9L0+Hk7sjSKKeINDNz1UpqXFjwjDUYrwmA55ZCJPWNlDTzKdtjal9OE38SRy78UYe0R1UfEdEunaWrra2OTjpBT4d7Wc6t1ylcLGa/v6o8v59MA7Xy/PzXSIfHoJnqkMtZpC+yNEMvDmXPdaWTi16g4dV1+PvNFgZZqDQW9AuROzuoCTxDWjIzrPUaSfaG58cHTwt4hVHcOoJCJpfTMrX8QCEdQl6m/fIU+OXetlOy89a7A+oUl8gsNpArW7ML4n5qaxa0mTfayOruTMPBejO6gZLeOCyt4Nx8wmqdyVNsyVkr24P1FOj1fmR8pMu9IEc3uzu5fAZEPb4kR1HmydJTWgeCUhf+GKCcAkK+a/O8MsP66MaGbM9es3xr2hWFA2iTZokiXfDrdKMymjlEXQx9NEviLWe/oqyupG6O3Ee2oo1I9F2uFyeLhS5RQk6WhhXmeBR3ZX9PUcqiAFaU56XFHEuGOXXam3cEj2zbok="
