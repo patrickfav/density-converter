@@ -74,14 +74,13 @@ public class AndroidConverterTest extends AConverterTest {
 
         List<DensityFolder> expectedDirs = new ArrayList<>();
 
-
-        expectedDirs.addAll(AndroidConverter.getAndroidDensityDescriptors(arguments).stream().map(
-                androidDensityDescriptor -> new DensityFolder(androidDensityDescriptor.folderName, androidDensityDescriptor.scale)).collect(Collectors.toList()));
+        expectedDirs.addAll(AndroidConverter.getAndroidDensityDescriptors(arguments)
+                .stream()
+                .map(androidDensityDescriptor -> new DensityFolder(androidDensityDescriptor.folderName, androidDensityDescriptor.scale)).collect(Collectors.toList()));
 
         assertFalse("expected dirs should not be empty", expectedDirs.isEmpty());
         if (!files.isEmpty()) {
             assertFalse("output dir should not be empty", dstDir.list() == null && dstDir.list().length == 0);
-
 
             System.out.println("Android-convert " + files);
 

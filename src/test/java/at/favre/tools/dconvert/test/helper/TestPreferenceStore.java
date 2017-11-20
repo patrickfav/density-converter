@@ -9,15 +9,15 @@ import org.junit.Ignore;
  */
 @Ignore("not a test class")
 public class TestPreferenceStore implements IPreferenceStore {
-	private Arguments arg;
+    private Arguments arg;
 
-	@Override
-	public void save(Arguments arg) {
-		this.arg = arg;
-	}
+    @Override
+    public void save(Arguments arg) {
+        this.arg = arg;
+    }
 
-	@Override
-	public Arguments get() {
-		return arg;
-	}
+    @Override
+    public Arguments get() {
+        return arg;
+    }
 }

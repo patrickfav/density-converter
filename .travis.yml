@@ -15,8 +15,9 @@ before_script:
   - sudo apt-get install libc6:i386 libstdc++6:i386
 
 script:
-  - mvn install -X
-  - mvn clean package
+  - mvn clean install -X
+  - mvn checkstyle:check
+  - mvn package
 
 after_success:
   - mvn test jacoco:report coveralls:report
@@ -34,6 +35,10 @@ deploy:
     on:
       branch: master
       tags: true
+
+cache:
+  directories:
+    - $HOME/.m2
 
 notifications:
   slack:

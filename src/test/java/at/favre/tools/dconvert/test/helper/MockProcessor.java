@@ -12,33 +12,33 @@ import java.util.Collections;
  */
 @Ignore
 public class MockProcessor implements IPostProcessor {
-	private long sleep = 66;
-	private Exception exception = null;
+    private long sleep = 66;
+    private Exception exception = null;
 
-	public MockProcessor() {
-	}
+    public MockProcessor() {
+    }
 
-	public MockProcessor(long sleep) {
-		this.sleep = sleep;
-	}
+    public MockProcessor(long sleep) {
+        this.sleep = sleep;
+    }
 
-	public MockProcessor(Exception exception) {
-		this.exception = exception;
-	}
+    public MockProcessor(Exception exception) {
+        this.exception = exception;
+    }
 
-	@Override
-	public Result process(File rawFile, boolean keepOriginal) {
-		try {
-			Thread.sleep(sleep);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+    @Override
+    public Result process(File rawFile, boolean keepOriginal) {
+        try {
+            Thread.sleep(sleep);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-		return new Result("test done", exception, Collections.singletonList(rawFile));
-	}
+        return new Result("test done", exception, Collections.singletonList(rawFile));
+    }
 
-	@Override
-	public boolean isSupported() {
-		return true;
-	}
+    @Override
+    public boolean isSupported() {
+        return true;
+    }
 }

@@ -1,3 +1,19 @@
+/*
+ *  Copyright 2016 Patrick Favre-Bulle
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package at.favre.tools.dconvert.converters.scaling;
 
 import net.coobird.thumbnailator.makers.FixedSizeThumbnailMaker;
@@ -38,8 +54,7 @@ public class ThumbnailnatorProgressiveAlgorithm implements ScaleAlgorithm {
         private void checkArg(Object interpolationValue) {
             if (interpolationValue != RenderingHints.VALUE_INTERPOLATION_BICUBIC &&
                     interpolationValue != RenderingHints.VALUE_INTERPOLATION_BILINEAR &&
-                    interpolationValue != RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
-                    )
+                    interpolationValue != RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
                 throw new IllegalArgumentException("wrong argument passed muts be one of RenderingHints.VALUE_INTERPOLATION_BICUBIC, " +
                         "RenderingHints.VALUE_INTERPOLATION_BILINEAR or RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR");
         }
@@ -72,12 +87,13 @@ public class ThumbnailnatorProgressiveAlgorithm implements ScaleAlgorithm {
             g.setRenderingHints(RENDERING_HINTS);
             g.setComposite(AlphaComposite.Src);
 
-		/*
-         * Determine the size of the first resize step should be.
-		 * 1) Beginning from the target size
-		 * 2) Increase each dimension by 2
-		 * 3) Until reaching the original size
-		 */
+            /*
+             * Determine the size of the first resize step should be.
+             * 1) Beginning from the target size
+             * 2) Increase each dimension by 2
+             * 3) Until reaching the original size
+             */
+
             int startWidth = targetWidth;
             int startHeight = targetHeight;
 
