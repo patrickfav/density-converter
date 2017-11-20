@@ -46,7 +46,6 @@ public abstract class APostProcessor implements IPostProcessor {
 
             lockMap.get(rawFile).lock();
 
-
             return synchronizedProcess(rawFile, keepOriginal);
         } finally {
             lockMap.get(rawFile).unlock();

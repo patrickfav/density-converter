@@ -35,8 +35,11 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Util for post processors
  */
-public class PostProcessorUtil {
+public final class PostProcessorUtil {
     private static ReentrantLock lock = new ReentrantLock();
+
+    private PostProcessorUtil() {
+    }
 
     public static Result runImageOptimizer(File rawFile, ImageType processedType, String[] args, boolean keepOriginal) throws IOException {
         return runImageOptimizer(rawFile, processedType, args, keepOriginal, MiscUtil.getFileExtension(rawFile));
@@ -147,5 +150,4 @@ public class PostProcessorUtil {
         }
         return true;
     }
-
 }
