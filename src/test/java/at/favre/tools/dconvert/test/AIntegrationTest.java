@@ -12,7 +12,7 @@ import java.util.concurrent.CountDownLatch;
  * Basics of creating integration style tests (real input, real output)
  */
 public class AIntegrationTest {
-    private static final long WAIT_SEC = 7;
+    static final long WAIT_SEC = 7;
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
