@@ -29,18 +29,18 @@ import java.util.List;
  * Unit test of the {@link at.favre.tools.dconvert.converters.IPlatformConverter} for web
  */
 public class WebConverterTest extends AConverterTest {
-	@Override
-	protected EPlatform getType() {
-		return EPlatform.WEB;
-	}
+    @Override
+    protected EPlatform getType() {
+        return EPlatform.WEB;
+    }
 
-	@Override
-	protected void checkOutDir(File dstDir, Arguments arguments, List<File> files, EPlatform type) throws IOException {
-		checkOutDirWeb(dstDir, arguments, files);
-	}
+    @Override
+    protected void checkOutDir(File dstDir, Arguments arguments, List<File> files, EPlatform type) throws IOException {
+        checkOutDirWeb(dstDir, arguments, files);
+    }
 
-	public static void checkOutDirWeb(File dstDir, Arguments arguments, List<File> files) throws IOException {
-		System.out.println("web-convert " + files);
-		checkOutDirPostfixDescr(new File(dstDir, WebConverter.ROOT_FOLDER), arguments, files, WebConverter.getWebDescriptors());
-	}
+    public static void checkOutDirWeb(File dstDir, Arguments arguments, List<File> files) throws IOException {
+        System.out.println("web-convert " + files);
+        checkOutDirPostfixDescr(new File(dstDir, WebConverter.ROOT_FOLDER), arguments, files, WebConverter.getWebDescriptors());
+    }
 }

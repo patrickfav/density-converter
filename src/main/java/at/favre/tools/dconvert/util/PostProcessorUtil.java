@@ -19,117 +19,120 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Util for post processors
  */
-public class PostProcessorUtil {
-	private static ReentrantLock lock = new ReentrantLock();
+public final class PostProcessorUtil {
+    private static ReentrantLock lock = new ReentrantLock();
 
-	public static Result runImageOptimizer(File rawFile, ImageType processedType, String[] args, boolean keepOriginal) throws IOException {
-		return runImageOptimizer(rawFile, processedType, args, keepOriginal, MiscUtil.getFileExtension(rawFile));
-	}
+    private PostProcessorUtil() {
+    }
 
-	public static Result runImageOptimizer(File rawFile, ImageType processedType, String[] args, boolean keepOriginal, String outExtension) throws IOException {
-		if (Arguments.getImageType(rawFile) == processedType && rawFile.exists() && rawFile.isFile()) {
-			String id = UUID.randomUUID().toString().substring(0, 8);
+    public static Result runImageOptimizer(File rawFile, ImageType processedType, String[] args, boolean keepOriginal) throws IOException {
+        return runImageOptimizer(rawFile, processedType, args, keepOriginal, MiscUtil.getFileExtension(rawFile));
+    }
 
-			File outFile = getFileWithPostFix(rawFile, "_optimized_" + id, outExtension);
-			File copy = getFileWithPostFix(rawFile, "_copy_" + id, outExtension);
+    public static Result runImageOptimizer(File rawFile, ImageType processedType, String[] args, boolean keepOriginal, String outExtension) throws IOException {
+        if (Arguments.getImageType(rawFile) == processedType && rawFile.exists() && rawFile.isFile()) {
+            String id = UUID.randomUUID().toString().substring(0, 8);
 
-			Files.copy(rawFile.toPath(), copy.toPath(), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
+            File outFile = getFileWithPostFix(rawFile, "_optimized_" + id, outExtension);
+            File copy = getFileWithPostFix(rawFile, "_copy_" + id, outExtension);
 
-			for (int i = 0; i < args.length; i++) {
-				if (args[i].equals("%%outFilePath%%")) {
-					args[i] = "\"" + outFile.getAbsolutePath() + "\"";
-				}
+            Files.copy(rawFile.toPath(), copy.toPath(), StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING);
 
-				if (args[i].equals("%%sourceFilePath%%")) {
-					args[i] = "\"" + copy.getAbsolutePath() + "\"";
-				}
-			}
+            for (int i = 0; i < args.length; i++) {
+                if (args[i].equals("%%outFilePath%%")) {
+                    args[i] = "\"" + outFile.getAbsolutePath() + "\"";
+                }
 
-			Result result = runCmd(args);
+                if (args[i].equals("%%sourceFilePath%%")) {
+                    args[i] = "\"" + copy.getAbsolutePath() + "\"";
+                }
+            }
 
-			copy.delete();
+            Result result = runCmd(args);
 
-			boolean r1 = true, r2 = true, r3 = true;
-			if (outFile.exists() && outFile.isFile()) {
-				if (keepOriginal) {
-					File origFile = getFileWithPostFix(rawFile, IPostProcessor.ORIG_POSTFIX, MiscUtil.getFileExtension(rawFile));
+            copy.delete();
 
-					if (origFile.exists()) {
-						origFile.delete();
-					}
+            boolean r1 = true, r2 = true, r3 = true;
+            if (outFile.exists() && outFile.isFile()) {
+                if (keepOriginal) {
+                    File origFile = getFileWithPostFix(rawFile, IPostProcessor.ORIG_POSTFIX, MiscUtil.getFileExtension(rawFile));
 
-					r1 = rawFile.renameTo(origFile);
+                    if (origFile.exists()) {
+                        origFile.delete();
+                    }
 
-					File outFileNew = getFileWithPostFix(rawFile, "", outExtension);
+                    r1 = rawFile.renameTo(origFile);
 
-					if (outFileNew.exists()) {
-						outFileNew.delete();
-					}
+                    File outFileNew = getFileWithPostFix(rawFile, "", outExtension);
 
-					r2 = outFile.renameTo(outFileNew);
-				} else {
-					if (rawFile.delete()) {
-						File outFileNew = getFileWithPostFix(rawFile, "", outExtension);
+                    if (outFileNew.exists()) {
+                        outFileNew.delete();
+                    }
 
-						if (outFileNew.exists()) {
-							outFileNew.delete();
-						}
+                    r2 = outFile.renameTo(outFileNew);
+                } else {
+                    if (rawFile.delete()) {
+                        File outFileNew = getFileWithPostFix(rawFile, "", outExtension);
 
-						r3 = outFile.renameTo(outFileNew);
-					}
-				}
-			}
-			String log = result.log;
-			if (!r1 || !r2 || !r3) {
-				log += "Could not rename all files correctly\n";
-			}
+                        if (outFileNew.exists()) {
+                            outFileNew.delete();
+                        }
 
-			return new Result(log, result.exception, Collections.singletonList(rawFile));
-		}
-		return null;
-	}
+                        r3 = outFile.renameTo(outFileNew);
+                    }
+                }
+            }
+            String log = result.log;
+            if (!r1 || !r2 || !r3) {
+                log += "Could not rename all files correctly\n";
+            }
 
-	private static File getFileWithPostFix(File src, String postfix, String extension) {
-		return new File(src.getParentFile(), MiscUtil.getFileNameWithoutExtension(src) + postfix + "." + extension);
-	}
+            return new Result(log, result.exception, Collections.singletonList(rawFile));
+        }
+        return null;
+    }
 
-	private static Result runCmd(String[] cmdArray) {
-		StringBuilder logStringBuilder = new StringBuilder();
-		Exception exception = null;
-		try {
-			logStringBuilder.append("execute: ").append(Arrays.toString(cmdArray)).append("\n");
-			ProcessBuilder pb = new ProcessBuilder(cmdArray);
-			pb.redirectErrorStream(true);
-			Process process = pb.start();
-			try (BufferedReader inStreamReader = new BufferedReader(
-					new InputStreamReader(process.getInputStream()))) {
-				String s;
-				while ((s = inStreamReader.readLine()) != null) {
-					if (!s.isEmpty()) logStringBuilder.append("\t").append(s).append("\n");
-				}
-			}
-			process.waitFor();
-		} catch (Exception e) {
-			exception = e;
-			logStringBuilder.append("error: could not run command - ").append(Arrays.toString(cmdArray)).append(" - ").append(e.getMessage()).append(" - is it set in PATH?\n");
-		}
-		return new Result(logStringBuilder.toString(), exception, Collections.emptyList());
-	}
+    private static File getFileWithPostFix(File src, String postfix, String extension) {
+        return new File(src.getParentFile(), MiscUtil.getFileNameWithoutExtension(src) + postfix + "." + extension);
+    }
 
-	public static boolean canRunCmd(String[] cmdArray) {
-		try {
-			ProcessBuilder pb = new ProcessBuilder(cmdArray);
-			pb.redirectErrorStream(true);
-			Process process = pb.start();
-			try (BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-				while ((inStreamReader.readLine()) != null) {
-				}
-			}
-			process.waitFor();
-		} catch (Exception e) {
-			return false;
-		}
-		return true;
-	}
+    private static Result runCmd(String[] cmdArray) {
+        StringBuilder logStringBuilder = new StringBuilder();
+        Exception exception = null;
+        try {
+            logStringBuilder.append("execute: ").append(Arrays.toString(cmdArray)).append("\n");
+            ProcessBuilder pb = new ProcessBuilder(cmdArray);
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            try (BufferedReader inStreamReader = new BufferedReader(
+                    new InputStreamReader(process.getInputStream()))) {
+                String s;
+                while ((s = inStreamReader.readLine()) != null) {
+                    if (!s.isEmpty()) logStringBuilder.append("\t").append(s).append("\n");
+                }
+            }
+            process.waitFor();
+        } catch (Exception e) {
+            exception = e;
+            logStringBuilder.append("error: could not run command - ").append(Arrays.toString(cmdArray)).append(" - ").append(e.getMessage()).append(" - is it set in PATH?\n");
+        }
+        return new Result(logStringBuilder.toString(), exception, Collections.emptyList());
+    }
+
+    public static boolean canRunCmd(String[] cmdArray) {
+        try {
+            ProcessBuilder pb = new ProcessBuilder(cmdArray);
+            pb.redirectErrorStream(true);
+            Process process = pb.start();
+            try (BufferedReader inStreamReader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                while ((inStreamReader.readLine()) != null) {
+                }
+            }
+            process.waitFor();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 
 }

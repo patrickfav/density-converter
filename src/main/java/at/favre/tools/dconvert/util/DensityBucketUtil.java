@@ -15,7 +15,6 @@
  *
  */
 
-
 package at.favre.tools.dconvert.util;
 
 import at.favre.tools.dconvert.arg.Arguments;
@@ -31,8 +30,11 @@ import java.util.TreeMap;
 /**
  * Helps assembling needed densities to convert to
  */
-public class DensityBucketUtil {
-    public static final float SVG_UPSCALE_FACTOR = 4;
+public final class DensityBucketUtil {
+    private static final float SVG_UPSCALE_FACTOR = 4;
+
+    private DensityBucketUtil() {
+    }
 
     public static <T extends DensityDescriptor> Map<T, Dimension> getDensityBuckets(java.util.List<T> densities, Dimension srcDimension, Arguments args, float scale, boolean isNinePatch) throws IOException {
 
@@ -41,13 +43,13 @@ public class DensityBucketUtil {
         }
 
         switch (args.scaleMode) {
-            default:
-            case FACTOR:
-                return getDensityBucketsWithFactorScale(densities, srcDimension, args, scale);
             case DP_WIDTH:
                 return getDensityBucketsWithDpScale(densities, srcDimension, args, scale);
             case DP_HEIGHT:
                 return getDensityBucketsHeightDpScale(densities, srcDimension, args, scale);
+            default:
+            case FACTOR:
+                return getDensityBucketsWithFactorScale(densities, srcDimension, args, scale);
         }
     }
 

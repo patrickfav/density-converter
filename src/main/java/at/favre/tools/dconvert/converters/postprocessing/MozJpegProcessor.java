@@ -12,18 +12,18 @@ import java.util.Collections;
  * https://github.com/mozilla/mozjpeg
  */
 public class MozJpegProcessor extends APostProcessor {
-	@Override
-	public Result synchronizedProcess(File rawFile, boolean keepOriginal) {
-		try {
-			String[] args = new String[]{"jpegtran", "-outfile", "%%outFilePath%%", "-optimise", "-progressive", "-copy", "none", "%%sourceFilePath%%"};
-			return PostProcessorUtil.runImageOptimizer(rawFile, ImageType.JPG, args, keepOriginal);
-		} catch (Exception e) {
-			return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
-		}
-	}
+    @Override
+    public Result synchronizedProcess(File rawFile, boolean keepOriginal) {
+        try {
+            String[] args = new String[]{"jpegtran", "-outfile", "%%outFilePath%%", "-optimise", "-progressive", "-copy", "none", "%%sourceFilePath%%"};
+            return PostProcessorUtil.runImageOptimizer(rawFile, ImageType.JPG, args, keepOriginal);
+        } catch (Exception e) {
+            return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
+        }
+    }
 
-	@Override
-	public boolean isSupported() {
-		return PostProcessorUtil.canRunCmd(new String[]{"jpegtran", "-h"});
-	}
+    @Override
+    public boolean isSupported() {
+        return PostProcessorUtil.canRunCmd(new String[]{"jpegtran", "-h"});
+    }
 }

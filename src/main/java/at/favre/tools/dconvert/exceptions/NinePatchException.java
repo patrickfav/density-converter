@@ -21,14 +21,14 @@ package at.favre.tools.dconvert.exceptions;
  * Exception in nine patch routine
  */
 public class NinePatchException extends Exception {
-	public NinePatchException() {
-	}
+    public NinePatchException() {
+    }
 
-	public NinePatchException(String message) {
-		super(message);
-	}
+    public NinePatchException(String message) {
+        super(message);
+    }
 
-	public NinePatchException(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public NinePatchException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

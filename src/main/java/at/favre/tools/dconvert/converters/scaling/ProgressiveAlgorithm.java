@@ -26,7 +26,7 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
         /**
          * Combination of bilinear with lanczos3, uses bilinear if target is at least half of src
          */
-        PROGRESSIVE_BILINEAR_AND_LANCZOS2, PROGRESSIVE_BILINEAR_AND_LANCZOS3;
+        PROGRESSIVE_BILINEAR_AND_LANCZOS2, PROGRESSIVE_BILINEAR_AND_LANCZOS3
     }
 
     public Type type;
@@ -74,7 +74,7 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
         }
     }
 
-    private class MultiStepLanczos3RescaleOp extends AdvancedResizeOp {
+    private final class MultiStepLanczos3RescaleOp extends AdvancedResizeOp {
         private MultiStepLanczos3RescaleOp(int dstWidth, int dstHeight) {
             super(DimensionConstrain.createAbsolutionDimension(dstWidth, dstHeight));
         }

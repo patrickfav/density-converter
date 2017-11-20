@@ -38,8 +38,7 @@ public class ThumbnailnatorProgressiveAlgorithm implements ScaleAlgorithm {
         private void checkArg(Object interpolationValue) {
             if (interpolationValue != RenderingHints.VALUE_INTERPOLATION_BICUBIC &&
                     interpolationValue != RenderingHints.VALUE_INTERPOLATION_BILINEAR &&
-                    interpolationValue != RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR
-                    )
+                    interpolationValue != RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR)
                 throw new IllegalArgumentException("wrong argument passed muts be one of RenderingHints.VALUE_INTERPOLATION_BICUBIC, " +
                         "RenderingHints.VALUE_INTERPOLATION_BILINEAR or RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR");
         }
@@ -72,12 +71,13 @@ public class ThumbnailnatorProgressiveAlgorithm implements ScaleAlgorithm {
             g.setRenderingHints(RENDERING_HINTS);
             g.setComposite(AlphaComposite.Src);
 
-		/*
-         * Determine the size of the first resize step should be.
-		 * 1) Beginning from the target size
-		 * 2) Increase each dimension by 2
-		 * 3) Until reaching the original size
-		 */
+            /*
+             * Determine the size of the first resize step should be.
+             * 1) Beginning from the target size
+             * 2) Increase each dimension by 2
+             * 3) Until reaching the original size
+             */
+
             int startWidth = targetWidth;
             int startHeight = targetHeight;
 

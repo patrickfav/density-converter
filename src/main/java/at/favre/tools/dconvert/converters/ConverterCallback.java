@@ -25,8 +25,8 @@ import java.util.List;
  */
 public interface ConverterCallback {
 
-	void success(String log, List<File> compressedImages);
+    void success(String log, List<File> compressedImages);
 
-	void failure(Exception e);
+    void failure(Exception e);
 
 }

@@ -37,77 +37,76 @@ import java.util.List;
  */
 public abstract class APlatformConverter<T extends DensityDescriptor> implements IPlatformConverter {
 
-	@Override
-	public Result convert(File srcImage, Arguments args) {
-		try {
-			File destinationFolder = args.dst;
-			LoadedImage imageData = ImageUtil.loadImage(srcImage);
-			String targetImageFileName = MiscUtil.getFileNameWithoutExtension(srcImage);
-			ImageType imageType = Arguments.getImageType(srcImage);
-			boolean isNinePatch = AndroidConverter.isNinePatch(srcImage) && getClass() == AndroidConverter.class;
+    @Override
+    public Result convert(File srcImage, Arguments args) {
+        try {
+            File destinationFolder = args.dst;
+            LoadedImage imageData = ImageUtil.loadImage(srcImage);
+            String targetImageFileName = MiscUtil.getFileNameWithoutExtension(srcImage);
+            ImageType imageType = Arguments.getImageType(srcImage);
+            boolean isNinePatch = AndroidConverter.isNinePatch(srcImage) && getClass() == AndroidConverter.class;
 
-			StringBuilder log = new StringBuilder();
-			log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ")
-					.append(imageData.getImage().getWidth()).append("x").append(imageData.getImage().getHeight()).append(" (").append(args.scale).append(args.scaleMode == EScaleMode.FACTOR ? "x" : "dp").append(")\n");
+            StringBuilder log = new StringBuilder();
+            log.append(getConverterName()).append(": ").append(targetImageFileName).append(" ")
+                    .append(imageData.getImage().getWidth()).append("x").append(imageData.getImage().getHeight()).append(" (").append(args.scale).append(args.scaleMode == EScaleMode.FACTOR ? "x" : "dp").append(")\n");
 
-			Map<T, Dimension> densityMap = DensityBucketUtil.getDensityBuckets(usedOutputDensities(args), new Dimension(imageData.getImage().getWidth(), imageData.getImage().getHeight()), args, args.scale, isNinePatch);
+            Map<T, Dimension> densityMap = DensityBucketUtil.getDensityBuckets(usedOutputDensities(args), new Dimension(imageData.getImage().getWidth(), imageData.getImage().getHeight()), args, args.scale, isNinePatch);
 
-			File mainSubFolder = createMainSubFolder(destinationFolder, targetImageFileName, args);
+            File mainSubFolder = createMainSubFolder(destinationFolder, targetImageFileName, args);
 
-			onPreExecute(mainSubFolder, targetImageFileName, usedOutputDensities(args), imageType, args);
+            onPreExecute(mainSubFolder, targetImageFileName, usedOutputDensities(args), imageType, args);
 
-			List<File> allResultingFiles = new ArrayList<>();
+            List<File> allResultingFiles = new ArrayList<>();
 
-			for (Map.Entry<T, Dimension> entry : densityMap.entrySet()) {
-				File dstFolder = createFolderForOutputFile(mainSubFolder, entry.getKey(), entry.getValue(), targetImageFileName, args);
+            for (Map.Entry<T, Dimension> entry : densityMap.entrySet()) {
+                File dstFolder = createFolderForOutputFile(mainSubFolder, entry.getKey(), entry.getValue(), targetImageFileName, args);
 
-				if ((dstFolder.isDirectory() && dstFolder.exists()) || args.dryRun) {
-					File imageFile = new File(dstFolder, createDestinationFileNameWithoutExtension(entry.getKey(), entry.getValue(), targetImageFileName, args));
+                if ((dstFolder.isDirectory() && dstFolder.exists()) || args.dryRun) {
+                    File imageFile = new File(dstFolder, createDestinationFileNameWithoutExtension(entry.getKey(), entry.getValue(), targetImageFileName, args));
 
-					log.append("process ").append(imageFile).append(" with ").append(entry.getValue().width).append("x").append(entry.getValue().height).append(" (x")
-							.append(entry.getKey().scale).append(") ").append(isNinePatch ? "(9-patch)" : "").append("\n");
+                    log.append("process ").append(imageFile).append(" with ").append(entry.getValue().width).append("x").append(entry.getValue().height).append(" (x")
+                            .append(entry.getKey().scale).append(") ").append(isNinePatch ? "(9-patch)" : "").append("\n");
 
-					if (!args.dryRun) {
-						List<File> files = new ImageHandler(args).saveToFile(imageFile, imageData, entry.getValue(), isNinePatch);
+                    if (!args.dryRun) {
+                        List<File> files = new ImageHandler(args).saveToFile(imageFile, imageData, entry.getValue(), isNinePatch);
 
-						allResultingFiles.addAll(files);
+                        allResultingFiles.addAll(files);
 
-						for (File file : files) {
-							log.append("compressed to disk: ").append(file).append(" (").append(String.format(Locale.US, "%.2f", (float) file.length() / 1024f)).append("kB)\n");
-						}
+                        for (File file : files) {
+                            log.append("compressed to disk: ").append(file).append(" (").append(String.format(Locale.US, "%.2f", (float) file.length() / 1024f)).append("kB)\n");
+                        }
 
-						if (files.isEmpty()) {
-							log.append("files skipped\n");
-						}
-					}
-				} else {
-					throw new IllegalStateException("could not create " + dstFolder);
-				}
-			}
+                        if (files.isEmpty()) {
+                            log.append("files skipped\n");
+                        }
+                    }
+                } else {
+                    throw new IllegalStateException("could not create " + dstFolder);
+                }
+            }
 
-			onPostExecute(args);
+            onPostExecute(args);
 
-			imageData.getImage().flush();
+            imageData.getImage().flush();
 
-			return new Result(log.toString(), allResultingFiles);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return new Result(null, e, Collections.emptyList());
-		}
-	}
+            return new Result(log.toString(), allResultingFiles);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Result(null, e, Collections.emptyList());
+        }
+    }
 
+    public abstract List<T> usedOutputDensities(Arguments arguments);
 
-	public abstract List<T> usedOutputDensities(Arguments arguments);
+    public abstract String getConverterName();
 
-	public abstract String getConverterName();
+    public abstract File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments);
 
-	public abstract File createMainSubFolder(File destinationFolder, String targetImageFileName, Arguments arguments);
+    public abstract File createFolderForOutputFile(File mainSubFolder, T density, Dimension dimension, String targetFileName, Arguments arguments);
 
-	public abstract File createFolderForOutputFile(File mainSubFolder, T density, Dimension dimension, String targetFileName, Arguments arguments);
+    public abstract String createDestinationFileNameWithoutExtension(T density, Dimension dimension, String targetFileName, Arguments arguments);
 
-	public abstract String createDestinationFileNameWithoutExtension(T density, Dimension dimension, String targetFileName, Arguments arguments);
+    public abstract void onPreExecute(File dstFolder, String targetFileName, List<T> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception;
 
-	public abstract void onPreExecute(File dstFolder, String targetFileName, List<T> densityDescriptions, ImageType imageType, Arguments arguments) throws Exception;
-
-	public abstract void onPostExecute(Arguments arguments);
+    public abstract void onPostExecute(Arguments arguments);
 }

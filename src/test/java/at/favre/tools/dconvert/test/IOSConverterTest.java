@@ -42,85 +42,85 @@ import static org.junit.Assert.assertTrue;
  * Unit test of the {@link at.favre.tools.dconvert.converters.IPlatformConverter} for ios
  */
 public class IOSConverterTest extends AConverterTest {
-	@Override
-	protected EPlatform getType() {
-		return EPlatform.IOS;
-	}
+    @Override
+    protected EPlatform getType() {
+        return EPlatform.IOS;
+    }
 
-	@Override
-	protected void checkOutDir(File dstDir, Arguments arguments, List<File> files, EPlatform type) throws IOException {
-		checkOutDirIos(dstDir, arguments, files);
-	}
+    @Override
+    protected void checkOutDir(File dstDir, Arguments arguments, List<File> files, EPlatform type) throws IOException {
+        checkOutDirIos(dstDir, arguments, files);
+    }
 
-	@Test
-	public void testMultiplePngImagesetFolders() throws Exception {
-		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example2_alpha_144.png", "jpg_example2_512.jpg");
-		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, 0.5f)
-				.dstFolder(defaultDst).platform(Collections.singleton(getType())).iosCreateImagesetFolders(true).build(), files);
-	}
+    @Test
+    public void testMultiplePngImagesetFolders() throws Exception {
+        List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png", "png_example2_alpha_144.png", "jpg_example2_512.jpg");
+        test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, 0.5f)
+                .dstFolder(defaultDst).platform(Collections.singleton(getType())).iosCreateImagesetFolders(true).build(), files);
+    }
 
-	@Test
-	public void testSinglePngImagesetFolder() throws Exception {
-		List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
-		test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, 0.5f)
-				.dstFolder(defaultDst).platform(Collections.singleton(getType())).iosCreateImagesetFolders(true).build(), files);
-	}
+    @Test
+    public void testSinglePngImagesetFolder() throws Exception {
+        List<File> files = copyToTestPath(defaultSrc, "png_example1_alpha_144.png");
+        test(new Arguments.Builder(defaultSrc, DEFAULT_SCALE).compression(EOutputCompressionMode.SAME_AS_INPUT_PREF_PNG, 0.5f)
+                .dstFolder(defaultDst).platform(Collections.singleton(getType())).iosCreateImagesetFolders(true).build(), files);
+    }
 
-	public static void checkOutDirIos(File dstDir, Arguments arguments, List<File> files) throws IOException {
-		Map<File, Dimension> dimensionMap = createDimensionMap(files);
+    public static void checkOutDirIos(File dstDir, Arguments arguments, List<File> files) throws IOException {
+        Map<File, Dimension> dimensionMap = createDimensionMap(files);
 
-		List<PostfixDescriptor> densityDescriptors = IOSConverter.getIosDescriptors();
+        List<PostfixDescriptor> densityDescriptors = IOSConverter.getIosDescriptors();
 
-		System.out.println("ios-convert " + files);
+        System.out.println("ios-convert " + files);
 
-		if (arguments.iosCreateImagesetFolders) {
-			checkWithImagesetFolders(dstDir, arguments, files, dimensionMap, densityDescriptors);
-		} else {
-			checkOutDirPostfixDescr(new File(dstDir, IOSConverter.ROOT_FOLDER), arguments, files, densityDescriptors);
-		}
-	}
+        if (arguments.iosCreateImagesetFolders) {
+            checkWithImagesetFolders(dstDir, arguments, files, dimensionMap, densityDescriptors);
+        } else {
+            checkOutDirPostfixDescr(new File(dstDir, IOSConverter.ROOT_FOLDER), arguments, files, densityDescriptors);
+        }
+    }
 
-	private static void checkWithImagesetFolders(File dstDir, Arguments arguments, List<File> files, Map<File, Dimension> dimensionMap, List<PostfixDescriptor> densityDescriptors) throws IOException {
-		assertTrue("src files and dst folder count should match", files.size() == dstDir.listFiles().length);
-		for (File iosImgFolder : dstDir.listFiles()) {
-			boolean found = false;
-			File srcFile = null;
-			for (File file : files) {
-				if (String.valueOf(MiscUtil.getFileNameWithoutExtension(file) + ".imageset").equals(iosImgFolder.getName())) {
-					found = true;
-					srcFile = file;
-					break;
-				}
-			}
+    private static void checkWithImagesetFolders(File dstDir, Arguments arguments, List<File> files, Map<File, Dimension> dimensionMap, List<PostfixDescriptor> densityDescriptors) throws IOException {
+        assertTrue("src files and dst folder count should match", files.size() == dstDir.listFiles().length);
+        for (File iosImgFolder : dstDir.listFiles()) {
+            boolean found = false;
+            File srcFile = null;
+            for (File file : files) {
+                if (String.valueOf(MiscUtil.getFileNameWithoutExtension(file) + ".imageset").equals(iosImgFolder.getName())) {
+                    found = true;
+                    srcFile = file;
+                    break;
+                }
+            }
 
-			assertTrue("root image folder should be found ", found);
-			assertTrue("image folder should contain at least 1 file", iosImgFolder.listFiles().length > 0);
+            assertTrue("root image folder should be found ", found);
+            assertTrue("image folder should contain at least 1 file", iosImgFolder.listFiles().length > 0);
 
-			List<ImageInfo> expectedFiles = new ArrayList<>();
-			for (PostfixDescriptor densityDescriptor : densityDescriptors) {
-				final File finalSrcFile = srcFile;
-				expectedFiles.addAll(Arguments.getOutCompressionForType(
-						arguments.outputCompressionMode, Arguments.getImageType(srcFile)).stream().map(compression ->
-						new ImageInfo(finalSrcFile, MiscUtil.getFileNameWithoutExtension(finalSrcFile) + densityDescriptor.postFix + "." + compression.extension, densityDescriptor.scale)).collect(Collectors.toList()));
-			}
+            List<ImageInfo> expectedFiles = new ArrayList<>();
+            for (PostfixDescriptor densityDescriptor : densityDescriptors) {
+                final File finalSrcFile = srcFile;
+                expectedFiles.addAll(Arguments.getOutCompressionForType(
+                        arguments.outputCompressionMode, Arguments.getImageType(srcFile)).stream().map(compression ->
+                        new ImageInfo(finalSrcFile, MiscUtil.getFileNameWithoutExtension(finalSrcFile) + densityDescriptor.postFix + "." + compression.extension, densityDescriptor.scale)).collect(Collectors.toList()));
+            }
 
-			for (File dstImageFile : iosImgFolder.listFiles()) {
-				for (ImageInfo expectedFile : expectedFiles) {
-					if (dstImageFile.getName().equals(expectedFile.targetFileName)) {
-						expectedFile.found = true;
+            for (File dstImageFile : iosImgFolder.listFiles()) {
+                for (ImageInfo expectedFile : expectedFiles) {
+                    if (dstImageFile.getName().equals(expectedFile.targetFileName)) {
+                        expectedFile.found = true;
 
-						Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedFile.scale, false);
-						assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(dstImageFile));
-					}
-				}
-			}
+                        Dimension expectedDimension = getScaledDimension(expectedFile.srcFile, arguments, dimensionMap.get(expectedFile.srcFile), expectedFile.scale, false);
+                        assertEquals("dimensions should match", expectedDimension, ImageUtil.getImageDimension(dstImageFile));
+                    }
+                }
+            }
 
-			for (ImageInfo expectedFile : expectedFiles) {
-				assertTrue(expectedFile.targetFileName + " expected in folder " + srcFile, expectedFile.found);
-			}
+            for (ImageInfo expectedFile : expectedFiles) {
+                assertTrue(expectedFile.targetFileName + " expected in folder " + srcFile, expectedFile.found);
+            }
 
-			System.out.print("found " + expectedFiles.size() + " files in " + iosImgFolder + ", ");
-		}
-		System.out.println();
-	}
+            System.out.print("found " + expectedFiles.size() + " files in " + iosImgFolder + ", ");
+        }
+        System.out.println();
+    }
 }

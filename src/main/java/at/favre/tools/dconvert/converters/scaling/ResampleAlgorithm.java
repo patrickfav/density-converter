@@ -23,7 +23,7 @@ public class ResampleAlgorithm implements ScaleAlgorithm {
     }
 
     public static class LanczosFilter implements ResampleFilter {
-        private final static float PI_FLOAT = (float) Math.PI;
+        private static final float PI_FLOAT = (float) Math.PI;
         private final float radius;
 
         public LanczosFilter(float radius) {

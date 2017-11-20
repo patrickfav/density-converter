@@ -26,19 +26,19 @@ import java.io.File;
  */
 public interface IPlatformConverter {
 
-	/**
-	 * Converts the given file to all needed densities
-	 *
-	 * @param srcImageFile        source image file to be used as base to scale
-	 * @param arguments           all tool args
-	 * @return result
-	 */
-	Result convert(File srcImageFile, Arguments arguments);
+    /**
+     * Converts the given file to all needed densities
+     *
+     * @param srcImageFile source image file to be used as base to scale
+     * @param arguments    all tool args
+     * @return result
+     */
+    Result convert(File srcImageFile, Arguments arguments);
 
-	/**
-	 * Cleans (ie. deletes) all dirs that would be generated with this converter and arguments
-	 *
-	 * @param arguments
-	 */
-	void clean(Arguments arguments);
+    /**
+     * Cleans (ie. deletes) all dirs that would be generated with this converter and arguments
+     *
+     * @param arguments
+     */
+    void clean(Arguments arguments);
 }

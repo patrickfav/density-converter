@@ -31,29 +31,29 @@ import java.util.Collections;
  */
 public class WebpProcessor extends APostProcessor {
 
-	@Override
-	public Result synchronizedProcess(File rawFile, boolean keepOriginal) {
-		try {
-			ImageType compression = Arguments.getImageType(rawFile);
-			String[] additionalArgs;
-			if (compression == ImageType.PNG || compression == ImageType.GIF) {
-				additionalArgs = new String[]{"-lossless", "-alpha_filter", "best", "-m", "6"};
-			} else if (compression == ImageType.JPG) {
-				additionalArgs = new String[]{"-m", "6", "-q", "90"};
-			} else {
-				return null;
-			}
+    @Override
+    public Result synchronizedProcess(File rawFile, boolean keepOriginal) {
+        try {
+            ImageType compression = Arguments.getImageType(rawFile);
+            String[] additionalArgs;
+            if (compression == ImageType.PNG || compression == ImageType.GIF) {
+                additionalArgs = new String[]{"-lossless", "-alpha_filter", "best", "-m", "6"};
+            } else if (compression == ImageType.JPG) {
+                additionalArgs = new String[]{"-m", "6", "-q", "90"};
+            } else {
+                return null;
+            }
 
-			String[] finalArg = MiscUtil.concat(MiscUtil.concat(new String[]{"cwebp"}, additionalArgs), new String[]{"%%sourceFilePath%%", "-o", "%%outFilePath%%"});
+            String[] finalArg = MiscUtil.concat(MiscUtil.concat(new String[]{"cwebp"}, additionalArgs), new String[]{"%%sourceFilePath%%", "-o", "%%outFilePath%%"});
 
-			return PostProcessorUtil.runImageOptimizer(rawFile, compression, finalArg, keepOriginal, "webp");
-		} catch (Exception e) {
-			return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
-		}
-	}
+            return PostProcessorUtil.runImageOptimizer(rawFile, compression, finalArg, keepOriginal, "webp");
+        } catch (Exception e) {
+            return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
+        }
+    }
 
-	@Override
-	public boolean isSupported() {
-		return PostProcessorUtil.canRunCmd(new String[]{"cwebp", "-h"});
-	}
+    @Override
+    public boolean isSupported() {
+        return PostProcessorUtil.canRunCmd(new String[]{"cwebp", "-h"});
+    }
 }

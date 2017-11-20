@@ -35,7 +35,9 @@ public enum EScalingAlgorithm {
     BICUBIC(new NaiveGraphics2dAlgorithm(RenderingHints.VALUE_INTERPOLATION_BICUBIC), "bicubic", new Type[]{Type.UPSCALING}, true),
     BILINEAR(new NaiveGraphics2dAlgorithm(RenderingHints.VALUE_INTERPOLATION_BILINEAR), "bilinear", new Type[]{Type.UPSCALING}, true);
 
-    public enum Type {UPSCALING, DOWNSCALING}
+    public enum Type {
+        UPSCALING, DOWNSCALING
+    }
 
     private final ScaleAlgorithm algorithm;
     private final String cliName;

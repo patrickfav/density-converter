@@ -216,7 +216,6 @@ public class GUIController {
         btnSrcFile.setGraphic(new ImageView(new Image("img/file-symbol.png")));
         btnDstFolderOpen.setGraphic(new ImageView(new Image("img/eye.png")));
 
-
         btnReset.setOnAction(event -> {
             saveToPrefs(new Arguments());
             loadPrefs();

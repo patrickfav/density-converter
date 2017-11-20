@@ -29,29 +29,29 @@ import java.util.Collections;
  * Calls pngcrush on a file
  */
 public class PngCrushProcessor extends APostProcessor {
-	public static final String[] DEFAULT_ARGS = new String[]{"-rem", "alla", "-rem", "text", "-rem", "gAMA", "-rem", "cHRM", "-rem", "iCCP", "-rem", "sRGB"};
-	public String[] additionalArgs;
+    private static final String[] DEFAULT_ARGS = new String[]{"-rem", "alla", "-rem", "text", "-rem", "gAMA", "-rem", "cHRM", "-rem", "iCCP", "-rem", "sRGB"};
+    private String[] additionalArgs;
 
-	public PngCrushProcessor() {
-		this(DEFAULT_ARGS);
-	}
+    public PngCrushProcessor() {
+        this(DEFAULT_ARGS);
+    }
 
-	public PngCrushProcessor(String[] additionalArgs) {
-		this.additionalArgs = additionalArgs;
-	}
+    public PngCrushProcessor(String[] additionalArgs) {
+        this.additionalArgs = additionalArgs;
+    }
 
-	@Override
-	public Result synchronizedProcess(File rawFile, boolean keepOriginal) {
-		try {
-			String[] args = MiscUtil.concat(MiscUtil.concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"%%sourceFilePath%%", "%%outFilePath%%"});
-			return PostProcessorUtil.runImageOptimizer(rawFile, ImageType.PNG, args, keepOriginal);
-		} catch (Exception e) {
-			return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
-		}
-	}
+    @Override
+    public Result synchronizedProcess(File rawFile, boolean keepOriginal) {
+        try {
+            String[] args = MiscUtil.concat(MiscUtil.concat(new String[]{"pngcrush"}, additionalArgs), new String[]{"%%sourceFilePath%%", "%%outFilePath%%"});
+            return PostProcessorUtil.runImageOptimizer(rawFile, ImageType.PNG, args, keepOriginal);
+        } catch (Exception e) {
+            return new Result("could not execute post processor " + getClass().getSimpleName(), e, Collections.singletonList(rawFile));
+        }
+    }
 
-	@Override
-	public boolean isSupported() {
-		return PostProcessorUtil.canRunCmd(new String[]{"pngcrush", "-h"});
-	}
+    @Override
+    public boolean isSupported() {
+        return PostProcessorUtil.canRunCmd(new String[]{"pngcrush", "-h"});
+    }
 }

@@ -269,7 +269,6 @@ public abstract class AConverterTest {
         }
     }
 
-
     protected static class ImageInfo {
         public final File srcFile;
         public final String targetFileName;
@@ -292,7 +291,10 @@ public abstract class AConverterTest {
             List<ImageInfo> expectedFiles = new ArrayList<>();
             for (File srcImageFile : files) {
                 for (PostfixDescriptor descriptor : densityDescriptors) {
-                    expectedFiles.addAll(Arguments.getOutCompressionForType(arguments.outputCompressionMode, Arguments.getImageType(srcImageFile)).stream().map(compression -> new ImageInfo(srcImageFile, MiscUtil.getFileNameWithoutExtension(srcImageFile) + descriptor.postFix + "." + compression.extension, descriptor.scale)).collect(Collectors.toList()));
+                    expectedFiles.addAll(Arguments.getOutCompressionForType(arguments.outputCompressionMode, Arguments.getImageType(srcImageFile))
+                            .stream()
+                            .map(compression -> new ImageInfo(srcImageFile, MiscUtil.getFileNameWithoutExtension(srcImageFile) + descriptor.postFix + "." + compression.extension, descriptor.scale))
+                            .collect(Collectors.toList()));
                 }
             }
 

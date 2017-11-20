@@ -28,61 +28,64 @@ import java.util.List;
 /**
  * Entry point of the app. Use arg -h to get help.
  */
-public class Main {
-	public static void main(String[] rawArgs) {
+public final class Main {
+    private Main() {
+    }
 
-		if (rawArgs.length < 1) {
-			new GUI().launchApp(rawArgs);
-			return;
-		}
+    public static void main(String[] rawArgs) {
 
-		Arguments args = CLIInterpreter.parse(rawArgs);
+        if (rawArgs.length < 1) {
+            new GUI().launchApp(rawArgs);
+            return;
+        }
 
-		if (args == null) {
-			return;
-		} else if (args == Arguments.START_GUI) {
-			System.out.println("start gui");
-			new GUI().launchApp(rawArgs);
-			return;
-		}
+        Arguments args = CLIInterpreter.parse(rawArgs);
 
-		System.out.println("start converting " + args.filesToProcess.size() + " files");
+        if (args == null) {
+            return;
+        } else if (args == Arguments.START_GUI) {
+            System.out.println("start gui");
+            new GUI().launchApp(rawArgs);
+            return;
+        }
 
-		new DConvert().execute(args, true, new DConvert.HandlerCallback() {
-			@Override
-			public void onProgress(float progress) {
-				try {
-					System.out.write(MiscUtil.getCmdProgressBar(progress).getBytes());
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+        System.out.println("start converting " + args.filesToProcess.size() + " files");
 
-			@Override
-			public void onFinished(int finishedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
-				System.out.print(MiscUtil.getCmdProgressBar(1f));
+        new DConvert().execute(args, true, new DConvert.HandlerCallback() {
+            @Override
+            public void onProgress(float progress) {
+                try {
+                    System.out.write(MiscUtil.getCmdProgressBar(progress).getBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
-				System.out.println("");
+            @Override
+            public void onFinished(int finishedJobs, List<Exception> exceptions, long time, boolean haltedDuringProcess, String log) {
+                System.out.print(MiscUtil.getCmdProgressBar(1f));
 
-				if (args.verboseLog) {
-					System.out.println("Log:");
-					System.out.println(log);
-				}
+                System.out.println("");
 
-				if (haltedDuringProcess) {
-					System.err.println("abort due to error");
-				}
-				if (exceptions.size() > 0) {
-					System.err.println("found " + exceptions.size() + " errors during execution");
-					if (args.verboseLog) {
-						for (Exception exception : exceptions) {
-							System.err.println("\terror: " + exception.getMessage());
-							exception.printStackTrace();
-						}
-					}
-				}
-				System.out.println("execution finished (" + time + "ms) with " + finishedJobs + " finsihed jobs and " + exceptions.size() + " errors");
-			}
-		});
-	}
+                if (args.verboseLog) {
+                    System.out.println("Log:");
+                    System.out.println(log);
+                }
+
+                if (haltedDuringProcess) {
+                    System.err.println("abort due to error");
+                }
+                if (exceptions.size() > 0) {
+                    System.err.println("found " + exceptions.size() + " errors during execution");
+                    if (args.verboseLog) {
+                        for (Exception exception : exceptions) {
+                            System.err.println("\terror: " + exception.getMessage());
+                            exception.printStackTrace();
+                        }
+                    }
+                }
+                System.out.println("execution finished (" + time + "ms) with " + finishedJobs + " finsihed jobs and " + exceptions.size() + " errors");
+            }
+        });
+    }
 }

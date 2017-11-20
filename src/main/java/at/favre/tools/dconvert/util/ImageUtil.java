@@ -43,7 +43,10 @@ import java.util.List;
 /**
  * Main Util class containing all
  */
-public class ImageUtil {
+public final class ImageUtil {
+
+    private ImageUtil() {
+    }
 
     public static LoadedImage loadImage(File input) throws Exception {
         if (input == null) {

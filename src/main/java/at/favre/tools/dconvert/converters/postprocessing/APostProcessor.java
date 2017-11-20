@@ -14,35 +14,34 @@ import java.util.concurrent.locks.ReentrantLock;
  * so that only 1 processor can process a file at a time
  */
 public abstract class APostProcessor implements IPostProcessor {
-	private static Map<File, ReentrantLock> lockMap = new ConcurrentHashMap<>();
-	private static ReentrantLock administrationLock = new ReentrantLock(true);
+    private static Map<File, ReentrantLock> lockMap = new ConcurrentHashMap<>();
+    private static ReentrantLock administrationLock = new ReentrantLock(true);
 
-	@Override
-	public Result process(File rawFile, boolean keepOriginal) {
-		try {
+    @Override
+    public Result process(File rawFile, boolean keepOriginal) {
+        try {
 
-			administrationLock.lock();
-			if (!lockMap.containsKey(rawFile)) {
-				lockMap.put(rawFile, new ReentrantLock(true));
-			}
+            administrationLock.lock();
+            if (!lockMap.containsKey(rawFile)) {
+                lockMap.put(rawFile, new ReentrantLock(true));
+            }
 
-			administrationLock.unlock();
+            administrationLock.unlock();
 
-			lockMap.get(rawFile).lock();
+            lockMap.get(rawFile).lock();
 
+            return synchronizedProcess(rawFile, keepOriginal);
+        } finally {
+            lockMap.get(rawFile).unlock();
+        }
+    }
 
-			return synchronizedProcess(rawFile, keepOriginal);
-		} finally {
-			lockMap.get(rawFile).unlock();
-		}
-	}
-
-	/**
-	 * This is the thread safe version of {@link #process(File, boolean)}
-	 *
-	 * @param rawFile
-	 * @param keepOriginal
-	 * @return
-	 */
-	protected abstract Result synchronizedProcess(File rawFile, boolean keepOriginal);
+    /**
+     * This is the thread safe version of {@link #process(File, boolean)}
+     *
+     * @param rawFile
+     * @param keepOriginal
+     * @return
+     */
+    protected abstract Result synchronizedProcess(File rawFile, boolean keepOriginal);
 }

@@ -23,26 +23,26 @@ import java.util.ResourceBundle;
  * Different output compression modes
  */
 public enum EOutputCompressionMode {
-	SAME_AS_INPUT_PREF_PNG("enum.outcomp.SAME_AS_INPUT_PREF_PNG"),
-	SAME_AS_INPUT_STRICT("enum.outcomp.SAME_AS_INPUT_STRICT"),
-	AS_JPG("enum.outcomp.AS_JPG"),
-	AS_PNG("enum.outcomp.AS_PNG"),
-	AS_GIF("enum.outcomp.AS_GIF"),
-	AS_BMP("enum.outcomp.AS_BMP"),
-	AS_JPG_AND_PNG("enum.outcomp.AS_JPG_AND_PNG");
+    SAME_AS_INPUT_PREF_PNG("enum.outcomp.SAME_AS_INPUT_PREF_PNG"),
+    SAME_AS_INPUT_STRICT("enum.outcomp.SAME_AS_INPUT_STRICT"),
+    AS_JPG("enum.outcomp.AS_JPG"),
+    AS_PNG("enum.outcomp.AS_PNG"),
+    AS_GIF("enum.outcomp.AS_GIF"),
+    AS_BMP("enum.outcomp.AS_BMP"),
+    AS_JPG_AND_PNG("enum.outcomp.AS_JPG_AND_PNG");
 
-	public String rbKey;
+    public String rbKey;
 
-	EOutputCompressionMode(String rbKey) {
-		this.rbKey = rbKey;
-	}
+    EOutputCompressionMode(String rbKey) {
+        this.rbKey = rbKey;
+    }
 
-	public static EOutputCompressionMode getFromString(String i18nString, ResourceBundle bundle) {
-		for (EOutputCompressionMode eOutputCompressionMode : EOutputCompressionMode.values()) {
-			if (bundle.getString(eOutputCompressionMode.rbKey).equals(i18nString)) {
-				return eOutputCompressionMode;
-			}
-		}
-		return null;
-	}
+    public static EOutputCompressionMode getFromString(String i18nString, ResourceBundle bundle) {
+        for (EOutputCompressionMode eOutputCompressionMode : EOutputCompressionMode.values()) {
+            if (bundle.getString(eOutputCompressionMode.rbKey).equals(i18nString)) {
+                return eOutputCompressionMode;
+            }
+        }
+        return null;
+    }
 }

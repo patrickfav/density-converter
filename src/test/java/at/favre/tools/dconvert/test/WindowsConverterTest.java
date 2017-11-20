@@ -29,18 +29,18 @@ import java.util.List;
  * Unit test of the {@link at.favre.tools.dconvert.converters.IPlatformConverter} for windows
  */
 public class WindowsConverterTest extends AConverterTest {
-	@Override
-	protected EPlatform getType() {
-		return EPlatform.WINDOWS;
-	}
+    @Override
+    protected EPlatform getType() {
+        return EPlatform.WINDOWS;
+    }
 
-	@Override
-	protected void checkOutDir(File dstDir, Arguments arguments, List<File> files, EPlatform type) throws IOException {
-		checkOutDirWindows(dstDir, arguments, files);
-	}
+    @Override
+    protected void checkOutDir(File dstDir, Arguments arguments, List<File> files, EPlatform type) throws IOException {
+        checkOutDirWindows(dstDir, arguments, files);
+    }
 
-	public static void checkOutDirWindows(File dstDir, Arguments arguments, List<File> files) throws IOException {
-		System.out.println("windows-convert " + files);
-		checkOutDirPostfixDescr(new File(dstDir, WindowsConverter.ROOT_FOLDER), arguments, files, WindowsConverter.getWindowsDescriptors());
-	}
+    public static void checkOutDirWindows(File dstDir, Arguments arguments, List<File> files) throws IOException {
+        System.out.println("windows-convert " + files);
+        checkOutDirPostfixDescr(new File(dstDir, WindowsConverter.ROOT_FOLDER), arguments, files, WindowsConverter.getWindowsDescriptors());
+    }
 }

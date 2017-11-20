@@ -25,19 +25,19 @@ import java.io.File;
  * PostProcessor run after the main conversation on all files
  */
 public interface IPostProcessor {
-	String ORIG_POSTFIX = "_orig";
+    String ORIG_POSTFIX = "_orig";
 
-	/**
-	 * Will process the given file. It is not necessary to spawn another thread for exectution
-	 *
-	 * @param rawFile to process
-	 * @param keepOriginal if true will not delete unprocessed file, but renames it to (filename)_orig.(extension)
-	 * @return optional log or output
-	 */
-	Result process(File rawFile, boolean keepOriginal);
+    /**
+     * Will process the given file. It is not necessary to spawn another thread for exectution
+     *
+     * @param rawFile      to process
+     * @param keepOriginal if true will not delete unprocessed file, but renames it to (filename)_orig.(extension)
+     * @return optional log or output
+     */
+    Result process(File rawFile, boolean keepOriginal);
 
-	/**
-	 * @return true if this processor is supported with the current setup (e.g. tool is set in PATH)
-	 */
-	boolean isSupported();
+    /**
+     * @return true if this processor is supported with the current setup (e.g. tool is set in PATH)
+     */
+    boolean isSupported();
 }
