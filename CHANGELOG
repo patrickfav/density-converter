@@ -2,6 +2,7 @@
 
 ## v1.0.0-alpha5
 * update various dependencies and plugins
+* switch to maven wrapper
 
 ## v1.0.0-alpha4
 * fixes ios content json format

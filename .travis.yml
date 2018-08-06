@@ -1,44 +1,47 @@
+# To let the CI execute the maven wrapper, use this command and push the change:
+#    git update-index --chmod=+x mvnw
+
 sudo: required
 language: java
 install: true
 jdk:
-  - oraclejdk8
+- oraclejdk8
 
 addons:
   apt:
     packages:
-      - oracle-java8-installer #needs updated jdk for javafx
+    - oracle-java8-installer #needs updated jdk for javafx
 
 #required for launch4j to run
 before_script:
-  - sudo apt-get update
-  - sudo apt-get install libc6:i386 libstdc++6:i386
+- sudo apt-get update
+- sudo apt-get install libc6:i386 libstdc++6:i386
 
 script:
-  - mvn clean install -X
-  - mvn checkstyle:check
-  - mvn package
+- ./mvnw clean install -X
+- ./mvnw checkstyle:check
+- ./mvnw package
 
 after_success:
-  - mvn test jacoco:report coveralls:report
+- ./mvnw test jacoco:report coveralls:report
 
 deploy:
-  - provider: releases
-    api_key:
-      secure: "4yszsIyM8p44pUCuuj6ZAbBgYFBkCdODaO6jUMJFRP/rBFsEa1QvqYJgrhXtmr/fZqDpnV8MLR93747eLShAiAgolcGePKAN6bH6J5fCDCp4+vOTnOsAdUFbBAzXnNybCZvlsceyLYHJZijfBjAw3U4bBZO99OGRx1EGlOY3X01Ahug2RS2O+viYeTGCHvcv83ULartGlsRSACDx27iw62PZ5mnEL1nTUd48ULbDO2D2mHhWakDJo0D0WIzZeTDVFgOR97ZnX0hWT8thAwhXt7TZBmrrAYrJVuBIA3pg2Gk0r6o2PElnp2pcnY8yzBZOMhtgqtRdUIzNVmrhQCgZeD7o9OVqmFYLrwlotbBhoMj+Ol956QWHTvrvwcJqiMLlb5MhHBTwp0gu8xNS3YVarNaBGd9w9GDE+zZ6p2USMTAMNAEeo6drKZLcFLpDxDY19r16Co/tThADOrXdoqGDDvJgDZVAwAM1dF4I+9GbIhDgdAsBJLDA5rE7d0eiEpGPxGy22P7jbxpH8IQUc/GSWfzuU+3e7V0TYnq4rrdfctNjt655KMfXY++X+6xhvY5EyThKaNz31q/4Gb4Y7yrrxn3gcjBXkBNoDD0pxSELfRtnzpg4M7RZyf3E//yZVcrEsxx5M1aPNMvHcQzOFDhWJeZ3peWMXY99HHVuMfdp1Qw="
-    file_glob: true
-    file:
-      - 'target/dconvert-*.jar'
-      - 'target/dconvert.exe'
-      - 'target/dconvert-gui.exe'
-    skip_cleanup: true
-    on:
-      branch: master
-      tags: true
+- provider: releases
+  api_key:
+    secure: "4yszsIyM8p44pUCuuj6ZAbBgYFBkCdODaO6jUMJFRP/rBFsEa1QvqYJgrhXtmr/fZqDpnV8MLR93747eLShAiAgolcGePKAN6bH6J5fCDCp4+vOTnOsAdUFbBAzXnNybCZvlsceyLYHJZijfBjAw3U4bBZO99OGRx1EGlOY3X01Ahug2RS2O+viYeTGCHvcv83ULartGlsRSACDx27iw62PZ5mnEL1nTUd48ULbDO2D2mHhWakDJo0D0WIzZeTDVFgOR97ZnX0hWT8thAwhXt7TZBmrrAYrJVuBIA3pg2Gk0r6o2PElnp2pcnY8yzBZOMhtgqtRdUIzNVmrhQCgZeD7o9OVqmFYLrwlotbBhoMj+Ol956QWHTvrvwcJqiMLlb5MhHBTwp0gu8xNS3YVarNaBGd9w9GDE+zZ6p2USMTAMNAEeo6drKZLcFLpDxDY19r16Co/tThADOrXdoqGDDvJgDZVAwAM1dF4I+9GbIhDgdAsBJLDA5rE7d0eiEpGPxGy22P7jbxpH8IQUc/GSWfzuU+3e7V0TYnq4rrdfctNjt655KMfXY++X+6xhvY5EyThKaNz31q/4Gb4Y7yrrxn3gcjBXkBNoDD0pxSELfRtnzpg4M7RZyf3E//yZVcrEsxx5M1aPNMvHcQzOFDhWJeZ3peWMXY99HHVuMfdp1Qw="
+  file_glob: true
+  file:
+  - 'target/dconvert-*.jar'
+  - 'target/dconvert.exe'
+  - 'target/dconvert-gui.exe'
+  skip_cleanup: true
+  on:
+    branch: master
+    tags: true
 
 cache:
   directories:
-    - $HOME/.m2
+  - $HOME/.m2
 
 notifications:
   slack:
