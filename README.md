@@ -284,10 +284,10 @@ Both user interfaces use the same underlying logic.
 
 ## How to build
 
-Build with maven
+Use the Maven wrapper to create a jar including all dependencies
 
 ```
-mvn clean package
+mvnw clean package
 ```
 
 The .jar file will be in the generated `/target` folder
