@@ -163,9 +163,6 @@
                             </classPath>
                             <jre>
                                 <minVersion>1.8.0</minVersion>
-                                <opts>
-                                    <opt>-Djava.endorsed.dirs=./endorsed</opt>
-                                </opts>
                             </jre>
                             <!--<splash>-->
                             <!--<file>misc/splash.bmp</file>-->
@@ -176,7 +173,7 @@
                             <versionInfo>
                                 <fileVersion>0.0.0.1</fileVersion>
                                 <txtFileVersion>0.0.0.1</txtFileVersion>
-                                <fileDescription>A tool that enables advanced features through adb
+                                <fileDescription>Scaling and density conversion tool for Android, iOS and the Web
                                 </fileDescription>
                                 <copyright>Patrick Favre-Bulle, 2016</copyright>
                                 <productVersion>1.0.0.0</productVersion>
