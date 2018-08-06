@@ -1,6 +1,11 @@
 package at.favre.tools.dconvert.test;
 
-import at.favre.tools.dconvert.arg.*;
+import at.favre.tools.dconvert.arg.Arguments;
+import at.favre.tools.dconvert.arg.EOutputCompressionMode;
+import at.favre.tools.dconvert.arg.EPlatform;
+import at.favre.tools.dconvert.arg.EScaleMode;
+import at.favre.tools.dconvert.arg.EScalingAlgorithm;
+import at.favre.tools.dconvert.arg.RoundingHandler;
 import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
@@ -11,7 +16,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.testfx.framework.junit.ApplicationTest;
 
@@ -27,7 +38,7 @@ import static org.junit.Assert.assertEquals;
  * Tests GUI
  */
 public class GUITest extends ApplicationTest {
-    public static final boolean HEADLESS = true;
+    private static final boolean HEADLESS = true;
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -248,17 +259,23 @@ public class GUITest extends ApplicationTest {
 
     @Test
     public void testClickSelectFolder() throws Exception {
-        clickOn("#btnSrcFolder").sleep(400).press(KeyCode.ESCAPE);
+        if (!HEADLESS) {
+            clickOn("#btnSrcFolder").sleep(400).press(KeyCode.ESCAPE);
+        }
     }
 
     @Test
     public void testClickSelectFile() throws Exception {
-        clickOn("#btnSrcFile").sleep(400).press(KeyCode.ESCAPE);
+        if (!HEADLESS) {
+            clickOn("#btnSrcFile").sleep(400).press(KeyCode.ESCAPE);
+        }
     }
 
     @Test
     public void testClickSelectDstFolder() throws Exception {
-        clickOn("#btnDstFolder").sleep(400).press(KeyCode.ESCAPE);
+        if (!HEADLESS) {
+            clickOn("#btnDstFolder").sleep(400).press(KeyCode.ESCAPE);
+        }
     }
 
     @Test
