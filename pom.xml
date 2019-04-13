@@ -6,7 +6,7 @@
 
     <groupId>at.favre.tools</groupId>
     <artifactId>dconvert</artifactId>
-    <version>${raw.version}-alpha5</version>
+    <version>${raw.version}-alpha6</version>
 
     <properties>
         <raw.version>1.0.0</raw.version>
