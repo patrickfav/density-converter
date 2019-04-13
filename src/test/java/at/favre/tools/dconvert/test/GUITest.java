@@ -1,11 +1,6 @@
 package at.favre.tools.dconvert.test;
 
-import at.favre.tools.dconvert.arg.Arguments;
-import at.favre.tools.dconvert.arg.EOutputCompressionMode;
-import at.favre.tools.dconvert.arg.EPlatform;
-import at.favre.tools.dconvert.arg.EScaleMode;
-import at.favre.tools.dconvert.arg.EScalingAlgorithm;
-import at.favre.tools.dconvert.arg.RoundingHandler;
+import at.favre.tools.dconvert.arg.*;
 import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
@@ -16,13 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import org.junit.After;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.rules.TemporaryFolder;
 import org.testfx.framework.junit.ApplicationTest;
 
@@ -49,7 +38,7 @@ public class GUITest extends ApplicationTest {
     private Scene scene;
 
     @BeforeClass
-    public static void setupSpec() throws Exception {
+    public static void setupSpec() {
         if (HEADLESS) {
             System.setProperty("testfx.robot", "glass");
             System.setProperty("testfx.headless", "true");
@@ -175,7 +164,7 @@ public class GUITest extends ApplicationTest {
         }
     }
 
-    //this test needs fixing: bug is that click on algo name is not distinct - sometimes it picks the correct choicebox, sometimes the other (up <> downsclaing have the same values
+    //this test needs fixing: bug is that click on algo name is not distinct - sometimes it picks the correct choicebox, sometimes the other (up <> downscaling have the same values
     @Ignore
     public void testDownScalingQuality() throws Exception {
         Assume.assumeFalse("this only seems to work in non-headless test", HEADLESS);
@@ -187,7 +176,7 @@ public class GUITest extends ApplicationTest {
         }
     }
 
-    //this test needs fixing: bug is that click on algo name is not distinct - sometimes it picks the correct choicebox, sometimes the other (up <> downsclaing have the same values
+    //this test needs fixing: bug is that click on algo name is not distinct - sometimes it picks the correct choicebox, sometimes the other (up <> downscaling have the same values
     @Ignore
     public void testUpScalingQuality() throws Exception {
         for (EScalingAlgorithm algo : EScalingAlgorithm.getAllEnabled()) {
@@ -240,6 +229,7 @@ public class GUITest extends ApplicationTest {
     @Test
     public void testThreads() throws Exception {
         for (int i = 1; i < Arguments.MAX_THREAD_COUNT + 1; i++) {
+            Thread.sleep(17);
             clickOn("#choiceThreads").clickOn(String.valueOf(i));
             assertEquals("arguments should match", defaultBuilder.threadCount(i).build(), controller.getFromUI(false));
         }
@@ -258,21 +248,21 @@ public class GUITest extends ApplicationTest {
     }
 
     @Test
-    public void testClickSelectFolder() throws Exception {
+    public void testClickSelectFolder() {
         if (!HEADLESS) {
             clickOn("#btnSrcFolder").sleep(400).press(KeyCode.ESCAPE);
         }
     }
 
     @Test
-    public void testClickSelectFile() throws Exception {
+    public void testClickSelectFile() {
         if (!HEADLESS) {
             clickOn("#btnSrcFile").sleep(400).press(KeyCode.ESCAPE);
         }
     }
 
     @Test
-    public void testClickSelectDstFolder() throws Exception {
+    public void testClickSelectDstFolder() {
         if (!HEADLESS) {
             clickOn("#btnDstFolder").sleep(400).press(KeyCode.ESCAPE);
         }
