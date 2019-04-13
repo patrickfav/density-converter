@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -229,7 +230,7 @@ public class GUITest extends ApplicationTest {
     @Test
     public void testThreads() throws Exception {
         for (int i = 1; i < Arguments.MAX_THREAD_COUNT + 1; i++) {
-            Thread.sleep(17);
+            sleep(18, TimeUnit.MILLISECONDS); //hack because after testfx update headless mode failed
             clickOn("#choiceThreads").clickOn(String.valueOf(i));
             assertEquals("arguments should match", defaultBuilder.threadCount(i).build(), controller.getFromUI(false));
         }
