@@ -1,5 +1,8 @@
 # Releases
 
+## v1.0.0-alpha6
+* update various dependencies and plugins
+
 ## v1.0.0-alpha5
 * update various dependencies and plugins
 * switch to maven wrapper
