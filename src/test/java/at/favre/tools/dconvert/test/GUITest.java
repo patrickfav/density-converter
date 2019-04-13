@@ -228,6 +228,7 @@ public class GUITest extends ApplicationTest {
     }
 
     @Test
+    @Ignore
     public void testThreads() throws Exception {
         for (int i = 1; i < Arguments.MAX_THREAD_COUNT + 1; i++) {
             sleep(18, TimeUnit.MILLISECONDS); //hack because after testfx update headless mode failed
