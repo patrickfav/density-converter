@@ -16,6 +16,10 @@
         <property name="max" value="300"/>
     </module>
 
+    <module name="SuppressionFilter">
+        <property name="file" value="checkstyle_suppressions.xml"/>
+    </module>
+
     <module name="TreeWalker">
         <module name="SuppressionCommentFilter"/> <!-- use //CHECKSTYLE:OFF (...) //CHECKSTYLE:ON to disable checkstyle: http://checkstyle.sourceforge.net/config_filters.html#SuppressionCommentFilter -->
 
