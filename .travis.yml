@@ -2,8 +2,9 @@
 #    git update-index --chmod=+x mvnw
 
 language: java
+dist: trusty
 jdk:
-  - oraclejdk11
+  - oraclejdk8
 
 addons:
   apt:
