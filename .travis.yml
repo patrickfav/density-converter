@@ -32,7 +32,7 @@ deploy:
   - 'target/dconvert-*.jar'
   - 'target/dconvert.exe'
   - 'target/dconvert-gui.exe'
-  cleanup: true
+  cleanup: false
   on:
     branch: master
     tags: true
