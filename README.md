@@ -292,6 +292,12 @@ mvnw clean package
 
 The .jar file will be in the generated `/target` folder
 
+### Checkstyle Config File
+
+This project uses my [`common-parent`](https://github.com/patrickfav/mvn-common-parent) which centralized a lot of
+the plugin versions aswell as providing the checkstyle config rules. Specifically they are maintained in [`checkstyle-config`](https://github.com/patrickfav/checkstyle-config). Locally the files will be copied after you `mvnw install` into your `target` folder and is called
+`target/checkstyle-checker.xml`. So if you use a plugin for your IDE, use this file as your local configuration.
+
 # About
 
 ## Credits

@@ -36,8 +36,8 @@ import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -47,8 +47,8 @@ public class ImageHandler {
     private static final Color DEFAULT_COLOR = Color.white;
     public static final boolean TEST_MODE = false;
     public static final ConvolveOp OP_ANTIALIAS = new ConvolveOp(new Kernel(3, 3, new float[]{.0f, .08f, .0f, .08f, .68f, .08f, .0f, .08f, .0f}), ConvolveOp.EDGE_NO_OP, null);
-    public static Map<ScaleAlgorithm, Long> traceMap = new HashMap<>();
-    private Arguments args;
+    public static final Map<ScaleAlgorithm, Long> traceMap = new HashMap<>();
+    private final Arguments args;
 
     public ImageHandler(Arguments args) {
         this.args = args;

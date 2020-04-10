@@ -47,8 +47,8 @@ public enum ImageType {
     public enum ECompression {
         JPG(false, "jpg"), PNG(true, "png"), GIF(true, "gif"), TIFF(false, "tif"), BMP(false, "bmp");
 
-        public boolean hasTransparency;
-        public String extension;
+        public final boolean hasTransparency;
+        public final String extension;
 
         ECompression(boolean hasTransparency, String extension) {
             this.hasTransparency = hasTransparency;

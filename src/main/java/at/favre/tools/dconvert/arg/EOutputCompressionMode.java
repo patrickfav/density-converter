@@ -30,7 +30,7 @@ public enum EOutputCompressionMode {
     AS_BMP("enum.outcomp.AS_BMP"),
     AS_JPG_AND_PNG("enum.outcomp.AS_JPG_AND_PNG");
 
-    public String rbKey;
+    public final String rbKey;
 
     EOutputCompressionMode(String rbKey) {
         this.rbKey = rbKey;

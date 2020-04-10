@@ -45,7 +45,7 @@ public class ProgressiveAlgorithm implements ScaleAlgorithm {
         PROGRESSIVE_BILINEAR_AND_LANCZOS2, PROGRESSIVE_BILINEAR_AND_LANCZOS3
     }
 
-    public Type type;
+    public final Type type;
 
     public ProgressiveAlgorithm(Type type) {
         this.type = type;
