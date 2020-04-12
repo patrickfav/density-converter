@@ -1,6 +1,11 @@
 package at.favre.tools.dconvert.test;
 
-import at.favre.tools.dconvert.arg.*;
+import at.favre.tools.dconvert.arg.Arguments;
+import at.favre.tools.dconvert.arg.EOutputCompressionMode;
+import at.favre.tools.dconvert.arg.EPlatform;
+import at.favre.tools.dconvert.arg.EScaleMode;
+import at.favre.tools.dconvert.arg.EScalingAlgorithm;
+import at.favre.tools.dconvert.arg.RoundingHandler;
 import at.favre.tools.dconvert.converters.postprocessing.MozJpegProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.PngCrushProcessor;
 import at.favre.tools.dconvert.converters.postprocessing.WebpProcessor;
@@ -11,7 +16,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.input.KeyCode;
 import javafx.stage.Stage;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.testfx.framework.junit.ApplicationTest;
 
@@ -280,9 +291,9 @@ public class GUITest extends ApplicationTest {
         clickOn(getIdForPlatform(EPlatform.ANDROID));
         clickOn("#cbSkipUpscaling");
         clickOn("#cbSkipExisting");
-        clickOn("#choiceThreads").clickOn(String.valueOf(2));
+
         assertEquals("arguments should match", new Arguments.Builder(defaultSrcFolder, 64).guiAdvancedOptions(true).verboseLog(true)
-                .scaleMode(EScaleMode.DP_HEIGHT).platform(Collections.singleton(EPlatform.ANDROID)).skipUpscaling(true).threadCount(2).skipExistingFiles(true)
+                .scaleMode(EScaleMode.DP_HEIGHT).platform(Collections.singleton(EPlatform.ANDROID)).skipUpscaling(true).threadCount(4).skipExistingFiles(true)
                 .build(), controller.getFromUI(false));
     }
 
