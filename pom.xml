@@ -16,7 +16,7 @@
 
     <properties>
         <raw.version>1.0.0</raw.version>
-        <imageiodep.version>3.5</imageiodep.version>
+        <imageiodep.version>3.4.1</imageiodep.version>
         <javafx.version>11.0.2</javafx.version>
     </properties>
 
