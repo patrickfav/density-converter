@@ -33,7 +33,7 @@ _To use the post processor ([pngcrush](http://pmt.sourceforge.net/pngcrush/), [m
 
 ### Requirements
 
-* JDK 8
+* JDK 11
 
 # Usage
 
@@ -264,7 +264,7 @@ MozJpeg is a Jpeg encoder that also features some lossless compression technique
 
 ## Implementation Details
 
-Java 1.8, JavaFx and Apache CLI
+Java 11, JavaFx and Apache CLI
 
 For support of various image types TwelveMonkey lib is used which claims to have wider support of even basic file types (jpeg, etc.)
 

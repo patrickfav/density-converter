@@ -2,14 +2,8 @@
 #    git update-index --chmod=+x mvnw
 
 language: java
-dist: trusty
 jdk:
-  - oraclejdk8
-
-addons:
-  apt:
-    packages:
-    - oracle-java8-installer #needs updated jdk for javafx
+  - oraclejdk11
 
 #required for launch4j to run
 before_script:

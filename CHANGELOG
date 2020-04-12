@@ -1,5 +1,8 @@
 # Releases
 
+## v1.0.0-alpha7
+* update to jdk11
+
 ## v1.0.0-alpha6
 * update various dependencies and plugins
 

@@ -16,7 +16,8 @@
 
     <properties>
         <raw.version>1.0.0</raw.version>
-        <imageiodep.version>3.4.1</imageiodep.version>
+        <imageiodep.version>3.5</imageiodep.version>
+        <javafx.version>11.0.2</javafx.version>
     </properties>
 
     <repositories>
@@ -124,7 +125,7 @@
                                 <preCp>anything</preCp>
                             </classPath>
                             <jre>
-                                <minVersion>1.8.0</minVersion>
+                                <minVersion>11</minVersion>
                             </jre>
                             <!--<splash>-->
                             <!--<file>misc/splash.bmp</file>-->
@@ -166,7 +167,7 @@
                                 <preCp>anything</preCp>
                             </classPath>
                             <jre>
-                                <minVersion>1.8.0</minVersion>
+                                <minVersion>11</minVersion>
                                 <opts>
                                     <opt>-Djava.endorsed.dirs=./endorsed</opt>
                                 </opts>
@@ -208,7 +209,7 @@
         <dependency>
             <groupId>net.coobird</groupId>
             <artifactId>thumbnailator</artifactId>
-            <version>0.4.8</version>
+            <version>0.4.11</version>
         </dependency>
         <dependency>
             <groupId>com.mortennobel</groupId>
@@ -222,7 +223,6 @@
             <artifactId>bridj</artifactId>
             <version>0.7.0</version>
         </dependency>
-
 
         <!-- supported reading/writing image types -->
         <dependency>
@@ -263,6 +263,28 @@
             <version>1.11</version>
         </dependency>
 
+        <!-- JavaFX not bundled with JDK anymore -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx</artifactId>
+            <version>${javafx.version}</version>
+            <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-base</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
         <!-- exclude some libs that are not used -->
         <dependency>
             <groupId>rhino</groupId>
@@ -286,25 +308,25 @@
         <dependency>
             <groupId>org.apache.ant</groupId>
             <artifactId>ant</artifactId>
-            <version>1.10.5</version>
+            <version>1.10.7</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-core</artifactId>
-            <version>4.0.15-alpha</version>
+            <version>4.0.16-alpha</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>testfx-junit</artifactId>
-            <version>4.0.15-alpha</version>
+            <version>4.0.16-alpha</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>openjfx-monocle</artifactId>
-            <version>8u76-b04</version>
+            <version>jdk-11+26</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
