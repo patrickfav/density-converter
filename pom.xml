@@ -345,6 +345,6 @@
 
     <ciManagement>
         <system>Travis</system>
-        <url>https://travis-ci.org/patrickfav/density-converter</url>
+        <url>https://travis-ci.com/patrickfav/density-converter</url>
     </ciManagement>
 </project>
