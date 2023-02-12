@@ -194,7 +194,7 @@ This tool can read & write the following file types:
 * TIFF - read and write support
 * BMP - read and write support
 
-Details on the [supported features of each format see here](https://github.com/haraldk/TwelveMonkeys/blob/master/README.md).
+Details on the [supported features of each format see here](https://github.com/haraldk/TwelveMonkeys/blob/main/README.md).
 
 Out-compression has the following modes:
 
