@@ -7,8 +7,9 @@ including PNG, JPEG, SVG, PSD and Android 9-patches. Using sophisticated scaling
 fast while keeping the image quality high (comparable to PS). To further optimize the output post processors like **pngcrush** and **mozJpeg** can be used (see section below).
 
 [![GitHub release](https://img.shields.io/github/release/patrickfav/density-converter.svg)](https://github.com/patrickfav/density-converter/releases/latest)
-[![Build Status](https://travis-ci.com/patrickfav/density-converter.svg?branch=master)](https://travis-ci.com/patrickfav/density-converter)
-[![Coverage Status](https://coveralls.io/repos/github/patrickfav/density-converter/badge.svg?branch=master)](https://coveralls.io/github/patrickfav/density-converter?branch=master) [![Maintainability](https://api.codeclimate.com/v1/badges/8f570296f51810daf509/maintainability)](https://codeclimate.com/github/patrickfav/density-converter/maintainability)
+[![Github Actions](https://github.com/patrickfav/density-converter/actions/workflows/build_deploy.yml/badge.svg)](https://github.com/patrickfav/density-converter/actions)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=patrickfav_density-converter&metric=coverage)](https://sonarcloud.io/summary/new_code?id=patrickfav_density-converter)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=patrickfav_density-converter&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=patrickfav_density-converter)
 
 Usage:
 
