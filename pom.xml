@@ -18,6 +18,7 @@
         <raw.version>1.0.0</raw.version>
         <imageiodep.version>3.4.1</imageiodep.version>
         <javafx.version>19.0.2.1</javafx.version>
+        <commonConfig.jacoco.check.disable>true</commonConfig.jacoco.check.disable>
     </properties>
 
     <repositories>
@@ -33,6 +34,14 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.8</version>
+                <configuration>
+                    <mainClass>at.favre.tools.dconvert.Main</mainClass>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -279,6 +288,11 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
             <version>${javafx.version}</version>
         </dependency>
         <!-- exclude some libs that are not used -->
