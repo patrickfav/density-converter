@@ -1,7 +1,7 @@
 # ![logo](src/main/resources/img/density_converter_icon_24.png) Density Image Converter Tool for Android, iOS, Windows and CSS
 
 This is a powerful little tool that helps **converting single or batches of images** to **Android**, **iOS**, **Windows** and **CSS** specific formats and density
-versions given the source scale factor or target width/height in [dp](http://developer.android.com/guide/practices/screens_support.html#density-independence).
+versions given the source scale factor or target width/height in [dp](https://developer.android.com/guide/practices/screens_support.html#density-independence).
 It has a **graphical** and **command line** interface and supports a wide array of image types for reading and conversion
 including PNG, JPEG, SVG, PSD and Android 9-patches. Using sophisticated scaling algorithms, it is designed to make conversion of images easy and
 fast while keeping the image quality high (comparable to PS). To further optimize the output post processors like **pngcrush** and **mozJpeg** can be used (see section below).
@@ -24,7 +24,7 @@ java -jar ./dconvert.jar
 
 will start the UI (_or double click the jar file_).
 
-_To use the post processor ([pngcrush](http://pmt.sourceforge.net/pngcrush/), [mozJpeg](http://mozjpeg.codelove.de/binaries.html) and [webp](https://developers.google.com/speed/webp/download)) the respective cmd tool must be set in PATH._
+_To use the post processor ([pngcrush](https://pmt.sourceforge.net/pngcrush/), [mozJpeg](https://mozjpeg.codelove.de/binaries.html) and [webp](https://developers.google.com/speed/webp/download)) the respective cmd tool must be set in PATH._
 
 
 ## Download
@@ -129,7 +129,7 @@ Full list of arguments:
 
 ## Using the .exe Launcher
 
-[Launch4J](http://launch4j.sourceforge.net) is used to create Windows executables. Two types are available: `dconvert.exe` and `dconvert-gui.exe`. The former is for command line, the later
+[Launch4J](https://launch4j.sourceforge.net) is used to create Windows executables. Two types are available: `dconvert.exe` and `dconvert-gui.exe`. The former is for command line, the later
 as a simple GUI starter. Launch4J will automatically download the required JRE.
 
 # Details
@@ -178,7 +178,7 @@ This tool can convert to formats used in Android, iOS and Windows:
  * **Android**: The Android converter will create `drawable-ldpi`, `drawable-mdpi`, etc. folders and saves images with the original name and respective scale factor in there. 9-Patches are specifically supported for Android - must have `.9.png` extension and only size correctly if out-compression is PNG.
  * **iOS**: The iOS converter will either create a folder for each image with the `.imageset` postfix and 3 images in them with no, `@2x` and `@3x` postfix also including is the `Content.json`; or creates a single folder `AssetCatalog` with all the images in it.
  * **Windows**: The Windows converter will create an `Assets` folder containing all the images with `.scale-100`, `.scale-140` etc. postfixes. This should be compatible with Windows universal apps.
- * **Web**: The web converter will create an `img` folder containing all the images with a `1x` and a `2x` scale factor which is compatible with [the css image-set](http://www.hongkiat.com/blog/css-image-set/) definition for multiple densities.
+ * **Web**: The web converter will create an `img` folder containing all the images with a `1x` and a `2x` scale factor which is compatible with [the css image-set](https://www.hongkiat.com/blog/css-image-set/) definition for multiple densities.
 
 There are some options that might change the format of the output. See cmd help or tooltips for more info.
 
@@ -194,7 +194,7 @@ This tool can read & write the following file types:
 * TIFF - read and write support
 * BMP - read and write support
 
-Details on the [supported features of each format see here](https://github.com/haraldk/TwelveMonkeys/blob/main/README.md).
+Details on the [supported features of each format see here](https://github.com/haraldk/TwelveMonkeys).
 
 Out-compression has the following modes:
 
@@ -243,7 +243,7 @@ Pngcrush is a brute force png lossless compression tool. This may be already in 
 but may be useful if not. Will run pngcrush over the all converted *.png files. See code or output for specific used options.
 
 The converter tool requires `pngcrush` to be in PATH. Minimal required version is 1.7.22; currently tested with v1.7.87 & 1.8.0.
-[More info on the pngcrush wesbite](http://pmt.sourceforge.net/pngcrush/)
+[More info on the pngcrush wesbite](https://pmt.sourceforge.net/pngcrush/)
 
 ### webp
 
@@ -258,7 +258,7 @@ If the flag is set the converter tool will compress jpegs to lossy webp and png/
 ### mozJpeg
 MozJpeg is a Jpeg encoder that also features some lossless compression techniques developed by the Mozilla foundation. It can be
  used to further shrink jpegs in size. Unfortunately they do not provide binaries on github,
- [but they can be found e.g. here](http://mozjpeg.codelove.de/binaries.html). The tool requires `jpegtran` to be set in PATH. Tested with mozJpeg 3.1
+ [but they can be found e.g. here](https://mozjpeg.codelove.de/binaries.html). The tool requires `jpegtran` to be set in PATH. Tested with mozJpeg 3.1
 
 [More info on mozJpeg](https://github.com/mozilla/mozjpeg)
 
@@ -305,7 +305,7 @@ the plugin versions aswell as providing the checkstyle config rules. Specificall
 * TIFF, PSD, SVG image type support [TwelveMonkeys](https://github.com/haraldk/TwelveMonkeys)
 * HQ image resizing with [Morten Nobel's Lib](https://github.com/mortennobel/java-image-scaling)
 * JavaFx theme based on Flatter by [hendrikebbers](https://github.com/guigarage/javafx-collection/tree/master/flatter)
-* Image file icon: Icon made by [Freepik](http://www.freepik.com/)
+* Image file icon: Icon made by [Freepik](https://www.freepik.com/)
 * 9-patch resizing routine from [Redwarp](https://github.com/redwarp/9-Patch-Resizer)
 
 # License
