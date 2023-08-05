@@ -25,7 +25,7 @@
 
         <raw.version>1.0.0</raw.version>
         <imageiodep.version>3.4.1</imageiodep.version>
-        <javafx.version>11.0.2</javafx.version>
+        <javafx.version>20.0.2</javafx.version>
         <commonConfig.jacoco.check.disable>true</commonConfig.jacoco.check.disable>
     </properties>
 
