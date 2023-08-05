@@ -34,7 +34,7 @@ _To use the post processor ([pngcrush](https://pmt.sourceforge.net/pngcrush/), [
 
 ### Requirements
 
-* JDK 11
+* JDK 11 with a [JavaFX packaged](https://stackoverflow.com/questions/58354622/javafx-is-missing-in-java-openjdk), like [Azul](https://www.azul.com/downloads/?package=jdk-fx#zulu) or [Liberica](https://bell-sw.com/pages/downloads/)
 
 # Usage
 
