@@ -155,7 +155,7 @@ public class GUIController {
         btnSrcFolder.setOnAction(new FolderPicker(srcDirectoryChooser, textFieldSrcPath, textFieldDstPath, bundle));
         btnDstFolder.setOnAction(new FolderPicker(srcDirectoryChooser, textFieldDstPath, null, bundle));
         btnConvert.setOnAction(event -> {
-            WinTaskbarProgress winTaskbarProgress = new WinTaskbarProgress();
+            TaskbarProgress taskbarProgress = TaskbarProgress.create();
             try {
                 Arguments arg = getFromUI(false);
                 saveToPrefs(arg);
@@ -171,7 +171,7 @@ public class GUIController {
                     public void onProgress(float progress) {
                         Platform.runLater(() -> {
                             progressBar.setProgress(progress);
-                            winTaskbarProgress.updateProgress(progress);
+                            taskbarProgress.updateProgress(progress);
                         });
                     }
 
@@ -185,14 +185,14 @@ public class GUIController {
                             textFieldConsole.appendText("");
 
                             if (!exceptions.isEmpty()) {
-                                winTaskbarProgress.error();
+                                taskbarProgress.error();
                                 Alert alert = new Alert(Alert.AlertType.WARNING);
                                 alert.setTitle(bundle.getString("main.alert.title"));
                                 alert.setHeaderText(null);
                                 alert.setContentText(MessageFormat.format(bundle.getString("main.alert.content"), exceptions.size()));
                                 alert.showAndWait();
                             } else {
-                                winTaskbarProgress.finish();
+                                taskbarProgress.finish();
                             }
                         });
 
