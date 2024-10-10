@@ -108,14 +108,7 @@ Full list of arguments:
     -roundingMode <round|ceil|floor>      Defines the rounding mode when scaling the dimensions. Possible
                                           options are 'round' (rounds up of >= 0.5), 'floor' (rounds down) and
                                           'ceil' (rounds up). Default is ROUND_HALF_UP
-    -scale <[float]|[int]dp>              The source. Can be an image file or a folder containing image files
-                                          to be converted. This argument is mandatory.
-    -scaleIsHeightDp                      If set and scale is in dp it will be interpreted as fixed height not
-                                          width
-    -skipExisting                         If set will not overwrite a already existing file
-    -skipUpscaling                        If set will only scale down, but not up to prevent image quality
-                                          loss
-    -src <path to file or folder>         The source scale. This can either be a factor (1,1.5,2,3,4,etc.)
+    -scale <[float]|[int]dp>              The source scale. This can either be a factor (1,1.5,2,3,4,etc.)
                                           used if the images already have the correct resolution for one scale
                                           factor and up- and downscaling for all other densities are needed.
                                           Ie. if you have the src file in density xxxhdpi you pass '4'. You
@@ -123,6 +116,13 @@ Full list of arguments:
                                           denotes the output pixel width (or height if the flag is set) in
                                           mdpi/x1. In this mode all output images will have the same width
                                           (height). This argument is mandatory.
+    -scaleIsHeightDp                      If set and scale is in dp it will be interpreted as fixed height not
+                                          width
+    -skipExisting                         If set will not overwrite a already existing file
+    -skipUpscaling                        If set will only scale down, but not up to prevent image quality
+                                          loss
+    -src <path to file or folder>         The source. Can be an image file or a folder containing image files
+                                          to be converted. This argument is mandatory.
     -threads <1-8>                        Sets the count of max parallel threads (more is faster but uses more
                                           memory). Possible values are 1-8. Default is 4
     -v,--version                          Gets current version
